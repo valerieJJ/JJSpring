@@ -1,9 +1,11 @@
 package valerie.myservices;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.http.HttpHost;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexResponse;
@@ -12,6 +14,7 @@ import org.elasticsearch.client.indices.GetIndexResponse;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
 import valerie.mycontrollers.Song;
 
 import java.io.IOException;
@@ -20,7 +23,7 @@ import java.io.IOException;
 @Service
 public class ESService {
     @Autowired
-    private RestHighLevelClient esClient ;//= new RestHighLevelClient(RestClient.builder(new HttpHost("localhost",9200,"http")));
+    private RestHighLevelClient esClient;// = new RestHighLevelClient(RestClient.builder(new HttpHost("localhost",9200,"http")));
 
 
     public void createIndex(String index) throws IOException {
@@ -57,17 +60,17 @@ public class ESService {
 //
 //    }
 
-    public void search(String collection) throws IOException {
+    public String search(String collection) throws IOException {
         GetIndexRequest request = new GetIndexRequest(collection);
         GetIndexResponse response = this.esClient.indices().get(request,RequestOptions.DEFAULT);
-        System.out.println(response.getMappings());
+//        System.out.println(response.getMappings());
+        return response.getMappings().toString();
     }
 
     public static void main(String[] args) throws IOException {
         ESService es = new ESService();
         String collection = "movietags";
-        es.search(collection);
-
+        System.out.println(es.search(collection));
 
     }
 }
