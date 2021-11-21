@@ -1,0 +1,40 @@
+
+<!DOCTYPE HTML>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<!--    <title>Passing Paraments</title>-->
+<!--    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />-->
+<!--    <script th:inline="javascript">-->
+<!--        function ShowMessage(){-->
+<!--            document.getElementById("message2").innerHTML = "Thymeleaf String by JS: " + [[${message2}]];-->
+<!--            var user = /*[[${user}]]*/ null ;-->
+<!--            document.getElementById("user").innerHTML = "Thymeleaf Beans by JS: name ->"+ user.name +", age -> "+ user.age.toString();-->
+<!--        }-->
+<!--    </script>-->
+    <title>Welcome to NeverLand</title>
+</head>
+
+<body>
+
+<form action="#" th:action="@{/dologin}" th:object="${user}" method="post">
+    <!--    Welcome <p th:text="*{username}"></p>-->
+    <!--    come by calling <p th:text="*{nickname}"></p>-->
+    name:  <!--/*@thymesVar id="username" type="java.lang.String"*/-->
+    <input type="text" th:field="*{username}"/><br>
+    password:<!--/*@thymesVar id="password" type="java.lang.String"*/-->
+    <input type="password" value="" th:field="*{password}"/><br>
+    <input type="submit" value="submit"/><br>
+</form>
+
+<!--servelet-->
+<!--<form action="/dologin" method="post">-->
+<!--    I want ur name <input type="text" name="username"><br>-->
+<!--    I want ur key <input type="password" name="password"><br>-->
+<!--    <input type="submit" value="Come!">-->
+<!--</form>-->
+
+</body>
+
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>RegisterPage</title>
+
+</head>
+<body>
+
+<form action="/doregister" method="post">
+    I want ur name <input type="text" name="username"><br>
+    We have a secrete <input type="password" name="password"><br>
+    <input type="submit" value="Ready!">
+</form>
+
+<!--/*@thymesVar id="user" type="java.lang.Class"*/-->
+<!--/*@thymesVar id="username" type="java.lang.String"*/-->
+<!--/*@thymesVar id="password" type="java.lang.String"*/-->
+<!-- th:object="${user}"-->
+
+<!--<form action="#" th:action="@{/register}", method="post">-->
+<!--    <label for="uname"> I want ur name</label><br>-->
+<!--    <input id="uname" type="text" th:value="${username}" /><br>&lt;!&ndash;  <input id="uname" type="text" th:value="${use}" />&ndash;&gt;-->
+<!--    <label for="upwd"> This is the secret between us: </label><br>-->
+<!--    <input id="upwd" type="text" th:value="${password}" />-->
+
+<!--    <input type="submit" value="I'm ready!"></input>-->
+<!--</form>-->
+
+
+</body>
+</html>
