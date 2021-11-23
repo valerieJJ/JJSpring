@@ -20,10 +20,10 @@
     <h1 class="h3 mb-3 font-weight-normal">Welcome to Neverland!</h1>
 
     <label class="sr-only">Username</label>
-    <input class="form-control" type="text" th:field="*{username}"/><br>
+    <input class="form-control" type="text" th:field="*{username}" placeholder="Username"/><br>
 
     <label class="sr-only">Password</label>
-    <input class="form-control" type="password" value="" th:field="*{password}"/><br>
+    <input class="form-control" type="password" value="" th:field="*{password}" placeholder="Password"/><br>
 
     <div class="checkbox mb-3">
         <label>
@@ -31,6 +31,7 @@
         </label>
     </div>
     <button class="btn btn-lg btn-primary btn-block" type="submit" >log in</button>
+    <button class="btn btn-lg btn-primary btn-block" type="submit" >register</button>
 <!--    <p class="mt-5 mb-3 text-muted">© 2017-2018</p>-->
     <a class="btn btn-sm">中文</a>
     <a class="btn btn-sm" >English</a>

@@ -1,32 +1,38 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>RegisterPage</title>
-
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>NeverLand has been waiting for you!</title>
+    <link th:href="@{/static/css/ks/bootstrap.min.css}" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link th:href="@{/static/css/ks/signin.css}" rel="stylesheet">
 </head>
-<body>
+<body class="text-center">
 
-<form action="/doregister" method="post">
-    I want ur name <input type="text" name="username"><br>
-    We have a secrete <input type="password" name="password"><br>
-    <input type="submit" value="Ready!">
+<form class="form-signin" th:action="@{/user/doregister}">
+<!--    I want ur name <input type="text" name="username"><br> action="/user/doregister" method="post"-->
+<!--    We have a secrete <input type="password" name="password"><br>-->
+<!--    <input type="submit" value="Ready!">-->
+
+    <img class="mb-4" th:src="@{/static/img/bootstrap-solid.svg}" alt="" width="72" height="72">
+    <h1 class="h3 mb-3 font-weight-normal">Creating an Account</h1>
+
+    <label class="sr-only">I want ur name</label>
+    <input type="text" name="username" class="form-control" placeholder="username" required="" autofocus="">
+    <label class="sr-only">We have a secrete</label>
+    <input type="password" name="password" class="form-control" placeholder="password" required="">
+    <div class="checkbox mb-3">
+        <label>
+            <input type="checkbox" value="remember-me" > remember me
+        </label>
+    </div>
+    <button class="btn btn-lg btn-primary btn-block" type="submit" >register</button>
+    <p class="mt-5 mb-3 text-muted">© 2017-2018</p>
+    <a class="btn btn-sm">中文</a>
+    <a class="btn btn-sm" >English</a>
 </form>
-
-<!--/*@thymesVar id="user" type="java.lang.Class"*/-->
-<!--/*@thymesVar id="username" type="java.lang.String"*/-->
-<!--/*@thymesVar id="password" type="java.lang.String"*/-->
-<!-- th:object="${user}"-->
-
-<!--<form action="#" th:action="@{/register}", method="post">-->
-<!--    <label for="uname"> I want ur name</label><br>-->
-<!--    <input id="uname" type="text" th:value="${username}" /><br>&lt;!&ndash;  <input id="uname" type="text" th:value="${use}" />&ndash;&gt;-->
-<!--    <label for="upwd"> This is the secret between us: </label><br>-->
-<!--    <input id="upwd" type="text" th:value="${password}" />-->
-
-<!--    <input type="submit" value="I'm ready!"></input>-->
-<!--</form>-->
-
-
 </body>
 </html>
