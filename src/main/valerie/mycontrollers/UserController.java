@@ -49,14 +49,14 @@ public class UserController {
 
     /****************************  Login  **************************/
 
-    @RequestMapping("/login")
+    @RequestMapping("/user/login")
     public String login(Model model) throws UnknownHostException {
         User user = userservice.getDefaultUser();
         model.addAttribute("user", user);
         return "login";
     }
 
-    @RequestMapping("/dologin")
+    @RequestMapping("/user/dologin")
     public String login(@ModelAttribute("user") User user) throws UnknownHostException {
         User newUsr = userservice.loginUser(new LoginUserRequest(user.getUsername(),user.getPassword()));
         if(newUsr==null){
@@ -65,17 +65,17 @@ public class UserController {
         }else {
             System.out.println("\nGet username="+newUsr.getUsername());
             System.out.println("Get password="+newUsr.getPassword());
-            return "homePage";
+            return "index";
         }
     }
 
     /****************************  Register  **************************/
 
-    @RequestMapping("/register")
+    @RequestMapping("/user/register")
     public String register(){
         return "register";
     }
-    @RequestMapping("/doregister")
+    @RequestMapping("/user/doregister")
     public String register(Model model, HttpServletRequest request){
         String name = request.getParameter("username");
         String password = request.getParameter("password");
@@ -93,7 +93,7 @@ public class UserController {
 //        model.addAttribute("username", name);
 //        model.addAttribute("password", password);
         model.addAttribute("user",user);
-        return "homePage";
+        return "index";
     }
 
 //    @RequestMapping("/login")
