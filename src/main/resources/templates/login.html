@@ -4,28 +4,36 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-<!--    <title>Passing Paraments</title>-->
-<!--    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />-->
-<!--    <script th:inline="javascript">-->
-<!--        function ShowMessage(){-->
-<!--            document.getElementById("message2").innerHTML = "Thymeleaf String by JS: " + [[${message2}]];-->
-<!--            var user = /*[[${user}]]*/ null ;-->
-<!--            document.getElementById("user").innerHTML = "Thymeleaf Beans by JS: name ->"+ user.name +", age -> "+ user.age.toString();-->
-<!--        }-->
-<!--    </script>-->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
     <title>Welcome to NeverLand</title>
+    <link th:href="@{/static/css/ks/bootstrap.min.css}" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link th:href="@{/static/css/ks/signin.css}" rel="stylesheet">
 </head>
 
-<body>
+<body class="text-center">
+<form class="form-signin" th:action="@{/user/dologin}" th:object="${user}" method="post">
+    <img class="mb-4" th:src="@{/static/img/bootstrap-solid.svg}" alt="" width="72" height="72">
+    <h1 class="h3 mb-3 font-weight-normal">Welcome to Neverland!</h1>
 
-<form action="#" th:action="@{/dologin}" th:object="${user}" method="post">
-    <!--    Welcome <p th:text="*{username}"></p>-->
-    <!--    come by calling <p th:text="*{nickname}"></p>-->
-    name:  <!--/*@thymesVar id="username" type="java.lang.String"*/-->
-    <input type="text" th:field="*{username}"/><br>
-    password:<!--/*@thymesVar id="password" type="java.lang.String"*/-->
-    <input type="password" value="" th:field="*{password}"/><br>
-    <input type="submit" value="submit"/><br>
+    <label class="sr-only">Username</label>
+    <input class="form-control" type="text" th:field="*{username}"/><br>
+
+    <label class="sr-only">Password</label>
+    <input class="form-control" type="password" value="" th:field="*{password}"/><br>
+
+    <div class="checkbox mb-3">
+        <label>
+            <input type="checkbox" value="remember-me" > remember me
+        </label>
+    </div>
+    <button class="btn btn-lg btn-primary btn-block" type="submit" >log in</button>
+<!--    <p class="mt-5 mb-3 text-muted">© 2017-2018</p>-->
+    <a class="btn btn-sm">中文</a>
+    <a class="btn btn-sm" >English</a>
 </form>
 
 <!--servelet-->
