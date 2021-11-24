@@ -7,10 +7,12 @@
 </head>
 <body>
 <p>Welcome home!</p>
-<p th:value="${user.username}"></p>
-<p th:text="${user.username}">!</p>
+<!--<p th:value="${use}"-->
+this is your homepage
+<!--<p th:value="${user.username}"></p>-->
+<!--<p th:text="${user.username}">!</p>-->
 
-<form action="#" th:action="@{/show}" th:object="${user}" method="post">
+<!--<form action="#" th:action="@{/show}" th:object="${user}" method="post">-->
 <button onclick="{ if(confirm('Show？'))location.href='/show'}">Show</button><br>
 </form>
 <button onclick="{ if(confirm('Personal？'))location.href='/whoisit'}">Personal</button>

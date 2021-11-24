@@ -57,7 +57,7 @@ public class UserController {
     }
 
     @RequestMapping("/user/dologin")
-    public String login(@ModelAttribute("user") User user) throws UnknownHostException {
+    public String login(@ModelAttribute("user") User user, Model model) throws UnknownHostException {
         User newUsr = userservice.loginUser(new LoginUserRequest(user.getUsername(),user.getPassword()));
         if(newUsr==null){
             System.out.println("Account does not exist");
@@ -65,12 +65,12 @@ public class UserController {
         }else {
             System.out.println("\nGet username="+newUsr.getUsername());
             System.out.println("Get password="+newUsr.getPassword());
+            model.addAttribute("user", newUsr);
             return "index";
         }
     }
 
     /****************************  Register  **************************/
-
     @RequestMapping("/user/register")
     public String register(){
         return "register";
@@ -95,6 +95,15 @@ public class UserController {
         model.addAttribute("user",user);
         return "index";
     }
+
+    @RequestMapping("/user/account")
+    public String accountPage(Model model){
+        User user = (User) model.getAttribute("user");
+        System.out.println("HomePage" + user.getUsername());
+        return "homePage";
+    }
+
+    //
 
 //    @RequestMapping("/login")
 //    public String login(){
