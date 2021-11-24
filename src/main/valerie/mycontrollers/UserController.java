@@ -16,7 +16,7 @@ import valerie.myservices.UserService;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-
+@RequestMapping("/user")
 @Controller
 public class UserController {
 
@@ -49,33 +49,35 @@ public class UserController {
 
     /****************************  Login  **************************/
 
-    @RequestMapping("/user/login")
+    @RequestMapping("/login")
     public String login(Model model) throws UnknownHostException {
         User user = userservice.getDefaultUser();
         model.addAttribute("user", user);
         return "login";
     }
 
-    @RequestMapping("/user/dologin")
+    @RequestMapping("/dologin") //@RequestMapping("/user/dologin")
     public String login(@ModelAttribute("user") User user, Model model) throws UnknownHostException {
         User newUsr = userservice.loginUser(new LoginUserRequest(user.getUsername(),user.getPassword()));
         if(newUsr==null){
             System.out.println("Account does not exist");
+            model.addAttribute("user", null);
             return "login";
         }else {
             System.out.println("\nGet username="+newUsr.getUsername());
             System.out.println("Get password="+newUsr.getPassword());
             model.addAttribute("user", newUsr);
+//            return model;
             return "index";
         }
     }
 
     /****************************  Register  **************************/
-    @RequestMapping("/user/register")
+    @RequestMapping("/register")
     public String register(){
         return "register";
     }
-    @RequestMapping("/user/doregister")
+    @RequestMapping("/doregister")
     public String register(Model model, HttpServletRequest request){
         String name = request.getParameter("username");
         String password = request.getParameter("password");
@@ -96,10 +98,17 @@ public class UserController {
         return "index";
     }
 
-    @RequestMapping("/user/account")
-    public String accountPage(Model model){
-        User user = (User) model.getAttribute("user");
-        System.out.println("HomePage" + user.getUsername());
+
+    @RequestMapping("/account")
+    public String accountPage(Model model){//, @ModelAttribute("user") User user
+//        System.out.println("HomePage" + user.getUsername());
+//        model.addAttribute("user", user);
+//        User account = (User) model.getAttribute("user");
+//        System.out.println("HomePage" + account.getUsername());
+        User account = userservice.getDefaultUser();
+        account.setUsername("applehead");
+        model.addAttribute("account",account);
+
         return "homePage";
     }
 

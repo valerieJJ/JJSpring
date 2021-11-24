@@ -93,16 +93,16 @@ span.jPag-snext-img{
     text-align:right;
 }
 ul.jPag-pages li span.jPag-previous-img{
-    background:transparent url(../images/previous.png) no-repeat center right;
+    background:transparent url(../../images/previous.png) no-repeat center right;
 }
 ul.jPag-pages li span.jPag-next-img{
-    background:transparent url(../images/next.png) no-repeat center left;
+    background:transparent url(../../images/next.png) no-repeat center left;
 }
 span.jPag-sprevious-img{
-    background:transparent url(../images/sprevious.png) no-repeat center right;
+    background:transparent url(../../images/sprevious.png) no-repeat center right;
 }
 span.jPag-snext-img{
-    background:transparent url(../images/snext.png) no-repeat center left;
+    background:transparent url(../../images/snext.png) no-repeat center left;
 }
 
 
