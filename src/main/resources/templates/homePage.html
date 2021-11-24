@@ -19,9 +19,10 @@ NeverLand is for all time!
 <!--<p th:text="${user.username}">!</p>-->
 
 <!--<form action="#" th:action="@{/show}" th:object="${user}" method="post">-->
-<button onclick="{ if(confirm('Show？'))location.href='/show'}">Show</button><br>
+<button onclick="{ if(confirm('Show？'))location.href='/user/show'}">Show</button><br>
 </form>
-<button onclick="{ if(confirm('Personal？'))location.href='/whoisit'}">Personal</button>
+<button onclick="{ if(confirm('Personal？'))location.href='/user/whoisit'}">Personal</button><br>
+<button onclick="{ if(confirm('neverland？'))location.href='/user/goIndex'}">NeverLand</button>
 
 </body>
 

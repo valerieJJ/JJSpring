@@ -61,7 +61,6 @@ public class UserController {
         User newUsr = userservice.loginUser(new LoginUserRequest(user.getUsername(),user.getPassword()));
         if(newUsr==null){
             System.out.println("Account does not exist");
-            model.addAttribute("user", null);
             return "login";
         }else {
             System.out.println("\nGet username="+newUsr.getUsername());
@@ -100,18 +99,27 @@ public class UserController {
 
 
     @RequestMapping("/account")
-    public String accountPage(Model model){//, @ModelAttribute("user") User user
+    public ModelAndView accountPage(Model model){//, @ModelAttribute("user") User user
 //        System.out.println("HomePage" + user.getUsername());
 //        model.addAttribute("user", user);
 //        User account = (User) model.getAttribute("user");
 //        System.out.println("HomePage" + account.getUsername());
         User account = userservice.getDefaultUser();
         account.setUsername("applehead");
-        model.addAttribute("account",account);
+//        model.addAttribute("account",account);
+        ModelAndView mv = new ModelAndView();
+        mv.addObject("account", account);
+        mv.setViewName("homePage");
 
-        return "homePage";
+        return mv;
     }
 
+    @RequestMapping("/goIndex")
+    public ModelAndView goIndex(){
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("index");
+        return mv;
+    }
     //
 
 //    @RequestMapping("/login")
