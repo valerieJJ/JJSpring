@@ -30,34 +30,18 @@ public class UserController {
     public String getData(Model model,HttpServletRequest request) throws UnknownHostException {
         DBObject data = userservice.getCollectionData();
         model.addAttribute("coll",data.toString());
-        User usrr = (User) request.getAttribute("user");
-        if(usrr!=null){
-            System.out.println("show - get user from request"+usrr.getUsername());
-        }else{
-            System.out.println("show - cannot get user from request!!!");
-        }
-//        model.addAttribute("user", usr);
 
         HttpSession session1 = request.getSession();
         User usr = (User)session1.getAttribute("user");
+        if(usr == null){
+            usr = userservice.getDefaultUser();
+        }
         model.addAttribute("user", usr);
 
         System.out.println("show - port:"+request.getServerPort()+",session:"+session1.getId());
         System.out.println("show - get user from request.session" + usr.getUsername());
         return "show";
     }
-//
-//    @RequestMapping("/show")
-//    public String getData(Model model,HttpServletRequest request) throws UnknownHostException {
-//        DBObject data = userservice.getCollectionData();
-//
-//        HttpSession session1 = request.getSession();
-//        System.out.println("show - port:"+request.getServerPort()+",session:"+session1.getId());
-//
-//        model.addAttribute("mydata",data.toString());
-////        session.setAttribute("mydata",data.toString());
-//        return "show";
-//    }
 
     @RequestMapping("/homePage")
     public String goHomePage(Model model, HttpServletRequest request) throws UnknownHostException {
@@ -65,8 +49,6 @@ public class UserController {
         System.out.println("HomePage" + user.getUsername());
         HttpSession session1 = request.getSession();
         System.out.println("homepage - port:"+request.getServerPort()+",session:"+session1.getId());
-//        User user = (User) session.getAttribute("user");
-//        System.out.println("HomePage" + user.getUsername());
         return "homePage";
     }
 
@@ -109,6 +91,21 @@ public class UserController {
         }
     }
 
+    /****************************  Log out  **************************/
+    @RequestMapping("/logout")
+    public String logout(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        // 将用户信息从session中删除
+        session.removeAttribute("user");
+        Object info = session.getAttribute("user");
+        if(info==null){
+            System.out.println("logout success");
+        }else{
+            System.out.println("failed to logout");
+        }
+        return "index";
+    }
+
     /****************************  Register  **************************/
     @RequestMapping("/register")
     public String register(){
@@ -130,8 +127,6 @@ public class UserController {
         model.addAttribute("success", true);
 
         User user = userservice.registerUser(new RegisterUserRequest(name,password));
-//        model.addAttribute("username", name);
-//        model.addAttribute("password", password);
         model.addAttribute("user",user);
         return "mainIndex";
     }
@@ -143,12 +138,13 @@ public class UserController {
 //        model.addAttribute("user", user);
 //        User account = (User) model.getAttribute("user");
 //        System.out.println("HomePage" + account.getUsername());
-        User account = userservice.getDefaultUser();
-//        String name = (String) request.getAttribute("username");
-//        account.setUsername(name);
-//        model.addAttribute("account",account);
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        if(user==null){
+            user = userservice.getDefaultUser();
+        }
         ModelAndView mv = new ModelAndView();
-        mv.addObject("account", account);
+        mv.addObject("user", user);
         mv.setViewName("homePage");
 
         return mv;
@@ -160,32 +156,5 @@ public class UserController {
         mv.setViewName("mainIndex");
         return mv;
     }
-    //
-
-//    @RequestMapping("/login")
-//    public String login(){
-//        return "login";
-//    }
-//    @RequestMapping("/dologin")
-//    public String login(Model model, HttpServletRequest request){
-//        String name = request.getParameter("username");
-//        String password = request.getParameter("password");
-//        System.out.println("username is " + name);
-//        System.out.println("password is " + password);
-//
-//        User user = userservice.loginUser(new LoginUserRequest(name,password));
-//
-//        if(user==null){
-//            System.out.println("User does not exist!");
-//            model.addAttribute("success",false);
-//            model.addAttribute("message","用户不存在或密码错误");
-//            return "register";
-//        }else{
-//            System.out.println("Successfully login!");
-//            model.addAttribute("user", user);
-//            model.addAttribute("success", true);
-//            return "homePage";
-//        }
-//    }
 
 }

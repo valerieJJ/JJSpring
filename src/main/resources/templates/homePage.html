@@ -9,11 +9,11 @@
 <p>Welcome home!</p>
 <!--<p th:value="${use}"-->
 this is your homepage
-
+<br>
 
 NeverLand is for all time!
-<p th:text="${account.getUsername()}"></p>
-<p th:text="${account.getNickname()}"></p>
+<p th:text="${user.getUsername()}"></p>
+<p th:text="${user.getNickname()}"></p>
 
 <!--<p th:value="${user.username}"></p>-->
 <!--<p th:text="${user.username}">!</p>-->
@@ -21,8 +21,9 @@ NeverLand is for all time!
 <!--<form action="#" th:action="@{/show}" th:object="${user}" method="post">-->
 <button onclick="{ if(confirm('Show？'))location.href='/user/show'}">Show</button><br>
 </form>
-<button onclick="{ if(confirm('Personal？'))location.href='/user/whoisit'}">Personal</button><br>
-<button onclick="{ if(confirm('neverland？'))location.href='/user/goIndex'}">NeverLand</button>
+<button onclick="{ location.href='/user/whoisit'}">Personal</button><br>
+<button onclick="{ location.href='/user/goIndex'}">NeverLand</button>
+<button onclick="{ if(confirm('Logout？'))location.href='/user/logout'}">Logout</button>
 
 </body>
 

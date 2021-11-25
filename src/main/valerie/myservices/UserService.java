@@ -42,8 +42,7 @@ public class UserService {
 
     public User getDefaultUser(){
         User user = new User();
-        user.setUsername("michael");
-        user.setPassword("valerie");
+        user.setUsername("mickey");
         return user;
     }
 
