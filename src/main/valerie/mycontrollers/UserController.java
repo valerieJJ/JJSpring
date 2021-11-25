@@ -67,8 +67,8 @@ public class UserController {
 
     @RequestMapping("/login")
     public String login(Model model) throws UnknownHostException {
-        User user = userservice.getDefaultUser();
-        model.addAttribute("user", user);
+//        User user = userservice.getDefaultUser();
+//        model.addAttribute("user", user);
         return "login";
     }
 
@@ -131,29 +131,36 @@ public class UserController {
         return "mainIndex";
     }
 
-
     @RequestMapping("/account")
     public ModelAndView accountPage(Model model, HttpServletRequest request){//, @ModelAttribute("user") User user
-//        System.out.println("HomePage" + user.getUsername());
-//        model.addAttribute("user", user);
-//        User account = (User) model.getAttribute("user");
-//        System.out.println("HomePage" + account.getUsername());
+
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
-        if(user==null){
-            user = userservice.getDefaultUser();
-        }
+        System.out.println("account action: sessionID" + session.getId());
+        System.out.println("account action: user " + session.getAttribute("user"));
+
         ModelAndView mv = new ModelAndView();
-        mv.addObject("user", user);
-        mv.setViewName("homePage");
+        if(user==null){
+            mv.setViewName("index");
+//            mv.setViewName("dologin");
+            System.out.println("please log in first");
+        }else{
+            mv.addObject("user", user);
+            mv.setViewName("homePage");
+        }
 
         return mv;
     }
 
     @RequestMapping("/goIndex")
-    public ModelAndView goIndex(){
+    public ModelAndView goIndex(HttpServletRequest request){
+        HttpSession session = request.getSession();
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("mainIndex");
+        if(session.getAttribute("user")==null){// || session.getAttribute("user")==null
+            mv.setViewName("index");
+        }else{
+            mv.setViewName("mainIndex");
+        }
         return mv;
     }
 
