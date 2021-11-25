@@ -3,7 +3,7 @@ body {
   height: 100%;
 }
 
-body {
+body.text-center {
   display: -ms-flexbox;
   display: -webkit-box;
   display: flex;
@@ -16,8 +16,19 @@ body {
   padding-top: 40px;
   padding-bottom: 40px;
   /*background-color: #f5f5f5;*/
+  /*background-image: url("msc7.jpg");*/
+  /*!*background-repeat: no-repeat;*!*/
+  /*background-attachment: scroll;*/
+  /*background-position: center center;*/
+  /*background-size: cover;*/
 }
 
+/*header.masthead {*/
+/*  padding-top: 10.5rem;*/
+/*  padding-bottom: 6rem;*/
+/*  text-align: center;*/
+/*  color: #fff;*/
+/*}*/
 .form-signin {
   width: 100%;
   max-width: 330px;

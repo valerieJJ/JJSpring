@@ -67,7 +67,7 @@ public class UserController {
             System.out.println("Get password="+newUsr.getPassword());
             model.addAttribute("user", newUsr);
 //            return model;
-            return "index";
+            return "mainIndex";
         }
     }
 
@@ -94,7 +94,7 @@ public class UserController {
 //        model.addAttribute("username", name);
 //        model.addAttribute("password", password);
         model.addAttribute("user",user);
-        return "index";
+        return "mainIndex";
     }
 
 
@@ -117,7 +117,7 @@ public class UserController {
     @RequestMapping("/goIndex")
     public ModelAndView goIndex(){
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("index");
+        mv.setViewName("mainIndex");
         return mv;
     }
     //

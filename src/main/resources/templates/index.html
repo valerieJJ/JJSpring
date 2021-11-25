@@ -35,7 +35,6 @@
                         <li class="nav-item"><a class="nav-link" onclick="{ if(confirm('Personal？'))location.href='/user/whoisit'}">Contact</a></li>
 
 <!--                        <li class="nav-item"><a class="nav-link" th:href="@{/user/account}">Contact</a></li>-->
-
 <!--                        <li class="nav-item">-->
 <!--                            <a class="nav-link" >-->
 <!--                            <button onclick="{ if(confirm('Personal？'))location.href='/whoisit'}">Personal</button>-->
@@ -52,8 +51,9 @@
             <div class="container">
                 <div class="masthead-subheading">This is it!</div>
                 <div class="masthead-heading text-uppercase">LOVE IS OUR MESSGE</div>
-                <a class="btn btn-primary btn-xl text-uppercase" href="#services">Come on</a>
-                <a class="btn btn-primary btn-xl text-uppercase" th:action="@{/whoisit}">Register</a>
+                <a class="btn btn-primary btn-xl text-uppercase" href="#services">explore</a>
+<!--                <a class="btn btn-primary btn-xl text-uppercase" th:action="@{/whoisit}">Register</a>-->
+                <a class="btn btn-primary btn-xl text-uppercase" onclick="{ if(confirm('Login？'))location.href='/user/login'}">login</a>
 
             </div>
         </header>
