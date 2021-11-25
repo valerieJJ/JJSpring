@@ -14,7 +14,7 @@ import valerie.myModel.requests.RegisterUserRequest;
 import valerie.myModel.requests.UserRequest;
 import valerie.myservices.UserService;
 import org.springframework.web.servlet.ModelAndView;
-
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/user")
 @Controller
@@ -27,16 +27,21 @@ public class UserController {
     }
 
     @RequestMapping("/show")
-    public String getData(Model model) throws UnknownHostException {
+    public String getData(Model model,HttpServletRequest request, HttpSession session) throws UnknownHostException {
         DBObject data = userservice.getCollectionData();
+        HttpSession session1 = request.getSession();
+        System.out.println("port:"+request.getServerPort()+",session:"+session1.getId());
         model.addAttribute("mydata",data.toString());
+//        session.setAttribute("mydata",data.toString());
         return "show";
     }
 
     @RequestMapping("/homePage")
-    public String goHomePage(Model model) throws UnknownHostException {
+    public String goHomePage(Model model, HttpSession session) throws UnknownHostException {
         User user = (User) model.getAttribute("user");
         System.out.println("HomePage" + user.getUsername());
+//        User user = (User) session.getAttribute("user");
+//        System.out.println("HomePage" + user.getUsername());
         return "homePage";
     }
 
@@ -57,7 +62,7 @@ public class UserController {
     }
 
     @RequestMapping("/dologin") //@RequestMapping("/user/dologin")
-    public String login(@ModelAttribute("user") User user, Model model) throws UnknownHostException {
+    public String login(@ModelAttribute("user") User user, Model model,HttpSession session) throws UnknownHostException {
         User newUsr = userservice.loginUser(new LoginUserRequest(user.getUsername(),user.getPassword()));
         if(newUsr==null){
             System.out.println("Account does not exist");
@@ -66,6 +71,7 @@ public class UserController {
             System.out.println("\nGet username="+newUsr.getUsername());
             System.out.println("Get password="+newUsr.getPassword());
             model.addAttribute("user", newUsr);
+//            session.setAttribute("user", newUsr);
 //            return model;
             return "mainIndex";
         }
@@ -80,6 +86,7 @@ public class UserController {
     public String register(Model model, HttpServletRequest request){
         String name = request.getParameter("username");
         String password = request.getParameter("password");
+
         System.out.println("username is " + name);
         System.out.println("password is " + password);
 //        User user = userservice.getUser(new RegisterUserRequest(name, password));
@@ -99,13 +106,14 @@ public class UserController {
 
 
     @RequestMapping("/account")
-    public ModelAndView accountPage(Model model){//, @ModelAttribute("user") User user
+    public ModelAndView accountPage(Model model, HttpServletRequest request){//, @ModelAttribute("user") User user
 //        System.out.println("HomePage" + user.getUsername());
 //        model.addAttribute("user", user);
 //        User account = (User) model.getAttribute("user");
 //        System.out.println("HomePage" + account.getUsername());
         User account = userservice.getDefaultUser();
-        account.setUsername("applehead");
+//        String name = (String) request.getAttribute("username");
+//        account.setUsername(name);
 //        model.addAttribute("account",account);
         ModelAndView mv = new ModelAndView();
         mv.addObject("account", account);
