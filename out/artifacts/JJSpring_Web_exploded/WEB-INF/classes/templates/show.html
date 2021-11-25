@@ -1,0 +1,17 @@
+
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>show</title>
+</head>
+<body>
+<h1 th:inline="text">Valerie mj</h1>
+<!--/*@thymesVar id="mydata" type="java.lang.String"*/-->
+<p th:text="${mydata}"></p>
+
+<!--<button οnclick="{ if(confirm('homePage？'))javascript:history.back(-1)}">homePage</button><br>-->
+<!--<button onclick="{ if(confirm('homePage？'))location.href='/homePage'}">homePage</button><br>-->
+<button onclick="{ if(confirm('homePage？')) javascript:history.back(-1)}">Back!</button><br>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>HomePage</title>
+</head>
+<body>
+<p>Welcome home!</p>
+<p th:value="${user.username}"></p>
+<p th:text="${user.username}">!</p>
+
+<form action="#" th:action="@{/show}" th:object="${user}" method="post">
+<button onclick="{ if(confirm('Show？'))location.href='/show'}">Show</button><br>
+</form>
+<button onclick="{ if(confirm('Personal？'))location.href='/whoisit'}">Personal</button>
+
+</body>
+
+</html>

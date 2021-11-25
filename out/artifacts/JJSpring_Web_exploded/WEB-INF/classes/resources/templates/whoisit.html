@@ -1,0 +1,50 @@
+
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>whoisit</title>
+</head>
+<body>
+<h1 th:inline="text">Valerie mj</h1>
+<!--/*@thymesVar id="nickname" type="java.lang.String"*/-->
+<p th:text="${nickname}"></p>
+<button onclick="{ if(confirm('homePage？')) javascript:history.back(-1)}">Back!</button><br>
+
+<!--<button onclick="{ if(confirm('homePage？'))location.href='/homePage'}">homePage</button><br>-->
+<!--<form action="#" th:action="@{/dowhoisit}" th:object="${user}" method="post">-->
+<!--&lt;!&ndash;    Welcome <p th:text="*{username}"></p>&ndash;&gt;-->
+<!--&lt;!&ndash;    come by calling <p th:text="*{nickname}"></p>&ndash;&gt;-->
+<!--  name:  &lt;!&ndash;/*@thymesVar id="username" type="java.lang.String"*/&ndash;&gt;-->
+<!--  <input type="text" th:field="*{username}"/><br>-->
+<!--    password:&lt;!&ndash;/*@thymesVar id="password" type="java.lang.String"*/&ndash;&gt;-->
+<!--    <input type="text" th:field="*{password}"/><br>-->
+<!--    <input type="submit" value="submit"/>-->
+<!--</form>-->
+
+
+Welcome <p th:text="${user.getUsername()}"></p>
+come by calling <p th:text="${user.getNickname()}"></p>
+
+<!--<form action="subscribe.html" th:attr="action=@{/}">-->
+<!--    <fieldset>-->
+<!--        <input type="text" name="email" />-->
+<!--        <input type="submit" value="Subscribe!" th:attr="value=#{subscribe.submit}"/>-->
+<!--    </fieldset>-->
+<!--</form>-->
+
+
+<!--<tr th:each="user : ${userList}">-->
+<!--    <td>-->
+<!--        &lt;!&ndash;/*@thymesVar id="getName" type="java.lang.String"*/&ndash;&gt;-->
+<!--        <a href="#" th:text="${user.getUsername()}">...</a>-->
+<!--    </td>-->
+<!--    &lt;!&ndash;/*@thymesVar id="getAge" type="java.lang.Integer"*/&ndash;&gt;-->
+<!--    <td th:text="${user.getNickname()}">1</td>-->
+<!--</tr>-->
+
+
+
+
+</body>
+</html>
