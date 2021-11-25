@@ -30,20 +30,20 @@ public class UserController {
     public String getData(Model model,HttpServletRequest request) throws UnknownHostException {
         DBObject data = userservice.getCollectionData();
         model.addAttribute("coll",data.toString());
+        User usrr = (User) request.getAttribute("user");
+        if(usrr!=null){
+            System.out.println("show - get user from request"+usrr.getUsername());
+        }else{
+            System.out.println("show - cannot get user from request!!!");
+        }
+//        model.addAttribute("user", usr);
 
         HttpSession session1 = request.getSession();
+        User usr = (User)session1.getAttribute("user");
+        model.addAttribute("user", usr);
+
         System.out.println("show - port:"+request.getServerPort()+",session:"+session1.getId());
-//        session1.setAttribute("mydata",data.toString());
-
-//        User usr = (User)session1.getAttribute("acc");
-//        String namee = usr.getUsername();
-//        System.out.println("showing the account name: "+namee);
-//        System.out.println("showing the account: " + usr.toString());
-
-        String nameee = (String) session1.getAttribute("usernameee");
-
-        System.out.println("showing: "+nameee);
-        model.addAttribute("mydata", nameee);
+        System.out.println("show - get user from request.session" + usr.getUsername());
         return "show";
     }
 //
@@ -102,8 +102,7 @@ public class UserController {
             model.addAttribute("user", newUsr);
 
             HttpSession session = request.getSession();
-            session.setAttribute("usernameee", newUsr.getUsername());
-//            session.setAttribute("acc", newUsr);
+            session.setAttribute("user", newUsr);
             System.out.println("login - port:"+request.getServerPort()+",session:"+session.getId());
 
             return "mainIndex";
