@@ -4,11 +4,22 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>show</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" type="text/css" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="../static/css/styles.css" rel="stylesheet" />
 </head>
 <body>
 <h1 th:inline="text">Valerie mj</h1>
 <!--/*@thymesVar id="mydata" type="java.lang.String"*/-->
-<p th:text="${mydata}"></p>
+<!--<p th:text="${mydata}"></p>-->
+<p th:text="${user.getUsername()}"></p>
+<br>
+Dear
+<p th:text="${user.getNickname()}"></p>
+<br>
+
+<p th:text="${coll}"></p>
 
 <!--<button οnclick="{ if(confirm('homePage？'))javascript:history.back(-1)}">homePage</button><br>-->
 <!--<button onclick="{ if(confirm('homePage？'))location.href='/homePage'}">homePage</button><br>-->
