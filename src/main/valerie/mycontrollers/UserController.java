@@ -27,28 +27,57 @@ public class UserController {
     }
 
     @RequestMapping("/show")
-    public String getData(Model model,HttpServletRequest request, HttpSession session) throws UnknownHostException {
+    public String getData(Model model,HttpServletRequest request) throws UnknownHostException {
         DBObject data = userservice.getCollectionData();
+        model.addAttribute("coll",data.toString());
+
         HttpSession session1 = request.getSession();
-        System.out.println("port:"+request.getServerPort()+",session:"+session1.getId());
-        model.addAttribute("mydata",data.toString());
-//        session.setAttribute("mydata",data.toString());
+        System.out.println("show - port:"+request.getServerPort()+",session:"+session1.getId());
+//        session1.setAttribute("mydata",data.toString());
+
+//        User usr = (User)session1.getAttribute("acc");
+//        String namee = usr.getUsername();
+//        System.out.println("showing the account name: "+namee);
+//        System.out.println("showing the account: " + usr.toString());
+
+        String nameee = (String) session1.getAttribute("usernameee");
+
+        System.out.println("showing: "+nameee);
+        model.addAttribute("mydata", nameee);
         return "show";
     }
+//
+//    @RequestMapping("/show")
+//    public String getData(Model model,HttpServletRequest request) throws UnknownHostException {
+//        DBObject data = userservice.getCollectionData();
+//
+//        HttpSession session1 = request.getSession();
+//        System.out.println("show - port:"+request.getServerPort()+",session:"+session1.getId());
+//
+//        model.addAttribute("mydata",data.toString());
+////        session.setAttribute("mydata",data.toString());
+//        return "show";
+//    }
 
     @RequestMapping("/homePage")
-    public String goHomePage(Model model, HttpSession session) throws UnknownHostException {
+    public String goHomePage(Model model, HttpServletRequest request) throws UnknownHostException {
         User user = (User) model.getAttribute("user");
         System.out.println("HomePage" + user.getUsername());
+        HttpSession session1 = request.getSession();
+        System.out.println("homepage - port:"+request.getServerPort()+",session:"+session1.getId());
 //        User user = (User) session.getAttribute("user");
 //        System.out.println("HomePage" + user.getUsername());
         return "homePage";
     }
 
     @RequestMapping("/whoisit")
-    public String getNickname(Model model) throws UnknownHostException {
+    public String getNickname(Model model, HttpServletRequest request) throws UnknownHostException {
+
         User user = userservice.getDefaultUser();
         model.addAttribute("user", user);
+
+        HttpSession session1 = request.getSession();
+        System.out.println("whoisit - port:"+request.getServerPort()+",session:"+session1.getId());
         return "whoisit";
     }
 
@@ -62,7 +91,7 @@ public class UserController {
     }
 
     @RequestMapping("/dologin") //@RequestMapping("/user/dologin")
-    public String login(@ModelAttribute("user") User user, Model model,HttpSession session) throws UnknownHostException {
+    public String login(@ModelAttribute("user") User user, Model model,HttpServletRequest request) throws UnknownHostException {
         User newUsr = userservice.loginUser(new LoginUserRequest(user.getUsername(),user.getPassword()));
         if(newUsr==null){
             System.out.println("Account does not exist");
@@ -71,8 +100,12 @@ public class UserController {
             System.out.println("\nGet username="+newUsr.getUsername());
             System.out.println("Get password="+newUsr.getPassword());
             model.addAttribute("user", newUsr);
-//            session.setAttribute("user", newUsr);
-//            return model;
+
+            HttpSession session = request.getSession();
+            session.setAttribute("usernameee", newUsr.getUsername());
+//            session.setAttribute("acc", newUsr);
+            System.out.println("login - port:"+request.getServerPort()+",session:"+session.getId());
+
             return "mainIndex";
         }
     }
