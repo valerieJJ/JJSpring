@@ -57,7 +57,6 @@ public class UserController {
 
     @RequestMapping("/whoisit")
     public String getNickname(Model model, HttpServletRequest request) throws UnknownHostException {
-
         HttpSession session = request.getSession();
         System.out.println("whoisit - port:"+request.getServerPort()+",session:"+session.getId());
         User user = (User)session.getAttribute("user");
