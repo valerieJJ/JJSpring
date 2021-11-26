@@ -2,7 +2,9 @@ package valerie.mycontrollers;
 
 import java.net.UnknownHostException;
 import com.mongodb.DBObject;
+import com.sun.net.httpserver.Authenticator;
 import com.sun.org.apache.xpath.internal.operations.Mod;
+import com.sun.tools.javac.main.Main;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +18,7 @@ import valerie.myservices.UserService;
 import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
+
 @RequestMapping("/user")
 @Controller
 public class UserController {
@@ -64,19 +67,20 @@ public class UserController {
     }
 
     /****************************  Login  **************************/
-
-    @RequestMapping("/login")
-    public String login(Model model) throws UnknownHostException {
-//        User user = userservice.getDefaultUser();
-//        model.addAttribute("user", user);
-        return "login";
-    }
+//
+//    @RequestMapping("/login")
+//    public String login(Model model) throws UnknownHostException {
+////        User user = userservice.getDefaultUser();
+////        model.addAttribute("user", user);
+//        return "login";
+//    }
 
     @RequestMapping("/dologin") //@RequestMapping("/user/dologin")
     public String login(@ModelAttribute("user") User user, Model model,HttpServletRequest request) throws UnknownHostException {
         User newUsr = userservice.loginUser(new LoginUserRequest(user.getUsername(),user.getPassword()));
         if(newUsr==null){
             System.out.println("Account does not exist");
+//            Main.Result.builder().code(-1).msg("用户名或密码错误").build();
             return "login";
         }else {
             System.out.println("\nGet username="+newUsr.getUsername());
@@ -156,9 +160,13 @@ public class UserController {
     public ModelAndView goIndex(HttpServletRequest request){
         HttpSession session = request.getSession();
         ModelAndView mv = new ModelAndView();
-        if(session.getAttribute("user")==null){// || session.getAttribute("user")==null
+        User user = (User) session.getAttribute("user");
+        System.out.println("goIndex: username = "+user.getUsername());
+        if(user==null){// || session.getAttribute("user")==null
             mv.setViewName("index");
+            System.out.println("no log in");
         }else{
+            mv.addObject("user", user);
             mv.setViewName("mainIndex");
         }
         return mv;
