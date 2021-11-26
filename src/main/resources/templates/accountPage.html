@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Who is it</title>
+    <title>Neverland</title>
     <!-- Favicon-->
     <link rel="icon" type="image/x-icon" href="../static/assets/favicon.ico" />
     <!-- Font Awesome icons (free version)-->
@@ -27,10 +27,19 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav text-uppercase ms-auto py-4 py-lg-0">
-                <li class="nav-item"><a class="nav-link" href="#service1">Music Folder</a></li>
-                <li class="nav-item"><a class="nav-link" href="#service2">My Favorates</a></li>
-                <li class="nav-item"><a class="nav-link" onclick="{ location.href='/user/goindex'}">NeverLand</a></li>
+                <li class="nav-item"><a class="nav-link" href="#portfolio">MovieRec</a></li>
+                <li class="nav-item"><a class="nav-link" href="#myaccount">MyHistory</a></li>
+                <li class="nav-item"><a class="nav-link" onclick="{ location.href='/user/account'}">MyAccount</a></li>
+                <li class="nav-item"><a class="nav-link" onclick="{ location.href='/user/whoisit'}">Contact</a></li>
 
+                <!--                        <li class="nav-item"><a class="nav-link" th:href="@{/user/account}">Contact</a></li>-->
+                <!--                        <li class="nav-item">-->
+                <!--                            <a class="nav-link" >-->
+                <!--                            <button onclick="{ if(confirm('Personal？'))location.href='/whoisit'}">Personal</button>-->
+                <!--                            </a>-->
+                <!--                        </li>-->
+                <!--                        <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>-->
+                <!--                        <li class="nav-item"><a class="nav-link" href="#about">About</a></li>-->
             </ul>
         </div>
     </div>
@@ -38,8 +47,8 @@
 <!-- Masthead-->
 <header class="masthead">
     <div class="container">
-        <div class="masthead-heading text-uppercase">My Studio!</div>
-        <div class="masthead-subheading">NeverLand offers a self-studio for every kid!</div>
+        <div class="masthead-subheading">This is it!</div>
+        <div class="masthead-heading text-uppercase">LOVE IS OUR MESSGE</div>
         <a class="btn btn-primary btn-xl text-uppercase" href="#services">explore</a>
         <!--                <a class="btn btn-primary btn-xl text-uppercase" th:action="@{/whoisit}">Register</a>-->
         <!--        <a class="btn btn-primary btn-xl text-uppercase" onclick="{ if(confirm('Login？'))location.href='/user/login'}">login</a>-->
@@ -47,11 +56,11 @@
     </div>
 </header>
 <!-- Services-->
-<section class="page-section" id="service1">
+<section class="page-section" id="services">
     <div class="container">
         <div class="text-center">
-            <h2 class="section-heading text-uppercase">My Music Folders</h2>
-            <h3 class="section-subheading text-muted">This is a music folder for your favorate songs</h3>
+            <h2 class="section-heading text-uppercase">Latest Movies</h2>
+            <h3 class="section-subheading text-muted">Here are the descriptions of the latest movies</h3>
         </div>
         <div class="row text-center">
             <div class="col-md-4">
@@ -59,43 +68,8 @@
                             <i class="fas fa-circle fa-stack-2x text-primary"></i>
                             <i class="fas fa-shopping-cart fa-stack-1x fa-inverse"></i>
                         </span>
-                <h4 class="my-3">Pop Song Folder</h4>
-                <p class="text-muted">This is for pop songs</p>
-            </div>
-            <div class="col-md-4">
-                        <span class="fa-stack fa-4x">
-                            <i class="fas fa-circle fa-stack-2x text-primary"></i>
-                            <i class="fas fa-laptop fa-stack-1x fa-inverse"></i>
-                        </span>
-                <h4 class="my-3">R&B Folder</h4>
-                <p class="text-muted">This is for R&B style</p>
-            </div>
-            <div class="col-md-4">
-                        <span class="fa-stack fa-4x">
-                            <i class="fas fa-circle fa-stack-2x text-primary"></i>
-                            <i class="fas fa-lock fa-stack-1x fa-inverse"></i>
-                        </span>
-                <h4 class="my-3">Self-Defined Folder</h4>
-                <p class="text-muted">A folder defined by yourself</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="page-section" id="service2">
-    <div class="container">
-        <div class="text-center">
-            <h2 class="section-heading text-uppercase">My Favorates</h2>
-            <h3 class="section-subheading text-muted">my lovers</h3>
-        </div>
-        <div class="row text-center">
-            <div class="col-md-4">
-                        <span class="fa-stack fa-4x">
-                            <i class="fas fa-circle fa-stack-2x text-primary"></i>
-                            <i class="fas fa-shopping-cart fa-stack-1x fa-inverse"></i>
-                        </span>
-                <h4 class="my-3">For All Time</h4>
-                <p class="text-muted">If these words could keep u happy, i'd do any thing</p>
+                <h4 class="my-3">Thriller</h4>
+                <p class="text-muted">the best selling album in the history</p>
             </div>
             <div class="col-md-4">
                         <span class="fa-stack fa-4x">
@@ -116,6 +90,7 @@
         </div>
     </div>
 </section>
+
 <!-- Footer-->
 <footer class="footer py-4">
     <div class="container">
