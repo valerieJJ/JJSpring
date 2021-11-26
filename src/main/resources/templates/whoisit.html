@@ -39,7 +39,10 @@
 <header class="masthead">
     <div class="container">
         <div class="masthead-heading text-uppercase">My Studio!</div>
-        <div class="masthead-subheading">NeverLand offers a self-studio for every kid!</div>
+
+        <div class="masthead-subheading">NeverLand offers a self-studio for
+            <p class="masthead-subheading" th:text="${user.getUsername()}"></p>
+        </div>
         <a class="btn btn-primary btn-xl text-uppercase" href="#services">explore</a>
         <!--                <a class="btn btn-primary btn-xl text-uppercase" th:action="@{/whoisit}">Register</a>-->
         <!--        <a class="btn btn-primary btn-xl text-uppercase" onclick="{ if(confirm('Login？'))location.href='/user/login'}">login</a>-->

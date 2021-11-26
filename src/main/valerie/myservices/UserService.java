@@ -12,6 +12,7 @@ import valerie.myModel.User;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.List;
 import java.util.Set;
 import com.google.gson.Gson;
 import com.mongodb.util.JSON;
@@ -106,6 +107,14 @@ public class UserService {
         return user;
     }
 
+    public User loginUser(String name){
+        User user = findUser(name);
+        if(null == user) {
+            return null;
+        }
+        return user;
+    }
+
     private User DBObject2User(DBObject object){
         try{
             return objectMapper.readValue(JSON.serialize(object), User.class);
@@ -138,6 +147,7 @@ public class UserService {
     public User findUser(String name){
         BasicDBObject query = new BasicDBObject("username", name);
         DBCollection coll = getUserCollection();
+//        List<DBObject> userObjList = coll.find(query);
         userobj = coll.findOne(query);
         if(null == userobj)
             return null;
