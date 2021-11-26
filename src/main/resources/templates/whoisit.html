@@ -1,50 +1,358 @@
-
 <!DOCTYPE html>
-
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>whoisit</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Who is it</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="../static/assets/favicon.ico" />
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" crossorigin="anonymous"></script>
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" type="text/css" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="../static/css/styles.css" rel="stylesheet" />
 </head>
-<body>
-<h1 th:inline="text">Valerie mj</h1>
-<!--/*@thymesVar id="nickname" type="java.lang.String"*/-->
-<p th:text="${nickname}"></p>
-<button onclick="{ if(confirm('homePage？')) javascript:history.back(-1)}">Back!</button><br>
+<body id="page-top">
+<!-- Navigation-->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
+    <div class="container">
+        <a class="navbar-brand" href="#page-top"><img src="../static/assets/img/navbar-logo.svg" alt="..." /></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            Menu
+            <i class="fas fa-bars ms-1"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav text-uppercase ms-auto py-4 py-lg-0">
+                <li class="nav-item"><a class="nav-link" href="#service1">Music Folder</a></li>
+                <li class="nav-item"><a class="nav-link" href="#service2">My Favorates</a></li>
+                <li class="nav-item"><a class="nav-link" onclick="{ location.href='/user/goindex'}">NeverLand</a></li>
 
-<!--<button onclick="{ if(confirm('homePage？'))location.href='/homePage'}">homePage</button><br>-->
-<!--<form action="#" th:action="@{/dowhoisit}" th:object="${user}" method="post">-->
-<!--&lt;!&ndash;    Welcome <p th:text="*{username}"></p>&ndash;&gt;-->
-<!--&lt;!&ndash;    come by calling <p th:text="*{nickname}"></p>&ndash;&gt;-->
-<!--  name:  &lt;!&ndash;/*@thymesVar id="username" type="java.lang.String"*/&ndash;&gt;-->
-<!--  <input type="text" th:field="*{username}"/><br>-->
-<!--    password:&lt;!&ndash;/*@thymesVar id="password" type="java.lang.String"*/&ndash;&gt;-->
-<!--    <input type="text" th:field="*{password}"/><br>-->
-<!--    <input type="submit" value="submit"/>-->
-<!--</form>-->
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- Masthead-->
+<header class="masthead">
+    <div class="container">
+        <div class="masthead-subheading">This is it!</div>
+        <div class="masthead-heading text-uppercase">LOVE IS OUR MESSGE</div>
+        <a class="btn btn-primary btn-xl text-uppercase" href="#services">explore</a>
+        <!--                <a class="btn btn-primary btn-xl text-uppercase" th:action="@{/whoisit}">Register</a>-->
+        <!--        <a class="btn btn-primary btn-xl text-uppercase" onclick="{ if(confirm('Login？'))location.href='/user/login'}">login</a>-->
 
+    </div>
+</header>
+<!-- Services-->
+<section class="page-section" id="service1">
+    <div class="container">
+        <div class="text-center">
+            <h2 class="section-heading text-uppercase">My Music Folders</h2>
+            <h3 class="section-subheading text-muted">This is a music folder for your favorate songs</h3>
+        </div>
+        <div class="row text-center">
+            <div class="col-md-4">
+                        <span class="fa-stack fa-4x">
+                            <i class="fas fa-circle fa-stack-2x text-primary"></i>
+                            <i class="fas fa-shopping-cart fa-stack-1x fa-inverse"></i>
+                        </span>
+                <h4 class="my-3">Pop Song Folder</h4>
+                <p class="text-muted">This is for pop songs</p>
+            </div>
+            <div class="col-md-4">
+                        <span class="fa-stack fa-4x">
+                            <i class="fas fa-circle fa-stack-2x text-primary"></i>
+                            <i class="fas fa-laptop fa-stack-1x fa-inverse"></i>
+                        </span>
+                <h4 class="my-3">R&B Folder</h4>
+                <p class="text-muted">This is for R&B style</p>
+            </div>
+            <div class="col-md-4">
+                        <span class="fa-stack fa-4x">
+                            <i class="fas fa-circle fa-stack-2x text-primary"></i>
+                            <i class="fas fa-lock fa-stack-1x fa-inverse"></i>
+                        </span>
+                <h4 class="my-3">Self-Defined Folder</h4>
+                <p class="text-muted">A folder defined by yourself</p>
+            </div>
+        </div>
+    </div>
+</section>
 
-Welcome <p th:text="${user.getUsername()}"></p>
-come by calling <p th:text="${user.getNickname()}"></p>
-
-<!--<form action="subscribe.html" th:attr="action=@{/}">-->
-<!--    <fieldset>-->
-<!--        <input type="text" name="email" />-->
-<!--        <input type="submit" value="Subscribe!" th:attr="value=#{subscribe.submit}"/>-->
-<!--    </fieldset>-->
-<!--</form>-->
-
-
-<!--<tr th:each="user : ${userList}">-->
-<!--    <td>-->
-<!--        &lt;!&ndash;/*@thymesVar id="getName" type="java.lang.String"*/&ndash;&gt;-->
-<!--        <a href="#" th:text="${user.getUsername()}">...</a>-->
-<!--    </td>-->
-<!--    &lt;!&ndash;/*@thymesVar id="getAge" type="java.lang.Integer"*/&ndash;&gt;-->
-<!--    <td th:text="${user.getNickname()}">1</td>-->
-<!--</tr>-->
-
-
-
-
+<section class="page-section" id="service2">
+    <div class="container">
+        <div class="text-center">
+            <h2 class="section-heading text-uppercase">My Favorates</h2>
+            <h3 class="section-subheading text-muted">my lovers</h3>
+        </div>
+        <div class="row text-center">
+            <div class="col-md-4">
+                        <span class="fa-stack fa-4x">
+                            <i class="fas fa-circle fa-stack-2x text-primary"></i>
+                            <i class="fas fa-shopping-cart fa-stack-1x fa-inverse"></i>
+                        </span>
+                <h4 class="my-3">For All Time</h4>
+                <p class="text-muted">If these words could keep u happy, i'd do any thing</p>
+            </div>
+            <div class="col-md-4">
+                        <span class="fa-stack fa-4x">
+                            <i class="fas fa-circle fa-stack-2x text-primary"></i>
+                            <i class="fas fa-laptop fa-stack-1x fa-inverse"></i>
+                        </span>
+                <h4 class="my-3">Smooth Criminal</h4>
+                <p class="text-muted">Annie are u ok ? Are u ok annie?</p>
+            </div>
+            <div class="col-md-4">
+                        <span class="fa-stack fa-4x">
+                            <i class="fas fa-circle fa-stack-2x text-primary"></i>
+                            <i class="fas fa-lock fa-stack-1x fa-inverse"></i>
+                        </span>
+                <h4 class="my-3">Billie Jean</h4>
+                <p class="text-muted">Not my lover. But she said i am the one...</p>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Footer-->
+<footer class="footer py-4">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-4 text-lg-start">Copyright &copy; Your Website 2021</div>
+            <div class="col-lg-4 my-3 my-lg-0">
+                <a class="btn btn-dark btn-social mx-2" href="#!"><i class="fab fa-twitter"></i></a>
+                <a class="btn btn-dark btn-social mx-2" href="#!"><i class="fab fa-facebook-f"></i></a>
+                <a class="btn btn-dark btn-social mx-2" href="#!"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a class="link-dark text-decoration-none me-3" href="#!">Privacy Policy</a>
+                <a class="link-dark text-decoration-none" href="#!">Terms of Use</a>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- Portfolio Modals-->
+<!-- Portfolio item 1 modal popup-->
+<div class="portfolio-modal modal fade" id="portfolioModal1" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="close-modal" data-bs-dismiss="modal"><img src="../static/assets/img/close-icon.svg" alt="Close modal" /></div>
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="modal-body">
+                            <!-- Project details-->
+                            <h2 class="text-uppercase">Project Name</h2>
+                            <!--                            <h2 class="text-uppercase"><p th:text="${movie}"></p></h2>-->
+                            <p class="item-intro text-muted">Lorem ipsum dolor sit amet consectetur.</p>
+                            <img class="img-fluid d-block mx-auto" src="../static/assets/img/portfolio/1.jpg" alt="..." />
+                            <p>Use this area to describe your project. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est blanditiis dolorem culpa incidunt minus dignissimos deserunt repellat aperiam quasi sunt officia expedita beatae cupiditate, maiores repudiandae, nostrum, reiciendis facere nemo!</p>
+                            <ul class="list-inline">
+                                <li>
+                                    <strong>Client:</strong>
+                                    Threads
+                                </li>
+                                <li>
+                                    <strong>Category:</strong>
+                                    Illustration
+                                </li>
+                            </ul>
+                            <button class="btn btn-primary btn-xl text-uppercase" data-bs-dismiss="modal" type="button">
+                                <i class="fas fa-times me-1"></i>
+                                Close Project
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Portfolio item 2 modal popup-->
+<div class="portfolio-modal modal fade" id="portfolioModal2" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="close-modal" data-bs-dismiss="modal"><img src="../static/assets/img/close-icon.svg" alt="Close modal" /></div>
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="modal-body">
+                            <!-- Project details-->
+                            <h2 class="text-uppercase">Project Name</h2>
+                            <p class="item-intro text-muted">Lorem ipsum dolor sit amet consectetur.</p>
+                            <img class="img-fluid d-block mx-auto" src="../static/assets/img/portfolio/2.jpg" alt="..." />
+                            <p>Use this area to describe your project. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est blanditiis dolorem culpa incidunt minus dignissimos deserunt repellat aperiam quasi sunt officia expedita beatae cupiditate, maiores repudiandae, nostrum, reiciendis facere nemo!</p>
+                            <ul class="list-inline">
+                                <li>
+                                    <strong>Client:</strong>
+                                    Explore
+                                </li>
+                                <li>
+                                    <strong>Category:</strong>
+                                    Graphic Design
+                                </li>
+                            </ul>
+                            <button class="btn btn-primary btn-xl text-uppercase" data-bs-dismiss="modal" type="button">
+                                <i class="fas fa-times me-1"></i>
+                                Close Project
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Portfolio item 3 modal popup-->
+<div class="portfolio-modal modal fade" id="portfolioModal3" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="close-modal" data-bs-dismiss="modal"><img src="../static/assets/img/close-icon.svg" alt="Close modal" /></div>
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="modal-body">
+                            <!-- Project details-->
+                            <h2 class="text-uppercase">Project Name</h2>
+                            <p class="item-intro text-muted">Lorem ipsum dolor sit amet consectetur.</p>
+                            <img class="img-fluid d-block mx-auto" src="../static/assets/img/portfolio/3.jpg" alt="..." />
+                            <p>Use this area to describe your project. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est blanditiis dolorem culpa incidunt minus dignissimos deserunt repellat aperiam quasi sunt officia expedita beatae cupiditate, maiores repudiandae, nostrum, reiciendis facere nemo!</p>
+                            <ul class="list-inline">
+                                <li>
+                                    <strong>Client:</strong>
+                                    Finish
+                                </li>
+                                <li>
+                                    <strong>Category:</strong>
+                                    Identity
+                                </li>
+                            </ul>
+                            <button class="btn btn-primary btn-xl text-uppercase" data-bs-dismiss="modal" type="button">
+                                <i class="fas fa-times me-1"></i>
+                                Close Project
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Portfolio item 4 modal popup-->
+<div class="portfolio-modal modal fade" id="portfolioModal4" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="close-modal" data-bs-dismiss="modal"><img src="../static/assets/img/close-icon.svg" alt="Close modal" /></div>
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="modal-body">
+                            <!-- Project details-->
+                            <h2 class="text-uppercase">Project Name</h2>
+                            <p class="item-intro text-muted">Lorem ipsum dolor sit amet consectetur.</p>
+                            <img class="img-fluid d-block mx-auto" src="../static/assets/img/portfolio/4.jpg" alt="..." />
+                            <p>Use this area to describe your project. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est blanditiis dolorem culpa incidunt minus dignissimos deserunt repellat aperiam quasi sunt officia expedita beatae cupiditate, maiores repudiandae, nostrum, reiciendis facere nemo!</p>
+                            <ul class="list-inline">
+                                <li>
+                                    <strong>Client:</strong>
+                                    Lines
+                                </li>
+                                <li>
+                                    <strong>Category:</strong>
+                                    Branding
+                                </li>
+                            </ul>
+                            <button class="btn btn-primary btn-xl text-uppercase" data-bs-dismiss="modal" type="button">
+                                <i class="fas fa-times me-1"></i>
+                                Close Project
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Portfolio item 5 modal popup-->
+<div class="portfolio-modal modal fade" id="portfolioModal5" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="close-modal" data-bs-dismiss="modal"><img src="../static/assets/img/close-icon.svg" alt="Close modal" /></div>
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="modal-body">
+                            <!-- Project details-->
+                            <h2 class="text-uppercase">Project Name</h2>
+                            <p class="item-intro text-muted">Lorem ipsum dolor sit amet consectetur.</p>
+                            <img class="img-fluid d-block mx-auto" src="../static/assets/img/portfolio/5.jpg" alt="..." />
+                            <p>Use this area to describe your project. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est blanditiis dolorem culpa incidunt minus dignissimos deserunt repellat aperiam quasi sunt officia expedita beatae cupiditate, maiores repudiandae, nostrum, reiciendis facere nemo!</p>
+                            <ul class="list-inline">
+                                <li>
+                                    <strong>Client:</strong>
+                                    Southwest
+                                </li>
+                                <li>
+                                    <strong>Category:</strong>
+                                    Website Design
+                                </li>
+                            </ul>
+                            <button class="btn btn-primary btn-xl text-uppercase" data-bs-dismiss="modal" type="button">
+                                <i class="fas fa-times me-1"></i>
+                                Close Project
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Portfolio item 6 modal popup-->
+<div class="portfolio-modal modal fade" id="portfolioModal6" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="close-modal" data-bs-dismiss="modal"><img src="../static/assets/img/close-icon.svg" alt="Close modal" /></div>
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="modal-body">
+                            <!-- Project details-->
+                            <h2 class="text-uppercase">Project Name</h2>
+                            <p class="item-intro text-muted">Lorem ipsum dolor sit amet consectetur.</p>
+                            <img class="img-fluid d-block mx-auto" src="../static/assets/img/portfolio/6.jpg" alt="..." />
+                            <p>Use this area to describe your project. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est blanditiis dolorem culpa incidunt minus dignissimos deserunt repellat aperiam quasi sunt officia expedita beatae cupiditate, maiores repudiandae, nostrum, reiciendis facere nemo!</p>
+                            <ul class="list-inline">
+                                <li>
+                                    <strong>Client:</strong>
+                                    Window
+                                </li>
+                                <li>
+                                    <strong>Category:</strong>
+                                    Photography
+                                </li>
+                            </ul>
+                            <button class="btn btn-primary btn-xl text-uppercase" data-bs-dismiss="modal" type="button">
+                                <i class="fas fa-times me-1"></i>
+                                Close Project
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Core theme JS-->
+<script src="../static/js/trash/scripts.js"></script>
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+<!-- * *                               SB Forms JS                               * *-->
+<!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+<script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
 </body>
 </html>
