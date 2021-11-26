@@ -41,8 +41,10 @@ public class LoginInterceptor implements HandlerInterceptor {
         // 只有返回true才会继续向下执行，返回false取消当前请求
         HttpSession session = httpServletRequest.getSession();
         if (session == null || session.getAttribute("user")==null) {
-            System.out.println("access#{"+session.getId()+"}, not logged in, return"+reqPath);
+            System.out.println("preHandler: access#{"+session.getId()+"}, not logged in, return"+reqPath);
+            System.out.println("HttpStatus:"+HttpStatus.UNAUTHORIZED.value());
             httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
+//            httpServletResponse.sendRedirect("/user/index");
             return false;
         }
         return true;
