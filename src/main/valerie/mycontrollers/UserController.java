@@ -124,14 +124,19 @@ public class UserController {
         System.out.println("password is " + password);
 //        User user = userservice.getUser(new RegisterUserRequest(name, password));
         if(userservice.checkUserExist(name)){
+            System.out.println("user already exists, please login");
             model.addAttribute("success",false);
             model.addAttribute("message"," 用户名已经被注册！");
             return "register";
-        }
-        model.addAttribute("success", true);
+        }else{
+            model.addAttribute("success", true);
+            User user = userservice.registerUser(new RegisterUserRequest(name,password));
+            model.addAttribute("user", user);
+            HttpSession session = request.getSession();
+            session.setAttribute("user", user);
+            System.out.println("register successful!");
 
-        User user = userservice.registerUser(new RegisterUserRequest(name,password));
-        model.addAttribute("user",user);
+        }
         return "mainIndex";
     }
 
@@ -156,16 +161,16 @@ public class UserController {
         return mv;
     }
 
-    @RequestMapping("/goIndex")
+    @RequestMapping("/goindex")
     public ModelAndView goIndex(HttpServletRequest request){
         HttpSession session = request.getSession();
         ModelAndView mv = new ModelAndView();
         User user = (User) session.getAttribute("user");
-        System.out.println("goIndex: username = "+user.getUsername());
         if(user==null){// || session.getAttribute("user")==null
             mv.setViewName("index");
             System.out.println("no log in");
         }else{
+            System.out.println("goIndex: username = "+user.getUsername());
             mv.addObject("user", user);
             mv.setViewName("mainIndex");
         }

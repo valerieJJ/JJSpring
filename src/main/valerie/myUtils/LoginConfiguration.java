@@ -10,6 +10,6 @@ public class LoginConfiguration implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LoginInterceptor())
                 .addPathPatterns("/user/**")
-                .excludePathPatterns("/user/dologin","/user/account");
+                .excludePathPatterns("/user/dologin", "/user/doregister", "/user/goindex", "/user/index","/user/register","/user/account");
     }
 }
