@@ -46,14 +46,22 @@ public class UserController {
         return "show";
     }
 
-    @RequestMapping("/homePage")
-    public String goHomePage(Model model, HttpServletRequest request) throws UnknownHostException {
-        User user = (User) model.getAttribute("user");
-        System.out.println("HomePage" + user.getUsername());
-        HttpSession session1 = request.getSession();
-        System.out.println("homepage - port:"+request.getServerPort()+",session:"+session1.getId());
-        return "homePage";
+
+    @RequestMapping("/accountPage")
+    public String goAccountPage(Model model, HttpServletRequest request) throws UnknownHostException {
+        HttpSession session = request.getSession();
+        System.out.println("accountPage - port:"+request.getServerPort()+",session:"+session.getId());
+        User user = (User)session.getAttribute("user");
+        if(user==null){
+            System.out.println("no log in");
+            return "index";
+        }else{
+            model.addAttribute("user", user);
+            return "accountPage";
+        }
     }
+
+
 
     @RequestMapping("/whoisit")
     public String getNickname(Model model, HttpServletRequest request) throws UnknownHostException {
@@ -149,16 +157,16 @@ public class UserController {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
         System.out.println("account action: sessionID" + session.getId());
-        System.out.println("account action: user " + session.getAttribute("user"));
-
         ModelAndView mv = new ModelAndView();
         if(user==null){
             mv.setViewName("index");
 //            mv.setViewName("dologin");
             System.out.println("please log in first");
         }else{
+            System.out.println("account action: user " + user.getUsername());
             mv.addObject("user", user);
-            mv.setViewName("homePage");
+            mv.setViewName("accountPage");
+//            mv.setViewName("homePage");
         }
 
         return mv;

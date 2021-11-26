@@ -28,7 +28,9 @@ public class UserSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/assets/**");
-        web.ignoring().antMatchers("/css/**");
+        web.ignoring().antMatchers("/static/css/*");
+        web.ignoring().antMatchers("/static/img/*");
+        web.ignoring().antMatchers("/static/images/*");
     }
 
     @Override
@@ -38,8 +40,10 @@ public class UserSecurityConfiguration extends WebSecurityConfigurerAdapter {
 //                .loginProcessingUrl("/user/dologin") // 登陆访问路径
                 .defaultSuccessUrl("/user/goindex").permitAll() // 登陆成功之后的跳转路径
                 .and().authorizeRequests()
-                .antMatchers("/user/dologin", "/user/doregister", // 设置可以直接访问的路径，不需要认证
-                                    "/user/goindex", "/user/register","/user/account").permitAll()
+                .antMatchers("/user/dologin", "/user/doregister" // 设置可以直接访问的路径，不需要认证
+                        , "/user/register"
+//                        ,"/user/account","/user/goindex"
+                ).permitAll()
                 .anyRequest().authenticated()
                 .and().csrf().disable(); // 关闭csrf防护
     }
