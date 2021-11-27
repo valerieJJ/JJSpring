@@ -27,16 +27,17 @@ public class UserSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/assets/**");
-        web.ignoring().antMatchers("/static/css/*");
-        web.ignoring().antMatchers("/static/img/*");
-        web.ignoring().antMatchers("/static/images/*");
+//        web.ignoring().antMatchers("/static/assets/**");
+//        web.ignoring().antMatchers("/static/assets/img/*");
+//        web.ignoring().antMatchers("/static/assets/img/**");
+//        web.ignoring().antMatchers("/static/css/*");
+//        web.ignoring().antMatchers("/css/*");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.formLogin()
-                .loginPage("/") // 登陆页面设置
+                .loginPage("/index.html") // 登陆页面设置
 //                .loginProcessingUrl("/user/dologin") // 登陆访问路径
                 .defaultSuccessUrl("/user/goindex").permitAll() // 登陆成功之后的跳转路径
                 .and().authorizeRequests()
