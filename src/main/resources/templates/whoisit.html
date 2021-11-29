@@ -44,8 +44,7 @@
             <p class="masthead-subheading" th:text="${user.getUsername()}"></p>
         </div>
         <a class="btn btn-primary btn-xl text-uppercase" href="#services">explore</a>
-        <!--                <a class="btn btn-primary btn-xl text-uppercase" th:action="@{/whoisit}">Register</a>-->
-        <!--        <a class="btn btn-primary btn-xl text-uppercase" onclick="{ if(confirm('Login？'))location.href='/user/login'}">login</a>-->
+        <a class="btn btn-primary btn-xl text-uppercase" onclick="{ location.href='/user/logout'}">logout</a>
 
     </div>
 </header>

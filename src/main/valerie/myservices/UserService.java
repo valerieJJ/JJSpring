@@ -8,6 +8,7 @@ import com.mongodb.*;
 import org.bson.json.JsonWriterSettings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import valerie.myModel.Movie;
 import valerie.myModel.User;
 
 import java.io.IOException;
@@ -29,6 +30,8 @@ public class UserService {
     private MongoClient mongoClient;
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private MongodbService mongodbService;
 
     private DBCollection collection;
     private DBObject userobj;
@@ -70,13 +73,15 @@ public class UserService {
         return usercollection;
     }
 
-    public DBObject getCollectionData(){
+    public List<Movie> getCollectionData(String field, String value) throws UnknownHostException {
         DB db = mongoClient.getDB( "MovieDB" );
         collection = db.getCollection("Movie");
-
         DBObject myDoc = collection.findOne();
         System.out.println(myDoc);
-        return myDoc;
+
+//        DBObject res = mongodbService.getDataObj();
+        List<Movie> res = mongodbService.getDataObj(field,value);
+        return res;
     }
 
     public User registerUser(RegisterUserRequest request){

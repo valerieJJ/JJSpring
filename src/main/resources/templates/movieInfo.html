@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>movieInfo</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="../static/assets/favicon.ico" />
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" crossorigin="anonymous"></script>
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" type="text/css" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="../static/css/styles.css" rel="stylesheet" />
+</head>
+
+<body id="page-top">
+
+<section class="page-section" id="service1">
+    <div class="container">
+        <div class="text-center">
+<!--            <h3 class="section-subheading text-muted">Movie Information</h3>-->
+            <h2 class="section-heading text-uppercase" th:text="${movie.getName()}"></h2>
+             <h3 class="section-subheading text-muted" th:text="${movie.getDescri()}"></h3>
+        </div>
+
+        <div class="row text-center">
+            <div class="col-md-4">
+                        <span class="fa-stack fa-4x" >
+                            <i class="fas fa-square fa-stack-2x text-primary"></i>
+<!--                            <i class="fas  fa-stack-1x fa-inverse"></i>-->
+                        </span>
+                <h4 class="my-3">Language</h4>
+                <p class="text-muted" th:text="${movie.getLanguage()}"></p>
+            </div>
+            <div class="col-md-4">
+                        <span class="fa-stack fa-4x" type="button" th:src="@{/static/myIcons/mj.jpg}" onclick="{ location.href='/user/movie'}">
+                            <i class="fas fa-square fa-stack-2x text-primary"></i>
+<!--                            <i class="fas  fa-stack-1x fa-inverse"></i>-->
+                        </span>
+                <h4 class="my-3">Issue</h4>
+                <p class="text-muted" th:text="${movie.getIssue()}"></p>
+            </div>
+            <div class="col-md-4">
+                        <span class="fa-stack fa-4x">
+                            <i class="fas fa-square fa-stack-2x text-primary"></i>
+<!--                            <i class="fas fa-lock fa-stack-1x fa-inverse"></i>-->
+                        </span>
+                <h4 class="my-3">Directors</h4>
+                <p class="text-muted" th:text="${movie.getDirectors()}"></p>
+            </div>
+            Actors:<br>
+            <h3 class="section-subheading text-muted"  th:text="${movie.getActors()}"></h3>
+        Score:<br>
+        <p th:text="${movie.getScore()}"></p>
+
+        <button  class="btn btn-lg btn-primary btn-block"  onclick="{ location.href='/user/show'}">Back</button><br>
+            <button  class="btn btn-lg btn-primary btn-block"  onclick="{ location.href='/user/account#service2'}">account</button><br>
+    </div>
+    </div>
+
+</section>
+
+</body>
+</html>

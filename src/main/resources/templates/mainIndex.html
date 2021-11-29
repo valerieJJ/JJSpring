@@ -31,7 +31,7 @@
                 <li class="nav-item"><a class="nav-link" href="#portfolio">MovieRec</a></li>
                 <li class="nav-item"><a class="nav-link" href="#team">Team</a></li>
                 <li class="nav-item"><a class="nav-link" href="#myaccount">MyHistory</a></li>
-                <li class="nav-item"><a class="nav-link" onclick="{ location.href='/user/account'}">MyAccount</a></li>
+                <li class="nav-item"><a class="nav-link" onclick="{if(confirm('Personal？')) location.href='/user/account'}">MyAccount</a></li>
                 <li class="nav-item"><a class="nav-link" onclick="{ location.href='/user/whoisit'}">Contact</a></li>
 
                 <!--                        <li class="nav-item"><a class="nav-link" th:href="@{/user/account}">Contact</a></li>-->
@@ -49,7 +49,7 @@
 <!-- Masthead-->
 <header class="masthead">
     <div class="container">
-        <div class="masthead-subheading">This is it!<p class="masthead-subheading" th:text="${user.getUsername()}"></div>
+        <div class="masthead-subheading">This is NeverLand!<p class="masthead-subheading" th:text="${user.getUsername()}"></div>
         <div class="masthead-heading text-uppercase">LOVE IS OUR MESSGE</div>
         <a class="btn btn-primary btn-xl text-uppercase" href="#services">explore</a>
         <!--                <a class="btn btn-primary btn-xl text-uppercase" th:action="@{/whoisit}">Register</a>-->

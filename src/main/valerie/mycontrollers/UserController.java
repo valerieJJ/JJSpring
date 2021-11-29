@@ -1,6 +1,8 @@
 package valerie.mycontrollers;
 
 import java.net.UnknownHostException;
+import java.util.List;
+
 import com.mongodb.DBObject;
 import com.sun.net.httpserver.Authenticator;
 import com.sun.org.apache.xpath.internal.operations.Mod;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 //import valerie.mycontrollers.MongodbService;
+import valerie.myModel.Movie;
 import valerie.myModel.User;
 import valerie.myModel.requests.LoginUserRequest;
 import valerie.myModel.requests.RegisterUserRequest;
@@ -30,9 +33,16 @@ public class UserController {
     }
 
     @RequestMapping("/show")
-    public String getData(Model model,HttpServletRequest request) throws UnknownHostException {
-        DBObject data = userservice.getCollectionData();
-        model.addAttribute("coll",data.toString());
+    public String getData(@ModelAttribute("movie") Movie movieReq, Model model,HttpServletRequest request) throws UnknownHostException {
+//        DBObject data = userservice.getCollectionData();
+
+        int mid = movieReq.getMid();
+        System.out.println("show - get mid = "+mid);
+
+        String field="language";
+        String value = "English";
+        List<Movie> data = userservice.getCollectionData(field, value);
+        model.addAttribute("mongodata", data.toString());
 
         HttpSession session1 = request.getSession();
         User usr = (User)session1.getAttribute("user");
@@ -53,14 +63,13 @@ public class UserController {
         System.out.println("accountPage - port:"+request.getServerPort()+",session:"+session.getId());
         User user = (User)session.getAttribute("user");
         if(user==null){
-            System.out.println("no log in");
+            System.out.println("account - no log in");
             return "index";
         }else{
             model.addAttribute("user", user);
             return "accountPage";
         }
     }
-
 
 
     @RequestMapping("/whoisit")
@@ -78,7 +87,7 @@ public class UserController {
     }
 
     /****************************  Login  **************************/
-//
+
 //    @RequestMapping("/login")
 //    public String login(Model model) throws UnknownHostException {
 ////        User user = userservice.getDefaultUser();
@@ -86,6 +95,7 @@ public class UserController {
 //        return "login";
 //    }
 
+//    @GetMapping("/dologin")
     @RequestMapping("/dologin") //@RequestMapping("/user/dologin")
     public String login(@ModelAttribute("user") User user, Model model,HttpServletRequest request) throws UnknownHostException {
         User newUsr = userservice.loginUser(new LoginUserRequest(user.getUsername(),user.getPassword()));
@@ -160,7 +170,7 @@ public class UserController {
         ModelAndView mv = new ModelAndView();
         if(user==null){
             mv.setViewName("index");
-//            mv.setViewName("dologin");
+//            mv.setViewName("login");
             System.out.println("please log in first");
         }else{
             System.out.println("account action: user " + user.getUsername());

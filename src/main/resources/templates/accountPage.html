@@ -29,6 +29,7 @@
             <ul class="navbar-nav text-uppercase ms-auto py-4 py-lg-0">
                 <li class="nav-item"><a class="nav-link" href="#service1">Music Folder</a></li>
                 <li class="nav-item"><a class="nav-link" href="#service2">My Favorates</a></li>
+                <li class="nav-item"><a class="nav-link" onclick="{ location.href='/user/show'}">showDB</a></li>
                 <li class="nav-item"><a class="nav-link" onclick="{ location.href='/user/goindex'}">NeverLand</a></li>
 
             </ul>
@@ -43,7 +44,7 @@
         <div class="masthead-subheading">NeverLand offers a self-studio for
             <p class="masthead-subheading" th:text="${user.getUsername()}"></p>
         </div>
-        <a class="btn btn-primary btn-xl text-uppercase" href="#services">explore</a>
+        <a class="btn btn-primary btn-xl text-uppercase" href="#service1">explore</a>
         <a class="btn btn-primary btn-xl text-uppercase" onclick="{ location.href='/user/logout'}">logout</a>
 
     </div>
@@ -57,7 +58,7 @@
         </div>
         <div class="row text-center">
             <div class="col-md-4">
-                        <span class="fa-stack fa-4x">
+                        <span class="fa-stack fa-4x" type="button" onclick="{ location.href='/user/show'}">
                             <i class="fas fa-circle fa-stack-2x text-primary"></i>
                             <i class="fas fa-shopping-cart fa-stack-1x fa-inverse"></i>
                         </span>
@@ -65,7 +66,7 @@
                 <p class="text-muted">This is for pop songs</p>
             </div>
             <div class="col-md-4">
-                        <span class="fa-stack fa-4x">
+                        <span class="fa-stack fa-4x" type="button" onclick="{ location.href='/user/show'}">
                             <i class="fas fa-circle fa-stack-2x text-primary"></i>
                             <i class="fas fa-laptop fa-stack-1x fa-inverse"></i>
                         </span>
@@ -73,7 +74,7 @@
                 <p class="text-muted">This is for R&B style</p>
             </div>
             <div class="col-md-4">
-                        <span class="fa-stack fa-4x">
+                        <span class="fa-stack fa-4x" type="button" onclick="{ location.href='/user/show'}">
                             <i class="fas fa-circle fa-stack-2x text-primary"></i>
                             <i class="fas fa-lock fa-stack-1x fa-inverse"></i>
                         </span>
@@ -92,7 +93,7 @@
         </div>
         <div class="row text-center">
             <div class="col-md-4">
-                        <span class="fa-stack fa-4x">
+                        <span class="fa-stack fa-4x" type="button" onclick="{ location.href='/movie/getmovie'}">
                             <i class="fas fa-circle fa-stack-2x text-primary"></i>
                             <i class="fas fa-shopping-cart fa-stack-1x fa-inverse"></i>
                         </span>
@@ -100,7 +101,7 @@
                 <p class="text-muted">If these words could keep u happy, i'd do any thing</p>
             </div>
             <div class="col-md-4">
-                        <span class="fa-stack fa-4x">
+                        <span class="fa-stack fa-4x" type="button" onclick="{ location.href='/movie/getmovie'}">
                             <i class="fas fa-circle fa-stack-2x text-primary"></i>
                             <i class="fas fa-laptop fa-stack-1x fa-inverse"></i>
                         </span>
@@ -108,7 +109,7 @@
                 <p class="text-muted">Annie are u ok ? Are u ok annie?</p>
             </div>
             <div class="col-md-4">
-                        <span class="fa-stack fa-4x">
+                        <span class="fa-stack fa-4x" type="button" onclick="{ location.href='/movie/getmovie'}">
                             <i class="fas fa-circle fa-stack-2x text-primary"></i>
                             <i class="fas fa-lock fa-stack-1x fa-inverse"></i>
                         </span>

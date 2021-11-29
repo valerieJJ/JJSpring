@@ -11,7 +11,7 @@ import valerie.myModel.User;
 
 import java.util.List;
 
-@Service("userDetailsService")
+//@Service("userDetailsService")
 public class UserSecurityService implements UserDetailsService {
 
     @Autowired
@@ -28,7 +28,7 @@ public class UserSecurityService implements UserDetailsService {
             //数据库没有用户名，认证失败
             throw new UsernameNotFoundException("User does not exist");
         }
-
+        System.out.println("User found");
         List<GrantedAuthority> auths = getAuthority("lover");
 
         return new org.springframework.security.core.userdetails.User(user.getUsername()
