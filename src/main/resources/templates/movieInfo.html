@@ -52,8 +52,20 @@
             </div>
             Actors:<br>
             <h3 class="section-subheading text-muted"  th:text="${movie.getActors()}"></h3>
-        Score:<br>
-        <p th:text="${movie.getScore()}"></p>
+
+            <form class="input-group-text" th:action="@{/movie/rate}" th:object="${rating}">
+                <label class="sr-only">movie id</label>
+                <!--/*@thymesVar id="mid" type="java.lang.String"*/-->
+<!--                <input type="text" th:field="*{mid}" placeholder="mid"/><br>-->
+                <h3 class="section-subheading text-muted"  th:text="${rating_message}"></h3>
+                <input type="text" th:field="*{score}" placeholder="score"/><br>
+                <input th:field="*{mid}" th:value="${movie.getMid()}"/>
+
+                <button class="btn btn-lg btn-primary btn-block" type="submit" >score</button>
+            </form>
+
+<!--        Score:<br>-->
+<!--        <p th:text="${movie.getScore()}"></p>-->
 
         <button  class="btn btn-lg btn-primary btn-block"  onclick="{ location.href='/user/goindex'}">mainIndex</button><br>
             <button  class="btn btn-lg btn-primary btn-block"  onclick="{ location.href='/user/account#service2'}">account</button><br>
