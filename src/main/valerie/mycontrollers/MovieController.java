@@ -54,6 +54,11 @@ public class MovieController {
         return modelAndView;
     }
 
+//    @RequestMapping("/moviedetails")
+//    public ModelAndView getMovieDetails(){
+//
+//    }
+
 
     @RequestMapping("/getmovie")
     public ModelAndView getMovieInfo(@ModelAttribute("movie") Movie movieReq, ModelAndView modelAndView) {
@@ -75,6 +80,5 @@ public class MovieController {
         modelAndView.setViewName("movieInfo");
         return modelAndView;
     }
-
 
 }
