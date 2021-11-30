@@ -36,7 +36,7 @@ public class MovieController {
 
 
     @RequestMapping("/getmovie")
-    public ModelAndView getMovieInfo(@ModelAttribute Movie movieReq, ModelAndView modelAndView) {
+    public ModelAndView getMovieInfo(@ModelAttribute("movie") Movie movieReq, ModelAndView modelAndView) {
         int mid = movieReq.getMid();
         System.out.println("getmovie - get mid = "+mid);
         if(mid==0){

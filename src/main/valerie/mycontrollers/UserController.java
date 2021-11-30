@@ -33,11 +33,7 @@ public class UserController {
     }
 
     @RequestMapping("/show")
-    public String getData(@ModelAttribute("movie") Movie movieReq, Model model,HttpServletRequest request) throws UnknownHostException {
-//        DBObject data = userservice.getCollectionData();
-
-        int mid = movieReq.getMid();
-        System.out.println("show - get mid = "+mid);
+    public String getData(Model model,HttpServletRequest request) throws UnknownHostException {
 
         String field="language";
         String value = "English";
@@ -97,7 +93,7 @@ public class UserController {
 
 //    @GetMapping("/dologin")
     @RequestMapping("/dologin") //@RequestMapping("/user/dologin")
-    public String login(@ModelAttribute("user") User user, Model model,HttpServletRequest request) throws UnknownHostException {
+    public String login(@ModelAttribute("user") User user,@ModelAttribute("movie") Movie movieReq, Model model,HttpServletRequest request) throws UnknownHostException {
         User newUsr = userservice.loginUser(new LoginUserRequest(user.getUsername(),user.getPassword()));
         if(newUsr==null){
             System.out.println("Account does not exist");
@@ -183,7 +179,7 @@ public class UserController {
     }
 
     @RequestMapping("/goindex")
-    public ModelAndView goIndex(HttpServletRequest request){
+    public ModelAndView goIndex(@ModelAttribute("movie") Movie movie, HttpServletRequest request){
         HttpSession session = request.getSession();
         ModelAndView mv = new ModelAndView();
         User user = (User) session.getAttribute("user");
@@ -197,5 +193,6 @@ public class UserController {
         }
         return mv;
     }
+
 
 }

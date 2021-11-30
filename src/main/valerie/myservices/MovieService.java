@@ -128,7 +128,6 @@ public class MovieService {
         DBCursor cursor = getMovieCollection().find(query);
         if(cursor.hasNext()){
             DBObject obj = cursor.next();
-            System.out.println("found movie : "+obj.toString());
             return this.DBObject2Movie(obj);
         }
         System.out.println("movieID not exist");

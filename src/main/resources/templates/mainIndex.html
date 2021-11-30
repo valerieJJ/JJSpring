@@ -51,6 +51,15 @@
     <div class="container">
         <div class="masthead-subheading">This is NeverLand!<p class="masthead-subheading" th:text="${user.getUsername()}"></div>
         <div class="masthead-heading text-uppercase">LOVE IS OUR MESSGE</div>
+
+        <form class="input-group-text" th:action="@{/movie/getmovie}" th:object="${movie}">
+            <label class="sr-only">movie id</label>
+            <!--/*@thymesVar id="mid" type="java.lang.String"*/-->
+            <input class="form-control" type="text" th:field="*{mid}" placeholder="mid"/><br>
+
+            <button class="btn btn-lg btn-primary btn-block" type="submit" >search</button>
+        </form>
+<div class="masthead-subheading"></div>
         <a class="btn btn-primary btn-xl text-uppercase" href="#services">explore</a>
         <!--                <a class="btn btn-primary btn-xl text-uppercase" th:action="@{/whoisit}">Register</a>-->
 <!--        <a class="btn btn-primary btn-xl text-uppercase" onclick="{ if(confirm('Login？'))location.href='/user/login'}">login</a>-->
