@@ -33,7 +33,7 @@ public class UserController {
     }
 
     @RequestMapping("/show")
-    public String getData(Model model,HttpServletRequest request) throws UnknownHostException {
+    public String getData(@ModelAttribute("movie") Movie movie, Model model,HttpServletRequest request) throws UnknownHostException {
 
         String field="language";
         String value = "English";

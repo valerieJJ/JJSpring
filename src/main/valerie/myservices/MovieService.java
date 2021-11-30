@@ -29,6 +29,8 @@ import java.util.*;
 public class MovieService {
     @Autowired
     private MongoClient mongoClient;
+    @Autowired
+    private MongodbService mongodbService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -47,6 +49,10 @@ public class MovieService {
         return movieCollection;
     }
 
+    public List<Movie> getCollectionData(String field, String value) throws UnknownHostException {
+        List<Movie> res = mongodbService.getDataObj(field,value);
+        return res;
+    }
 
     private DBCollection getAverageMoviesScoreCollection(){
         if(null == averageMoviesScoreCollection)
