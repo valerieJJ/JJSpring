@@ -22,6 +22,8 @@
 <!--            <h3 class="section-subheading text-muted">Movie Information</h3>-->
             <h2 class="section-heading text-uppercase" th:text="${movie.getName()}"></h2>
              <h3 class="section-subheading text-muted" th:text="${movie.getDescri()}"></h3>
+
+            <img class="img-fluid" src="../static/assets/img/myIcons/mj.jpg" alt="..." />
         </div>
 
         <div class="row text-center">
@@ -64,8 +66,8 @@
                     <button class="btn btn-lg btn-primary btn-block" type="submit" >score</button>
             </form>
 
-<!--        Score:<br>-->
-<!--        <p th:text="${movie.getScore()}"></p>-->
+        Score:<br>
+        <p th:text="${movie_score}"></p>
     </div>
     <div class="text-center">
         <p>  </p>

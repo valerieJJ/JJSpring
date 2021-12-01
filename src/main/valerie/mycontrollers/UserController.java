@@ -1,6 +1,7 @@
 package valerie.mycontrollers;
 
 import java.net.UnknownHostException;
+import java.util.HashMap;
 import java.util.List;
 
 import com.mongodb.DBObject;
@@ -12,11 +13,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 //import valerie.mycontrollers.MongodbService;
+import scala.reflect.api.Symbols;
 import valerie.myModel.Movie;
 import valerie.myModel.User;
 import valerie.myModel.requests.LoginUserRequest;
 import valerie.myModel.requests.RegisterUserRequest;
 import valerie.myModel.requests.UserRequest;
+import valerie.myservices.MovieService;
 import valerie.myservices.UserService;
 import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpSession;
@@ -28,6 +31,8 @@ public class UserController {
 
     @Autowired
     private UserService userservice;
+    @Autowired
+    private MovieService movieService;
 
     public UserController() throws UnknownHostException {
     }
@@ -53,19 +58,19 @@ public class UserController {
     }
 
 
-    @RequestMapping("/accountPage")
-    public String goAccountPage(Model model, HttpServletRequest request) throws UnknownHostException {
-        HttpSession session = request.getSession();
-        System.out.println("accountPage - port:"+request.getServerPort()+",session:"+session.getId());
-        User user = (User)session.getAttribute("user");
-        if(user==null){
-            System.out.println("account - no log in");
-            return "index";
-        }else{
-            model.addAttribute("user", user);
-            return "accountPage";
-        }
-    }
+//    @RequestMapping("/accountPage")
+//    public String goAccountPage(Model model, HttpServletRequest request) throws UnknownHostException {
+//        HttpSession session = request.getSession();
+//        System.out.println("accountPage - port:"+request.getServerPort()+",session:"+session.getId());
+//        User user = (User)session.getAttribute("user");
+//        if(user==null){
+//            System.out.println("account - no log in");
+//            return "index";
+//        }else{
+//            model.addAttribute("user", user);
+//            return "accountPage";
+//        }
+//    }
 
 
     @RequestMapping("/whoisit")
@@ -158,24 +163,22 @@ public class UserController {
     }
 
     @RequestMapping("/account")
-    public ModelAndView accountPage(Model model, HttpServletRequest request){//, @ModelAttribute("user") User user
+    public String accountPage(Model model, HttpServletRequest request){//
 
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
         System.out.println("account action: sessionID" + session.getId());
-        ModelAndView mv = new ModelAndView();
+        HashMap<String, String> movie_types = movieService.getMovieTypes();
         if(user==null){
-            mv.setViewName("index");
-//            mv.setViewName("login");
             System.out.println("please log in first");
+            return "index";
         }else{
             System.out.println("account action: user " + user.getUsername());
-            mv.addObject("user", user);
-            mv.setViewName("accountPage");
-//            mv.setViewName("homePage");
+            model.addAttribute("user", user);
+            model.addAttribute("movie_types", movie_types);
         }
 
-        return mv;
+        return "accountPage";
     }
 
     @RequestMapping("/goindex")

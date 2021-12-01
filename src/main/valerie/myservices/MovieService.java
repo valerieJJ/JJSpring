@@ -140,6 +140,7 @@ public class MovieService {
         return null;
     }
 
+
     public List<Movie> getDataObj(String field, String value) throws UnknownHostException {
         DB db = mongoClient.getDB("MovieDB");
         DBCollection coll = db.getCollection("Movie");
@@ -194,5 +195,17 @@ public class MovieService {
             movies.add(DBObject2Movie(movieObj));
         }
         return movies;
+    }
+
+    public HashMap<String, String> getMovieTypes(){
+        String[] cls = {"Comedy","Action","Drama"};
+        String[] describ = {"Comedies bring laughter", "Exciting action movies", "Warm Dramas for you"};
+        HashMap<String, String> map = new HashMap<>();
+        for(int i=0;i<cls.length;i++){
+            map.put(cls[i], describ[i]);
+        }
+
+//        ArrayList<String> classes = new ArrayList<>(Arrays.asList(cls));
+        return map;
     }
 }

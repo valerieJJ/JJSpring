@@ -52,19 +52,73 @@ public class MovieController {
         }else {
             model.addAttribute("rating_message", "rating failed");
         }
+
         Movie movie = (Movie)session.getAttribute("movie");
+
+        String movie_score = ratingService.getMovieAverageScores(mid);
         model.addAttribute("movie", movie);
+
+        model.addAttribute("movie_score", movie_score);
         return "movieInfo";
     }
 
+    @RequestMapping("/gotofolder")
+    public ModelAndView goMovieFolder(String type) throws UnknownHostException {
+        ModelAndView modelAndView = new ModelAndView();
+
+        System.out.println("~~~ go to "+ type);
+//        String field="language";
+        String field = "genres";
+        List<Movie> data = movieService.getCollectionData(field, type);
+        modelAndView.addObject("movies", data);
+        modelAndView.addObject("folder_name", type);
+        modelAndView.setViewName("movieFolder");
+//        HttpSession session = request.getSession();
+//        User usr = (User)session.getAttribute("user");
+//        modelAndView.addObject("user", usr);
+        return modelAndView;
+    }
     @RequestMapping("/moviefolder1")
     public ModelAndView showMovieFolder(HttpServletRequest request) throws UnknownHostException {
         ModelAndView modelAndView = new ModelAndView();
-        String field="language";
-        String value = "English";
+//        String field="language";
+//        String value = "English";
+
+        String field="genres";
+        String value = "Comedy";
         List<Movie> data = movieService.getCollectionData(field, value);
         modelAndView.addObject("movies", data);
-        modelAndView.addObject("folder_name", "Pop Song Folder");
+        modelAndView.addObject("folder_name", value);
+        modelAndView.setViewName("movieFolder");
+//        HttpSession session = request.getSession();
+//        User usr = (User)session.getAttribute("user");
+//        modelAndView.addObject("user", usr);
+        return modelAndView;
+    }
+
+    @RequestMapping("/moviefolder2")
+    public ModelAndView showMovieFolder2(HttpServletRequest request) throws UnknownHostException {
+        ModelAndView modelAndView = new ModelAndView();
+        String field="genres";
+        String value = "Action";
+        List<Movie> data = movieService.getCollectionData(field, value);
+        modelAndView.addObject("movies", data);
+        modelAndView.addObject("folder_name", value);
+        modelAndView.setViewName("movieFolder");
+//        HttpSession session = request.getSession();
+//        User usr = (User)session.getAttribute("user");
+//        modelAndView.addObject("user", usr);
+        return modelAndView;
+    }
+
+    @RequestMapping("/moviefolder3")
+    public ModelAndView showMovieFolder3(HttpServletRequest request) throws UnknownHostException {
+        ModelAndView modelAndView = new ModelAndView();
+        String field="genres";
+        String value = "Drama";
+        List<Movie> data = movieService.getCollectionData(field, value);
+        modelAndView.addObject("movies", data);
+        modelAndView.addObject("folder_name", value);
         modelAndView.setViewName("movieFolder");
 //        HttpSession session = request.getSession();
 //        User usr = (User)session.getAttribute("user");
@@ -84,15 +138,18 @@ public class MovieController {
             mid = 2549;
         }
         Movie movie = movieService.findByMID(mid);
+        String movie_score = ratingService.getMovieAverageScores(mid);
         if(movie==null){
             System.out.println("movie not found");
             modelAndView.setViewName("show");
         }else {
             modelAndView.addObject("movie",movie);
+            modelAndView.addObject("movie_score", movie_score);
         }
         modelAndView.addObject("rating_message", "how do u like it?");
         modelAndView.setViewName("movieInfo");
         HttpSession session = request.getSession();
+
         session.setAttribute("movie", movie);
         return modelAndView;
     }

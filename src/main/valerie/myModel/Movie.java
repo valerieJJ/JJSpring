@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -102,7 +103,6 @@ public class Movie implements Serializable{
     public String getActors() {
         return actors;
     }
-
     public void setActors(String actors) {
         this.actors = actors;
     }

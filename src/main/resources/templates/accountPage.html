@@ -27,9 +27,10 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav text-uppercase ms-auto py-4 py-lg-0">
-                <li class="nav-item"><a class="nav-link" href="#service1">Music Folder</a></li>
-                <li class="nav-item"><a class="nav-link" href="#service2">My Favorates</a></li>
-                <li class="nav-item"><a class="nav-link" onclick="{ location.href='/user/show'}">showDB</a></li>
+                <li class="nav-item"><a class="nav-link" href="#movie-folder">Movie Folder</a></li>
+                <li class="nav-item"><a class="nav-link" href="#music-folder">Music Folder</a></li>
+                <li class="nav-item"><a class="nav-link" href="#my-favorates">My Favorates</a></li>
+<!--                <li class="nav-item"><a class="nav-link" onclick="{ location.href='/user/show'}">showDB</a></li>-->
                 <li class="nav-item"><a class="nav-link" onclick="{ location.href='/user/goindex'}">NeverLand</a></li>
 
             </ul>
@@ -50,7 +51,31 @@
     </div>
 </header>
 <!-- Services-->
-<section class="page-section" id="service1">
+<section class="page-section" id="movie-folder">
+    <div class="container">
+        <div class="text-center">
+            <h2 class="section-heading text-uppercase">Movie Classification</h2>
+            <h3 class="section-subheading text-muted">browsing movies classfication</h3>
+        </div>
+        <div class="row text-center">
+            <div class="col-md-4" th:each="value:${movie_types}">
+
+                <a th:href="@{'/movie/gotofolder?type='+${value.getKey()}}">
+                    <span class="fa-stack fa-4x" type="button">
+                            <i class="fas fa-circle fa-stack-2x text-primary"></i>
+                            <i class="fas fa-shopping-cart fa-stack-1x fa-inverse"></i>
+                        </span>
+                </a>
+                <h4 class="my-3" th:text="${value.getKey()}"></h4>
+
+                <p class="text-muted" th:text="${value.getValue()}"></p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services-->
+<section class="page-section" id="music-folder">
     <div class="container">
         <div class="text-center">
             <h2 class="section-heading text-uppercase">My Music Folders</h2>
@@ -58,10 +83,13 @@
         </div>
         <div class="row text-center">
             <div class="col-md-4">
-                        <span class="fa-stack fa-4x" type="button" onclick="{ location.href='/movie/moviefolder1'}">
+
+                <a th:href="@{'/movie/gotofolder?type=Comedy'}">
+                    <span class="fa-stack fa-4x" type="button">
                             <i class="fas fa-circle fa-stack-2x text-primary"></i>
                             <i class="fas fa-shopping-cart fa-stack-1x fa-inverse"></i>
                         </span>
+                </a>
                 <h4 class="my-3">Pop Song Folder</h4>
                 <p class="text-muted">This is for pop songs</p>
             </div>
@@ -85,7 +113,7 @@
     </div>
 </section>
 
-<section class="page-section" id="service2">
+<section class="page-section" id="my-favorates">
     <div class="container">
         <div class="text-center">
             <h2 class="section-heading text-uppercase">My Favorates</h2>

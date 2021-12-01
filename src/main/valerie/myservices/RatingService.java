@@ -14,6 +14,7 @@ import valerie.myModel.Rating;
 import valerie.myModel.requests.MovieRatingRequest;
 
 import java.io.IOException;
+import java.util.Formatter;
 import java.util.Set;
 
 @Service
@@ -59,6 +60,22 @@ public class RatingService {
             jedis.rpop("uid:"+rating.getUid());
         }
         jedis.lpush("uid:"+rating.getUid(),rating.getMid()+":"+rating.getScore());
+    }
+
+    public String getMovieAverageScores(int mid){
+        BasicDBObject query = new BasicDBObject();
+        query.append("mid", mid);
+        DBCursor cursor = getRatingCollection().find(query);
+        double score = 0;
+        int cnt = 0;
+        while(cursor.hasNext()){
+            Rating rating = DBObject2Rating(cursor.next()) ;
+            double curScore = rating.getScore();
+            score += curScore;
+            cnt ++;
+        }
+        double avgScore = score/cnt;
+        return String.format("%.2f", avgScore).toString();
     }
 
     private Rating findRating(int uid, int mid){

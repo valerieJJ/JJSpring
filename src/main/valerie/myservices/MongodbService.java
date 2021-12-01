@@ -60,8 +60,8 @@ public class MongodbService {
 
         DBCursor cursor = coll.find(query);
         List<Movie> movies = new ArrayList<>();
-        int cnt = 0;
-        while(cursor.hasNext() && cnt<=3){
+        int cnt = 1;
+        while(cursor.hasNext() && cnt<=9){
             DBObject movieObj = cursor.next();
             Movie movie = this.DBObject2Movie(movieObj);
             movies.add(movie);

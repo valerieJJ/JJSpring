@@ -49,9 +49,10 @@
 <!-- Masthead-->
 <header class="masthead">
     <div class="container">
-        <div class="masthead-subheading">This is NeverLand!<p class="masthead-subheading" th:text="${user.getUsername()}"></div>
+        <div class="masthead-subheading">This is NeverLand!
+            <p class="masthead-subheading" th:text="${user.getUsername()}"/>
+        </div>
         <div class="masthead-heading text-uppercase">LOVE IS OUR MESSGE</div>
-
         <form class="input-group-text" th:action="@{/movie/getmovie}" th:object="${movie}">
             <label class="sr-only">movie id</label>
             <!--/*@thymesVar id="mid" type="java.lang.String"*/-->

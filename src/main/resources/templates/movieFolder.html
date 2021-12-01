@@ -34,7 +34,7 @@
                             <div class="portfolio-hover">
                                 <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"></i></div>
                             </div>
-                            <img class="img-fluid" src="../static/assets/img/myIcons/mj.jpg" alt="..." />
+                            <img class="img-fluid" src="../static/assets/img/myIcons/mickey.png" alt="..." />
                         </a>
                         <div class="portfolio-caption">
                             <div class="portfolio-caption-heading" th:text="${movie.getName()}">
@@ -47,8 +47,14 @@
             </tr>
         </div>
 
-        <button  class="btn btn-lg btn-primary btn-block"  onclick="{ location.href='/user/goindex'}">mainIndex</button><br>
-        <button  class="btn btn-lg btn-primary btn-block"  onclick="{ location.href='/user/account#service1'}">account</button><br>
+        <div class="text-center">
+            <p>  </p>
+            <button class="btn btn-lg btn-primary btn-block"  onclick="{ javascript:history.back(-1)}">back</button>
+            <button  class="btn btn-lg btn-primary btn-block"  onclick="{ location.href='/user/goindex'}">mainIndex</button>
+            <button  class="btn btn-lg btn-primary btn-block"  onclick="{ location.href='/user/account#service2'}">account</button><br>
+        </div>
+<!--        <button  class="btn btn-lg btn-primary btn-block"  onclick="{ location.href='/user/goindex'}">mainIndex</button><br>-->
+<!--        <button  class="btn btn-lg btn-primary btn-block"  onclick="{ location.href='/user/account#service1'}">account</button><br>-->
     </div>
 
 </section>
