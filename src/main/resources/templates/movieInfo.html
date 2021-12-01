@@ -60,15 +60,18 @@
                 <h3 class="section-subheading text-muted"  th:text="${rating_message}"></h3>
                 <input type="text" th:field="*{score}" placeholder="score"/><br>
                 <input th:field="*{mid}" th:value="${movie.getMid()}"/>
-
-                <button class="btn btn-lg btn-primary btn-block" type="submit" >score</button>
+                    <br>
+                    <button class="btn btn-lg btn-primary btn-block" type="submit" >score</button>
             </form>
 
 <!--        Score:<br>-->
 <!--        <p th:text="${movie.getScore()}"></p>-->
-
-        <button  class="btn btn-lg btn-primary btn-block"  onclick="{ location.href='/user/goindex'}">mainIndex</button><br>
-            <button  class="btn btn-lg btn-primary btn-block"  onclick="{ location.href='/user/account#service2'}">account</button><br>
+    </div>
+    <div class="text-center">
+        <p>  </p>
+        <button class="btn btn-lg btn-primary btn-block"  onclick="{ javascript:history.back(-1)}">back</button>
+        <button  class="btn btn-lg btn-primary btn-block"  onclick="{ location.href='/user/goindex'}">mainIndex</button>
+        <button  class="btn btn-lg btn-primary btn-block"  onclick="{ location.href='/user/account#service2'}">account</button><br>
     </div>
     </div>
 
