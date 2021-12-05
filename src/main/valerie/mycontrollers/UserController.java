@@ -4,22 +4,20 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.List;
 
-import com.mongodb.DBObject;
-import com.sun.net.httpserver.Authenticator;
-import com.sun.org.apache.xpath.internal.operations.Mod;
-import com.sun.tools.javac.main.Main;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 //import valerie.mycontrollers.MongodbService;
-import scala.reflect.api.Symbols;
 import valerie.myModel.Movie;
 import valerie.myModel.User;
+import valerie.myModel.DTO.MovieDTO;
+import valerie.myModel.VO.MovieVO;
+import valerie.myModel.requests.HotMovieRequest;
 import valerie.myModel.requests.LoginUserRequest;
 import valerie.myModel.requests.RegisterUserRequest;
-import valerie.myModel.requests.UserRequest;
 import valerie.myservices.MovieService;
+import valerie.myservices.RecService;
 import valerie.myservices.UserService;
 import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpSession;
@@ -33,6 +31,8 @@ public class UserController {
     private UserService userservice;
     @Autowired
     private MovieService movieService;
+    @Autowired
+    private RecService recService;
 
     public UserController() throws UnknownHostException {
     }
@@ -107,10 +107,13 @@ public class UserController {
         }else {
             System.out.println("\nGet username="+newUsr.getUsername());
             System.out.println("Get password="+newUsr.getPassword());
-            model.addAttribute("user", newUsr);
+            HotMovieRequest hotMovieRequest = new HotMovieRequest(6);
+            List<MovieVO> movieVOS = recService.getHotRecommendations(hotMovieRequest);
+            model.addAttribute("hotmovieVOS", movieVOS);
 
             HttpSession session = request.getSession();
             session.setAttribute("user", newUsr);
+            model.addAttribute("user", newUsr);
             System.out.println("login - port:"+request.getServerPort()+",session:"+session.getId());
 
             return "mainIndex";
@@ -144,6 +147,8 @@ public class UserController {
 
         System.out.println("username is " + name);
         System.out.println("password is " + password);
+        HotMovieRequest hotMovieRequest = new HotMovieRequest(6);
+        List<MovieVO> movieVOS = recService.getHotRecommendations(hotMovieRequest);
 //        User user = userservice.getUser(new RegisterUserRequest(name, password));
         if(userservice.checkUserExist(name)){
             System.out.println("user already exists, please login");
@@ -154,6 +159,7 @@ public class UserController {
             model.addAttribute("success", true);
             User user = userservice.registerUser(new RegisterUserRequest(name,password));
             model.addAttribute("user", user);
+            model.addAttribute("hotmovieVOS", movieVOS);
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
             System.out.println("register successful!");
@@ -186,12 +192,15 @@ public class UserController {
         HttpSession session = request.getSession();
         ModelAndView mv = new ModelAndView();
         User user = (User) session.getAttribute("user");
+        HotMovieRequest hotMovieRequest = new HotMovieRequest(6);
+        List<MovieVO> movieVOS = recService.getHotRecommendations(hotMovieRequest);
         if(user==null){// || session.getAttribute("user")==null
             mv.setViewName("index");
             System.out.println("no log in");
         }else{
             System.out.println("goIndex: username = "+user.getUsername());
             mv.addObject("user", user);
+            mv.addObject("hotmovieVOS", movieVOS);
             mv.setViewName("mainIndex");
         }
         return mv;

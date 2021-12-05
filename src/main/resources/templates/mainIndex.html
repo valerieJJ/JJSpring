@@ -28,7 +28,7 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav text-uppercase ms-auto py-4 py-lg-0">
                 <li class="nav-item"><a class="nav-link" href="#services">Latest Movies</a></li>
-                <li class="nav-item"><a class="nav-link" href="#portfolio">MovieRec</a></li>
+                <li class="nav-item"><a class="nav-link" href="#hot-movies">MovieRec</a></li>
                 <li class="nav-item"><a class="nav-link" href="#team">Team</a></li>
                 <li class="nav-item"><a class="nav-link" href="#myaccount">MyHistory</a></li>
                 <li class="nav-item"><a class="nav-link" onclick="{if(confirm('Personal？')) location.href='/user/account'}">MyAccount</a></li>
@@ -53,12 +53,27 @@
             <p class="masthead-subheading" th:text="${user.getUsername()}"/>
         </div>
         <div class="masthead-heading text-uppercase">LOVE IS OUR MESSGE</div>
-        <form class="input-group-text" th:action="@{/movie/getmovie}" th:object="${movie}">
+
+        <!--  根据电影名模糊查询  -->
+        <form class="input-group-text" th:action="@{/movie/moviefield}">
+            <label class="sr-only">movie name</label>
+            <select class="form-control" th:name="fieldname" placeholder="choose field">
+                <option>name</option>
+                <option>language</option>
+                <option>genres</option>
+                <option>actors</option>
+                <option>shoot</option>
+            </select>
+            <input class="form-control" type="text" th:name="value" placeholder="field value"/><br>
+            <button class="btn btn-lg btn-primary btn-block" type="submit" >search</button>
+        </form>
+
+        <!--  根据电影id精确查询  -->
+        <form class="input-group-text" th:action="@{/movie/movieid}" th:object="${movie}">
             <label class="sr-only">movie id</label>
-            <!--/*@thymesVar id="mid" type="java.lang.String"*/-->
             <input class="form-control" type="text" th:field="*{mid}" placeholder="mid"/><br>
 
-            <button class="btn btn-lg btn-primary btn-block" type="submit" >search</button>
+            <button class="btn btn-lg btn-primary btn-block" type="submit" >search by ID</button>
         </form>
 <div class="masthead-subheading"></div>
         <a class="btn btn-primary btn-xl text-uppercase" href="#services">explore</a>
@@ -67,6 +82,32 @@
 
     </div>
 </header>
+
+<!-- Services-->
+<section class="page-section" id="hot-movies">
+    <div class="container">
+        <div class="text-center">
+            <h2 class="section-heading text-uppercase">Hot Movies</h2>
+            <h3 class="section-subheading text-muted">click for more popular movies ...</h3>
+        </div>
+        <div class="row text-center">
+            <div class="col-lg-4 col-sm-6 mb-4" th:each="movieVO:${hotmovieVOS}">
+                <div class="portfolio-item">
+                        <a th:href="@{'/movie/movieid?mid='+${movieVO.getMid()}}">
+                            <div class="portfolio-hover">
+                                <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"></i></div>
+                            </div>
+                            <img class="img-fluid" src="../static/assets/img/myIcons/mickey.png" alt="..." />
+                        </a>
+                <h4 class="my-3" th:text="${movieVO.getName()}"></h4>
+                <p class="text-muted" th:text="${movieVO.getScore()}"></p>
+                <p class="text-muted" th:text="${movieVO.getGenres()}"></p>
+            </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Services-->
 <section class="page-section" id="services">
     <div class="container">
@@ -103,7 +144,7 @@
     </div>
 </section>
 <!-- Portfolio Grid-->
-<section class="page-section bg-light" id="portfolio">
+<section class="page-section bg-light" id="portfolio1">
     <div class="container">
         <div class="text-center">
             <h2 class="section-heading text-uppercase">Movie4u</h2>

@@ -39,7 +39,7 @@ public class MovieService {
     private DBCollection rateCollection;
     private DBCollection movieCollection;
 
-    private DBCollection getMovieCollection(){
+    public DBCollection getMovieCollection(){
 
         if(null == movieCollection){
             DB db = mongoClient.getDB( "MovieDB" );
@@ -130,7 +130,6 @@ public class MovieService {
     public Movie findByMID(int mid){
 
         DBObject query = new BasicDBObject("mid", mid);
-
         DBCursor cursor = getMovieCollection().find(query);
         if(cursor.hasNext()){
             DBObject obj = cursor.next();

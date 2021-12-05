@@ -6,18 +6,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import valerie.myModel.DTO.MovieDTO;
 import valerie.myModel.Movie;
 import valerie.myModel.Rating;
 import valerie.myModel.User;
+import valerie.myModel.VO.MovieVO;
 import valerie.myModel.requests.MovieRatingRequest;
+import valerie.myservices.ESService;
 import valerie.myservices.MovieService;
 import valerie.myservices.RatingService;
 import valerie.myservices.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.net.UnknownHostException;
-import java.util.List;
+import java.util.*;
 
 @RequestMapping("/movie")
 @Controller
@@ -28,6 +32,8 @@ public class MovieController {
     private UserService userService;
     @Autowired
     private RatingService ratingService;
+    @Autowired
+    private ESService esService;
 
     @RequestMapping("rate")
     public String rateMovie(
@@ -62,7 +68,7 @@ public class MovieController {
         return "movieInfo";
     }
 
-    @RequestMapping("/gotofolder")
+    @RequestMapping("/moviefolder")
     public ModelAndView goMovieFolder(String type) throws UnknownHostException {
         ModelAndView modelAndView = new ModelAndView();
 
@@ -126,7 +132,7 @@ public class MovieController {
         return modelAndView;
     }
 
-    @RequestMapping("/getmovie")
+    @RequestMapping("/movieid")
     public ModelAndView getMovieInfo(
             @ModelAttribute("movie") Movie movieReq
             ,@ModelAttribute("rating") Rating rating
@@ -154,6 +160,73 @@ public class MovieController {
         return modelAndView;
     }
 
+    @RequestMapping("/moviefield")
+    public ModelAndView searchMovieByName(String fieldname
+                                          ,String value
+            , HttpServletRequest request) throws IOException {
+//        String movieReqName = movie.getName();
+//        String field = "name";
+        ModelAndView modelAndView = new ModelAndView();
+        System.out.println("search movie field = "+fieldname);
+        System.out.println("search value = " + value);
+//        movieReqName = (movieReqName==null)?"Titanic":movieReqName; // default name
+        String es_collection = "movietags";
+        String[] excludes = {};
+        String[] includes = {"mid", "name", "genres", "language", "descri", "issue", "shoot", "directors", "timelong"};
+
+        HashMap<List<MovieDTO>, String> map;
+
+        map = esService.fullQuery("match", es_collection,
+                fieldname, value, excludes, includes, 6);
+//        if (fieldname=="genres"){
+//
+//            map = esService.fullQuery("match", es_collection,
+//                    fieldname, value, excludes, includes, 10);
+//        }else if(fieldname=="name"){
+//            map = esService.fullQuery("match", es_collection,fieldname, "Godfather: Part III", excludes, includes, 10);
+//        }else{
+//            map = esService.fullQuery("wildCard", es_collection,
+//                    fieldname, value, excludes, includes, 10);
+//        }
+
+        Set<List<MovieDTO>> set = map.keySet();
+        List<MovieVO> movieVOList = new ArrayList<>();
+        for(List<MovieDTO> list: set){
+            for(MovieDTO movieDTO: list){
+                Integer mid = movieDTO.getMid();
+                MovieVO movieVO = new MovieVO();
+                Movie mov = movieService.findByMID(mid);
+                String movie_score = ratingService.getMovieAverageScores(mid);
+                movieVO.setMid(mid);
+                movieVO.setName(mov.getName());
+                movieVO.setScore(movie_score);
+                movieVO.setIssue(mov.getIssue());
+                movieVO.setGenres(mov.getGenres());
+//                movieVO.setLanguage(mov.getLanguage());
+//                movieVO.setDirectors(mov.getDirectors());
+//                movieVO.setDescri(mov.getDescri());
+//                movieVO.setShoot(mov.getShoot());
+                movieVOList.add(movieVO);
+            }
+        }
+        System.out.println("get movieVOList.size() = "+movieVOList.size());
+        System.out.println("get movieVOList.get(0) = "+movieVOList.get(0).getName());
+
+        if(movieVOList==null){
+            System.out.println("movie not found");
+            modelAndView.setViewName("show");
+        }else {
+            System.out.println("goto moviename = "+ movieVOList.get(0));
+            modelAndView.addObject("movieVOList",movieVOList);
+            modelAndView.addObject("number",movieVOList.size());
+            modelAndView.addObject("fieldname",fieldname);
+            modelAndView.addObject("value", value);
+            modelAndView.setViewName("movieList");
+            HttpSession session = request.getSession();
+            session.setAttribute("movieVOList", movieVOList);
+        }
+        return modelAndView;
+    }
 
 
 }

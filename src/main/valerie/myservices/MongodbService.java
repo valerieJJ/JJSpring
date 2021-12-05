@@ -39,6 +39,13 @@ public class MongodbService {
         System.out.println(myDoc);
         return myDoc.toString();
     }
+
+    public DBCollection getCollection(String collectionName){
+        DB db = mongoClient.getDB("MovieDB");
+        DBCollection coll = db.getCollection(collectionName);
+        return coll;
+    }
+
     private Movie DBObject2Movie(DBObject object){
         try{
             return objectMapper.readValue(JSON.serialize(object), Movie.class);

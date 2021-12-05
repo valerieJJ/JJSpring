@@ -1,8 +1,8 @@
 package valerie.myModel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
+//import org.springframework.security.core.GrantedAuthority;
+//import org.springframework.security.core.userdetails.User;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -27,14 +27,14 @@ public class Account extends User implements Serializable {
     private long timestamp;
 
     private List<String> prefGenres = new ArrayList<>();
-
-    public Account(String username, String password, Collection<? extends GrantedAuthority> authorities) {
-        super(username, password, authorities);
-    }
-
-    public Account(String username, String password, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
-        super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
-    }
+//
+//    public Account(String username, String password, Collection<? extends GrantedAuthority> authorities) {
+//        super(username, password, authorities);
+//    }
+//
+//    public Account(String username, String password, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
+//        super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
+//    }
 
     public String getUsername() {
         return username;

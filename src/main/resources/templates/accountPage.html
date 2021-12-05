@@ -45,6 +45,7 @@
         <div class="masthead-subheading">NeverLand offers a self-studio for
             <p class="masthead-subheading" th:text="${user.getUsername()}"></p>
         </div>
+        <a class="btn btn-primary btn-xl text-uppercase" onclick="{ location.href='/music/mscdetails'}">details</a>
         <a class="btn btn-primary btn-xl text-uppercase" href="#service1">explore</a>
         <a class="btn btn-primary btn-xl text-uppercase" onclick="{ location.href='/user/logout'}">logout</a>
 
@@ -60,7 +61,7 @@
         <div class="row text-center">
             <div class="col-md-4" th:each="value:${movie_types}">
 
-                <a th:href="@{'/movie/gotofolder?type='+${value.getKey()}}">
+                <a th:href="@{'/movie/moviefolder?type='+${value.getKey()}}">
                     <span class="fa-stack fa-4x" type="button">
                             <i class="fas fa-circle fa-stack-2x text-primary"></i>
                             <i class="fas fa-shopping-cart fa-stack-1x fa-inverse"></i>
@@ -84,7 +85,7 @@
         <div class="row text-center">
             <div class="col-md-4">
 
-                <a th:href="@{'/movie/gotofolder?type=Comedy'}">
+                <a th:href="@{'/movie/moviefolder?type=Comedy'}">
                     <span class="fa-stack fa-4x" type="button">
                             <i class="fas fa-circle fa-stack-2x text-primary"></i>
                             <i class="fas fa-shopping-cart fa-stack-1x fa-inverse"></i>
