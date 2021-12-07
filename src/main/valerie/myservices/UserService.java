@@ -139,14 +139,14 @@ public class UserService {
         return null != findByUsername(username);
     }
 
-    public DBObject findByUsername(String username){
+    public User findByUsername(String username){
         BasicDBObject query = new BasicDBObject("username",username);
         userobj = getUserCollection().findOne(query);
         System.out.println("check user exist");
 
         if(null == userobj)
             return null;
-        return userobj;
+        return DBObject2User(userobj);
     }
 
     public User findUser(String name){

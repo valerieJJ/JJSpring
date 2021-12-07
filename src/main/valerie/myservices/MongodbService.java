@@ -17,6 +17,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 // To directly connect to a single MongoDB server (note that this will not auto-discover the primary even
 // if it's a member of a replica set:
@@ -24,7 +25,6 @@ import java.util.List;
 public class MongodbService {
     @Autowired
     private MongoClient mongoClient;
-
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -42,7 +42,15 @@ public class MongodbService {
 
     public DBCollection getCollection(String collectionName){
         DB db = mongoClient.getDB("MovieDB");
-        DBCollection coll = db.getCollection(collectionName);
+        Set<String> names = db.getCollectionNames();
+        DBCollection coll;
+        if(names.contains(collectionName)){
+            coll = db.getCollection(collectionName);
+        }else{
+            System.out.println("create and get a new collection");
+            coll = db.getCollection(collectionName);
+        }
+
         return coll;
     }
 

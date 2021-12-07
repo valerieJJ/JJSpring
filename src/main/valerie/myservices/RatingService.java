@@ -9,26 +9,31 @@ import com.mongodb.util.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
+import scala.Int;
 import valerie.myModel.Movie;
 import valerie.myModel.Rating;
 import valerie.myModel.requests.MovieRatingRequest;
 
 import java.io.IOException;
-import java.util.Formatter;
-import java.util.Set;
+import java.net.UnknownHostException;
+import java.util.*;
 
 @Service
 public class RatingService {
-    @Autowired
-    private MongoClient mongoClient;
+
+    private MongoClient mongoClient = new MongoClient( "localhost", 27017);
+
     @Autowired
     private MongodbService mongodbService;
     @Autowired
-    private ObjectMapper objectMapper;
+    private ObjectMapper objectMapper = new ObjectMapper();
     @Autowired
     private Jedis jedis;
 
     private DBCollection ratingCollection;
+
+    public RatingService() throws UnknownHostException {
+    }
 
     private Rating DBObject2Rating(DBObject object){
         try{
@@ -46,13 +51,12 @@ public class RatingService {
     }
 
     private DBCollection getRatingCollection(){
-        if(null == ratingCollection){
-            DB db = mongoClient.getDB( "MovieDB" );
-            Set<String> collections = db.getCollectionNames();
-            ratingCollection = db.getCollection("Rating");
-        }
+        DB db = mongoClient.getDB("MovieDB");
+        ratingCollection = db.getCollection("Rating");
+//        ratingCollection = mongodbService.getCollection("Rating");
         return ratingCollection;
     }
+
     private void updateRatingRedis(Rating rating){
         // 刷新缓存时，先删缓存再写缓存
         if(jedis.exists("uid:"+rating.getUid())
@@ -92,11 +96,40 @@ public class RatingService {
         }
     }
 
+    private List<Rating> findRatingByUID(int uid){
+        BasicDBObject query = new BasicDBObject();
+        query.append("uid", uid);
+        DBCursor cursor = getRatingCollection().find(query);
+        List<Rating> ratingList = new ArrayList<>();
+        while (cursor.hasNext()){
+            DBObject object = cursor.next();
+            Rating rating = DBObject2Rating(object);
+            ratingList.add(rating);
+        }
+        return ratingList;
+    }
+
     public boolean ratingExistMongo(int uid, int mid){
         if(findRating(uid, mid)!=null){
             return true;
         }else {
             return false;
+        }
+    }
+
+    public boolean insertNewRating2Mongo(Rating rating) throws JsonProcessingException, IllegalAccessException {
+        DBObject obj = mongodbService.bean2DBObject(rating);
+        getRatingCollection().insert(obj);
+        return true;
+    }
+
+    public boolean updataMovieRating(MovieRatingRequest request) throws JsonProcessingException, IllegalAccessException {
+        Rating rating = new Rating(request.getUid(), request.getMid(),request.getScore());
+        updateRatingRedis(rating);
+        if (ratingExistMongo(rating.getUid(),rating.getMid())){
+            return updateRatingMongo(rating);
+        }else {
+            return insertNewRating2Mongo(rating);
         }
     }
 
@@ -111,19 +144,19 @@ public class RatingService {
         return true;
     }
 
-    public boolean insertNewRating2Mongo(Rating rating) throws JsonProcessingException, IllegalAccessException {
-        DBObject obj = mongodbService.bean2DBObject(rating);
-        getRatingCollection().insert(obj);
-        return true;
-    }
-    public boolean updataMovieRating(MovieRatingRequest request) throws JsonProcessingException, IllegalAccessException {
-        Rating rating = new Rating(request.getUid(), request.getMid(),request.getScore());
-        updateRatingRedis(rating);
-        if (ratingExistMongo(rating.getUid(),rating.getMid())){
-            return updateRatingMongo(rating);
-        }else {
-            return insertNewRating2Mongo(rating);
+    public static void main(String[] args) throws UnknownHostException {
+        RatingService ratingService = new RatingService();
+        // valerie: uid=231141674, mongodb自动插入时间戳
+        List<Rating> ratingList = ratingService.findRatingByUID(6);
+        HashMap<Integer,List<Rating>> map = new HashMap<>();
+        for(Rating rating: ratingList){
+            map.put(rating.getMid(), ratingList);
+            System.out.println(String.format("%s, %s, %s, %s", rating.getUid(), rating.getMid()
+                                                            , rating.getScore(), rating.getTimestamp()));
+
         }
+        System.out.println(map.size());
+        System.out.println(map.keySet().toString());
 
     }
 

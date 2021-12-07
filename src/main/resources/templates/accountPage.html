@@ -29,7 +29,7 @@
             <ul class="navbar-nav text-uppercase ms-auto py-4 py-lg-0">
                 <li class="nav-item"><a class="nav-link" href="#movie-folder">Movie Folder</a></li>
                 <li class="nav-item"><a class="nav-link" href="#music-folder">Music Folder</a></li>
-                <li class="nav-item"><a class="nav-link" href="#my-favorates">My Favorates</a></li>
+                <li class="nav-item"><a class="nav-link" href="#my-favorites">My Favorites</a></li>
 <!--                <li class="nav-item"><a class="nav-link" onclick="{ location.href='/user/show'}">showDB</a></li>-->
                 <li class="nav-item"><a class="nav-link" onclick="{ location.href='/user/goindex'}">NeverLand</a></li>
 
@@ -51,7 +51,7 @@
 
     </div>
 </header>
-<!-- Services-->
+<!-- Movie Classification -->
 <section class="page-section" id="movie-folder">
     <div class="container">
         <div class="text-center">
@@ -75,7 +75,7 @@
     </div>
 </section>
 
-<!-- Services-->
+<!-- My Music Folders -->
 <section class="page-section" id="music-folder">
     <div class="container">
         <div class="text-center">
@@ -114,36 +114,24 @@
     </div>
 </section>
 
-<section class="page-section" id="my-favorates">
+<!-- My Favorates -->
+<section class="page-section" id="my-favorites">
     <div class="container">
         <div class="text-center">
-            <h2 class="section-heading text-uppercase">My Favorates</h2>
+            <h2 class="section-heading text-uppercase">My Favorites</h2>
             <h3 class="section-subheading text-muted">my lovers</h3>
         </div>
+
         <div class="row text-center">
-            <div class="col-md-4">
-                        <span class="fa-stack fa-4x" type="button" onclick="{ location.href='/movie/getmovie'}">
+            <div class="col-md-4" th:each="movieVO:${favoriteMovieVOS}">
+
+                <a th:href="@{'/movie/movieid?mid='+${movieVO.getMid()}}">
+                    <span class="fa-stack fa-4x" type="button">
                             <i class="fas fa-circle fa-stack-2x text-primary"></i>
-                            <i class="fas fa-shopping-cart fa-stack-1x fa-inverse"></i>
                         </span>
-                <h4 class="my-3">For All Time</h4>
-                <p class="text-muted">If these words could keep u happy, i'd do any thing</p>
-            </div>
-            <div class="col-md-4">
-                        <span class="fa-stack fa-4x" type="button" onclick="{ location.href='/movie/getmovie'}">
-                            <i class="fas fa-circle fa-stack-2x text-primary"></i>
-                            <i class="fas fa-laptop fa-stack-1x fa-inverse"></i>
-                        </span>
-                <h4 class="my-3">Smooth Criminal</h4>
-                <p class="text-muted">Annie are u ok ? Are u ok annie?</p>
-            </div>
-            <div class="col-md-4">
-                        <span class="fa-stack fa-4x" type="button" onclick="{ location.href='/movie/getmovie'}">
-                            <i class="fas fa-circle fa-stack-2x text-primary"></i>
-                            <i class="fas fa-lock fa-stack-1x fa-inverse"></i>
-                        </span>
-                <h4 class="my-3">Billie Jean</h4>
-                <p class="text-muted">Not my lover. But she said i am the one...</p>
+                </a>
+                <h4 class="my-3" th:text="${movieVO.getName()}"></h4>
+                <p class="text-muted" th:text="${movieVO.getGenres()}"></p>
             </div>
         </div>
     </div>

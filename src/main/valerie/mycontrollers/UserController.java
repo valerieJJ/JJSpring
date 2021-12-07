@@ -1,6 +1,8 @@
 package valerie.mycontrollers;
 
+import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -9,17 +11,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 //import valerie.mycontrollers.MongodbService;
+import valerie.myModel.Favorite;
 import valerie.myModel.Movie;
 import valerie.myModel.User;
-import valerie.myModel.DTO.MovieDTO;
 import valerie.myModel.VO.MovieVO;
+import valerie.myModel.requests.FavoriteRequest;
 import valerie.myModel.requests.HotMovieRequest;
 import valerie.myModel.requests.LoginUserRequest;
 import valerie.myModel.requests.RegisterUserRequest;
+import valerie.myservices.FavoriteService;
 import valerie.myservices.MovieService;
 import valerie.myservices.RecService;
 import valerie.myservices.UserService;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
 
@@ -28,11 +35,13 @@ import javax.servlet.http.HttpServletRequest;
 public class UserController {
 
     @Autowired
-    private UserService userservice;
+    private UserService userService;
     @Autowired
     private MovieService movieService;
     @Autowired
     private RecService recService;
+    @Autowired
+    private FavoriteService favoriteService;
 
     public UserController() throws UnknownHostException {
     }
@@ -42,13 +51,13 @@ public class UserController {
 
         String field="language";
         String value = "English";
-        List<Movie> data = userservice.getCollectionData(field, value);
+        List<Movie> data = userService.getCollectionData(field, value);
         model.addAttribute("mongodata", data.toString());
 
         HttpSession session1 = request.getSession();
         User usr = (User)session1.getAttribute("user");
         if(usr == null){
-            usr = userservice.getDefaultUser();
+            usr = userService.getDefaultUser();
         }
         model.addAttribute("user", usr);
 
@@ -99,7 +108,7 @@ public class UserController {
 //    @GetMapping("/dologin")
     @RequestMapping("/dologin") //@RequestMapping("/user/dologin")
     public String login(@ModelAttribute("user") User user,@ModelAttribute("movie") Movie movieReq, Model model,HttpServletRequest request) throws UnknownHostException {
-        User newUsr = userservice.loginUser(new LoginUserRequest(user.getUsername(),user.getPassword()));
+        User newUsr = userService.loginUser(new LoginUserRequest(user.getUsername(),user.getPassword()));
         if(newUsr==null){
             System.out.println("Account does not exist");
 //            Main.Result.builder().code(-1).msg("用户名或密码错误").build();
@@ -150,20 +159,19 @@ public class UserController {
         HotMovieRequest hotMovieRequest = new HotMovieRequest(6);
         List<MovieVO> movieVOS = recService.getHotRecommendations(hotMovieRequest);
 //        User user = userservice.getUser(new RegisterUserRequest(name, password));
-        if(userservice.checkUserExist(name)){
+        if(userService.checkUserExist(name)){
             System.out.println("user already exists, please login");
             model.addAttribute("success",false);
             model.addAttribute("message"," 用户名已经被注册！");
             return "register";
         }else{
             model.addAttribute("success", true);
-            User user = userservice.registerUser(new RegisterUserRequest(name,password));
+            User user = userService.registerUser(new RegisterUserRequest(name,password));
             model.addAttribute("user", user);
             model.addAttribute("hotmovieVOS", movieVOS);
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
             System.out.println("register successful!");
-
         }
         return "mainIndex";
     }
@@ -183,6 +191,15 @@ public class UserController {
             model.addAttribute("user", user);
             model.addAttribute("movie_types", movie_types);
         }
+
+        List<Favorite> favoriteList = favoriteService.getFavoriteHistory(user.getUid());
+        List<Integer> mids = new ArrayList<>();
+        for (Favorite favorite: favoriteList){
+            Integer mid = favorite.getMid();
+            mids.add(mid);
+        }
+        List<MovieVO> favoriteMovieVOS =movieService.getMovieVOS(mids);
+        model.addAttribute("favoriteMovieVOS", favoriteMovieVOS);
 
         return "accountPage";
     }
@@ -204,6 +221,49 @@ public class UserController {
             mv.setViewName("mainIndex");
         }
         return mv;
+    }
+
+    @RequestMapping(value = "/{mid}/favor", produces = "application/json", method = RequestMethod.GET )
+//    @ResponseBody
+    public void doFavorite(@PathVariable("mid")int mid
+//            ,@RequestParam("username")String username
+            , @RequestParam("favoption")boolean favoption
+//            , @ModelAttribute("state")boolean state
+            , HttpServletRequest request
+            , HttpServletResponse response
+            , Model model) throws IllegalAccessException, ServletException, IOException {
+//            User user = userService.findByUsername(username);
+            HttpSession session = request.getSession();
+            User user = (User) session.getAttribute("user");
+            FavoriteRequest favoriteRequest = new FavoriteRequest(user.getUid(), mid);
+            boolean succ = false;
+
+            if(favoption){
+                succ = favoriteService.updateFavorite(favoriteRequest);
+            }else {
+                succ = favoriteService.dropFavorite(favoriteRequest);
+            }
+            boolean state = (favoriteService.findFavorite(user.getUid(), mid)==null)?false:true;
+            model.addAttribute("success",succ);
+            model.addAttribute("state", state);
+
+//            request.getRequestDispatcher("/movie/moviefield").forward(request, response);
+            System.out.println("\n\nstate1 is " + String.valueOf(state)+"\n");
+
+//        request.setAttribute("state",state);
+
+
+        String toUrl = "/movie/movieid?mid="+mid; //"/user/" +mid+"/favor?favoption="+ favoption;
+        // 发送重定向响应:
+//        response.sendRedirect(toUrl);
+
+//        request.getRequestDispatcher("/movie/movieid").forward(request, response);
+        /*
+        * http://localhost:8080/movie/movieid?mid=2023
+        * http://localhost:8080/user/2023/favor?favoption=true
+        * */
+
+        request.getRequestDispatcher(toUrl).forward(request, response);
     }
 
 

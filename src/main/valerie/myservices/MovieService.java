@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import valerie.myModel.Movie;
 import valerie.myModel.Rating;
 import valerie.myModel.Recommendation;
+import valerie.myModel.VO.MovieVO;
 import valerie.myModel.requests.NewRecommendationRequest;
 //import valerie.myUtils.Constant;
 
@@ -31,6 +32,8 @@ public class MovieService {
     private MongoClient mongoClient;
     @Autowired
     private MongodbService mongodbService;
+    @Autowired
+    private RatingService ratingService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -83,6 +86,25 @@ public class MovieService {
         return getMovies(ids);
     }
 
+    public List<MovieVO> getMovieVOS(List<Integer> mids){
+        List<MovieVO> movieVOS = new ArrayList<>();
+        for(Integer mid: mids){
+            MovieVO movieVO = new MovieVO();
+            movieVO.setMid(mid);
+            Movie movie = findByMID(mid);
+            String avgScore = ratingService.getMovieAverageScores(mid);
+            movieVO.setName(movie.getName());
+            movieVO.setScore(avgScore);
+            movieVO.setDescri(movie.getDescri());
+            movieVO.setDirectors(movie.getDirectors());
+            movieVO.setActors(movie.getActors());
+            movieVO.setGenres(movie.getGenres());
+            movieVO.setLanguage(movie.getLanguage());
+            movieVO.setIssue(movie.getIssue());
+            movieVOS.add(movieVO);
+        }
+        return movieVOS;
+    }
 
     public List<Movie> getMovies(List<Integer> mids){
         List<Movie> movies = new ArrayList<>();

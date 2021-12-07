@@ -13,13 +13,15 @@
     <!-- Custom styles for this template -->
     <link th:href="@{/static/css/ks/signin.css}" rel="stylesheet">
 
-    <link href="../static/css/styles.css" rel="stylesheet" />
+    <link th:href="@{/css/styles.css}" rel="stylesheet" />
 </head>
 <!--background="/assets/img/msc7.jpg" background-repeat="no"-->
 <body class="text-center">
 <!--<body class="masthead">-->
-<form class="form-signin" th:action="@{/user/dologin}" th:object="${user}" method="post">
-    <img class="mb-4" th:src="@{/static/img/bootstrap-solid.svg}" alt="" width="72" height="72">
+
+<div class="container">
+    <form class="form-signin" th:action="@{/user/dologin}" th:object="${user}" method="post">
+    <img class="mb-4" th:src="@{/static/img/smoothcriminal.svg}" alt="" width="300" height="200">
     <h1 class="h3 mb-3 font-weight-normal" color="#FFA500">Welcome to Neverland!</h1>
 
     <label class="sr-only">Username</label>
@@ -44,10 +46,10 @@
     <a class="btn btn-sm" color="#fcba03">English</a>
 </form><br><!--servelet-->
 
-<button class="btn btn-lg btn-primary btn-block" onclick="{ location.href='/user/register'}">register</button>
-<br>
-<button class="btn btn-lg btn-primary btn-block" onclick="{ location.href='/user/goindex'}">NeverLand</button>
+    <button class="btn btn-lg btn-primary" onclick="{ location.href='/user/register'}">register</button>
+    <button class="btn btn-lg btn-primary" onclick="{ location.href='/user/goindex'}">NeverLand</button>
 
+</div>
 <!--<form action="/dologin" method="post">-->
 <!--    I want ur name <input type="text" name="username"><br>-->
 <!--    I want ur key <input type="password" name="password"><br>-->

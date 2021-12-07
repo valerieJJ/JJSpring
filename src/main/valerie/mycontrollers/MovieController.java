@@ -11,11 +11,9 @@ import valerie.myModel.Movie;
 import valerie.myModel.Rating;
 import valerie.myModel.User;
 import valerie.myModel.VO.MovieVO;
+import valerie.myModel.requests.FavoriteRequest;
 import valerie.myModel.requests.MovieRatingRequest;
-import valerie.myservices.ESService;
-import valerie.myservices.MovieService;
-import valerie.myservices.RatingService;
-import valerie.myservices.UserService;
+import valerie.myservices.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -34,6 +32,8 @@ public class MovieController {
     private RatingService ratingService;
     @Autowired
     private ESService esService;
+    @Autowired
+    private FavoriteService favoriteService;
 
     @RequestMapping("rate")
     public String rateMovie(
@@ -140,9 +140,9 @@ public class MovieController {
             , ModelAndView modelAndView) {
         int mid = movieReq.getMid();
         System.out.println("getmovie - get mid = "+mid);
-        if(mid==0){
-            mid = 2549;
-        }
+//        if(mid==0){
+//            mid = 2549;
+//        }
         Movie movie = movieService.findByMID(mid);
         String movie_score = ratingService.getMovieAverageScores(mid);
         if(movie==null){
@@ -157,6 +157,12 @@ public class MovieController {
         HttpSession session = request.getSession();
 
         session.setAttribute("movie", movie);
+
+        User user = (User) session.getAttribute("user");
+        boolean state = favoriteService.favoriteExistMongo(user.getUid(), mid);
+        modelAndView.addObject("state", state);
+
+        System.out.println("get state2: "+ state);
         return modelAndView;
     }
 
@@ -164,12 +170,9 @@ public class MovieController {
     public ModelAndView searchMovieByName(String fieldname
                                           ,String value
             , HttpServletRequest request) throws IOException {
-//        String movieReqName = movie.getName();
-//        String field = "name";
         ModelAndView modelAndView = new ModelAndView();
         System.out.println("search movie field = "+fieldname);
         System.out.println("search value = " + value);
-//        movieReqName = (movieReqName==null)?"Titanic":movieReqName; // default name
         String es_collection = "movietags";
         String[] excludes = {};
         String[] includes = {"mid", "name", "genres", "language", "descri", "issue", "shoot", "directors", "timelong"};
@@ -179,14 +182,11 @@ public class MovieController {
         map = esService.fullQuery("match", es_collection,
                 fieldname, value, excludes, includes, 6);
 //        if (fieldname=="genres"){
-//
-//            map = esService.fullQuery("match", es_collection,
-//                    fieldname, value, excludes, includes, 10);
+//            map = esService.fullQuery("match", es_collection, fieldname, value, excludes, includes, 10);
 //        }else if(fieldname=="name"){
 //            map = esService.fullQuery("match", es_collection,fieldname, "Godfather: Part III", excludes, includes, 10);
 //        }else{
-//            map = esService.fullQuery("wildCard", es_collection,
-//                    fieldname, value, excludes, includes, 10);
+//            map = esService.fullQuery("wildCard", es_collection, fieldname, value, excludes, includes, 10);
 //        }
 
         Set<List<MovieDTO>> set = map.keySet();

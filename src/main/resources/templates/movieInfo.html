@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
     <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" type="text/css" />
     <!-- Core theme CSS (includes Bootstrap)-->
-    <link href="../static/css/styles.css" rel="stylesheet" />
+    <link th:href="@{/css/styles.css}" rel="stylesheet" />
 </head>
 
 <body id="page-top">
@@ -23,7 +23,8 @@
             <h2 class="section-heading text-uppercase" th:text="${movie.getName()}"></h2>
              <h3 class="section-subheading text-muted" th:text="${movie.getDescri()}"></h3>
 
-            <img class="img-fluid" src="../static/assets/img/myIcons/mj.jpg" alt="..." />
+            <img class="img-fluid" th:src="@{/assets/img/myIcons/mj.jpg}" alt="..." />
+<!--            <img class="img-fluid" src="../static/assets/img/myIcons/mj.jpg" alt="..." />-->
         </div>
 
         <div class="row text-center">
@@ -69,13 +70,60 @@
         Score:<br>
         <p th:text="${movie_score}"></p>
     </div>
-    <div class="text-center">
-        <p>  </p>
-        <button class="btn btn-lg btn-primary btn-block"  onclick="{ javascript:history.back(-1)}">back</button>
-        <button  class="btn btn-lg btn-primary btn-block"  onclick="{ location.href='/user/goindex'}">mainIndex</button>
-        <button  class="btn btn-lg btn-primary btn-block"  onclick="{ location.href='/user/account#service2'}">account</button><br>
+        <div class="text-center">
+            <p>  </p>
+            <!--  <form th:action="@{/mycontroller/} + ${type}">
+                    <a th:href="@{/order/{id}/details(id=3,action='show_all')}">
+                    <form th:action="@{/mycontroller/{path}(path=${type})}">
+            https://blog.csdn.net/opope23f/article/details/102846330-->
+
+            <a type="button" th:if="${state==false}" class="btn btn-lg btn-primary btn-block" th:href="@{/user/{mid}/favor(mid=${movie.getMid()}, favoption=true)}">
+                add to favorites
+            </a>
+
+<!--            <form th:action="@{/user/{mid}/favor(mid=${movie.getMid()}, favoption=true)}">-->
+<!--                <button type="submit"> add to favorites</button>-->
+<!--            </form>-->
+
+            <a type="button" class="btn btn-lg btn-primary btn-block" th:if="${state==true}" th:href="@{/user/{mid}/favor(mid=${movie.getMid()}, favoption=false)}">
+                remove from favorites
+            </a>
+<!--            <button  class="btn btn-lg btn-primary btn-block"  onclick="{ location.href='/user/goindex'}">remove from favorites</button>-->
+        </div>
+        <div class="text-center">
+            <p>  </p>
+            <button class="btn btn-lg btn-primary btn-block"  onclick="{ javascript:history.back(-1)}">back</button>
+            <button  class="btn btn-lg btn-primary btn-block"  onclick="{ location.href='/user/goindex'}">mainIndex</button>
+            <button  class="btn btn-lg btn-primary btn-block"  onclick="{ location.href='/user/account#service2'}">account</button><br>
+        </div>
     </div>
-    </div>
+    <script>
+        function dothis() {
+            alert("all for love");
+
+        }
+    </script>
+
+    <script>
+        $(function () {
+            $("#ajaxRequest").click(function () {
+                $.ajax({
+                    method:"post",
+                    url:"/returnString",
+                    success:function (result) {
+                        console.log(result);
+                    }
+                });
+            });
+        });
+
+    </script>
+
+    <button class="btn btn-lg btn-primary btn-block" th:onclick="dothis()" th:text="dothis"/>
+
+
+
+        <h3 th:text="${state}"/>
 
 </section>
 
