@@ -223,12 +223,10 @@ public class UserController {
         return mv;
     }
 
-    @RequestMapping(value = "/{mid}/favor", produces = "application/json", method = RequestMethod.GET )
-//    @ResponseBody
-    public void doFavorite(@PathVariable("mid")int mid
-//            ,@RequestParam("username")String username
-            , @RequestParam("favoption")boolean favoption
-//            , @ModelAttribute("state")boolean state
+    @RequestMapping(value = "/{mid}/favor", produces = "application/json", method = RequestMethod.POST )
+    public void doFavorite(
+            @PathVariable("mid")int mid,
+            @RequestParam("favoption")boolean favoption
             , HttpServletRequest request
             , HttpServletResponse response
             , Model model) throws IllegalAccessException, ServletException, IOException {
@@ -247,24 +245,9 @@ public class UserController {
             model.addAttribute("success",succ);
             model.addAttribute("state", state);
 
-//            request.getRequestDispatcher("/movie/moviefield").forward(request, response);
             System.out.println("\n\nstate1 is " + String.valueOf(state)+"\n");
-
-//        request.setAttribute("state",state);
-
-
-        String toUrl = "/movie/movieid?mid="+mid; //"/user/" +mid+"/favor?favoption="+ favoption;
-        // 发送重定向响应:
-//        response.sendRedirect(toUrl);
-
-//        request.getRequestDispatcher("/movie/movieid").forward(request, response);
-        /*
-        * http://localhost:8080/movie/movieid?mid=2023
-        * http://localhost:8080/user/2023/favor?favoption=true
-        * */
-
+        String toUrl = "/movie/movieid?mid="+mid;
         request.getRequestDispatcher(toUrl).forward(request, response);
     }
-
 
 }

@@ -134,11 +134,12 @@ public class MovieController {
 
     @RequestMapping("/movieid")
     public ModelAndView getMovieInfo(
-            @ModelAttribute("movie") Movie movieReq
+//            @ModelAttribute("movie") Movie movieReq
+            @ModelAttribute("mid") int mid
             ,@ModelAttribute("rating") Rating rating
             , HttpServletRequest request
             , ModelAndView modelAndView) {
-        int mid = movieReq.getMid();
+//        int mid = movieReq.getMid();
         System.out.println("getmovie - get mid = "+mid);
 //        if(mid==0){
 //            mid = 2549;
@@ -153,16 +154,16 @@ public class MovieController {
             modelAndView.addObject("movie_score", movie_score);
         }
         modelAndView.addObject("rating_message", "how do u like it?");
-        modelAndView.setViewName("movieInfo");
         HttpSession session = request.getSession();
-
         session.setAttribute("movie", movie);
+
 
         User user = (User) session.getAttribute("user");
         boolean state = favoriteService.favoriteExistMongo(user.getUid(), mid);
         modelAndView.addObject("state", state);
 
         System.out.println("get state2: "+ state);
+        modelAndView.setViewName("movieInfo");
         return modelAndView;
     }
 
@@ -226,6 +227,29 @@ public class MovieController {
             session.setAttribute("movieVOList", movieVOList);
         }
         return modelAndView;
+    }
+
+
+    @RequestMapping("/favor")
+    public void doFavor(
+            HttpServletRequest request
+            , Model model) {
+        int mid = (int) request.getAttribute("mid");
+        System.out.println("getmovie - get mid = "+mid);
+        Movie movie = movieService.findByMID(mid);
+        if(movie==null){
+        }else {
+            model.addAttribute("movie",movie);
+        }
+        HttpSession session = request.getSession();
+
+        session.setAttribute("movie", movie);
+
+        User user = (User) session.getAttribute("user");
+        boolean state = favoriteService.favoriteExistMongo(user.getUid(), mid);
+        model.addAttribute("state", state);
+
+        System.out.println("get state2: "+ state);
     }
 
 

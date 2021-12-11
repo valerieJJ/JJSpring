@@ -72,23 +72,25 @@
     </div>
         <div class="text-center">
             <p>  </p>
-            <!--  <form th:action="@{/mycontroller/} + ${type}">
-                    <a th:href="@{/order/{id}/details(id=3,action='show_all')}">
-                    <form th:action="@{/mycontroller/{path}(path=${type})}">
-            https://blog.csdn.net/opope23f/article/details/102846330-->
+<!--            <a type="button" th:if="${state==false}" class="btn btn-lg btn-primary btn-block"-->
+<!--               th:href="@{/user/{mid}/favor(mid=${movie.getMid()}, favoption=true)}">-->
+<!--                add to favorites-->
+<!--            </a>-->
+<!--            <a type="button" class="btn btn-lg btn-primary btn-block" th:if="${state==true}"-->
+<!--               th:href="@{/user/{mid}/favor(mid=${movie.getMid()}, favoption=false)}">-->
+<!--                remove from favorites-->
+<!--            </a>-->
+            <form th:if="${state==false}" method="post" th:action="@{/user/{mid}/favor(mid=${movie.getMid()})}">
+                <input type="hidden" name="favoption" value=true>
+                <button class="btn btn-lg btn-primary btn-block" type="submit"> add to favorites</button>
+            </form>
+            <form th:if="${state==true}" method="post" th:action="@{/user/{mid}/favor(mid=${movie.getMid()})}">
+<!--                <input type="hidden" name="mid" th:value="${movie.getMid()}">-->
+                <input type="hidden" name="favoption" value=false>
+                <button class="btn btn-lg btn-primary btn-block" type="submit"> remove from favorites</button>
+            </form>
 
-            <a type="button" th:if="${state==false}" class="btn btn-lg btn-primary btn-block" th:href="@{/user/{mid}/favor(mid=${movie.getMid()}, favoption=true)}">
-                add to favorites
-            </a>
-
-<!--            <form th:action="@{/user/{mid}/favor(mid=${movie.getMid()}, favoption=true)}">-->
-<!--                <button type="submit"> add to favorites</button>-->
-<!--            </form>-->
-
-            <a type="button" class="btn btn-lg btn-primary btn-block" th:if="${state==true}" th:href="@{/user/{mid}/favor(mid=${movie.getMid()}, favoption=false)}">
-                remove from favorites
-            </a>
-<!--            <button  class="btn btn-lg btn-primary btn-block"  onclick="{ location.href='/user/goindex'}">remove from favorites</button>-->
+            <!--            <button  class="btn btn-lg btn-primary btn-block"  onclick="{ location.href='/user/goindex'}">remove from favorites</button>-->
         </div>
         <div class="text-center">
             <p>  </p>
