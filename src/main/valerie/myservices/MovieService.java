@@ -14,6 +14,7 @@ import org.bson.Document;
 import org.bson.Document;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import valerie.myModel.Movie;
 import valerie.myModel.Rating;
@@ -25,6 +26,7 @@ import valerie.myModel.requests.NewRecommendationRequest;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class MovieService {
@@ -161,6 +163,18 @@ public class MovieService {
         return null;
     }
 
+    @Async
+    public CompletableFuture<Movie> asyfindByMID(int mid){
+        System.out.println("Async finding movie by mID...");
+        DBObject query = new BasicDBObject("mid", mid);
+        DBCursor cursor = getMovieCollection().find(query);
+        if(cursor.hasNext()){
+            DBObject obj = cursor.next();
+            return CompletableFuture.completedFuture(this.DBObject2Movie(obj));
+        }
+        System.out.println("movieID not exist");
+        return null;
+    }
 
     public List<Movie> getDataObj(String field, String value) throws UnknownHostException {
         DB db = mongoClient.getDB("MovieDB");

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.*;
 import com.mongodb.util.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 import scala.Int;
@@ -17,6 +18,7 @@ import valerie.myModel.requests.MovieRatingRequest;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class RatingService {
@@ -80,6 +82,25 @@ public class RatingService {
         }
         double avgScore = score/cnt;
         return String.format("%.2f", avgScore).toString();
+    }
+
+
+    @Async
+    public CompletableFuture<String> asygetMovieAverageScores(int mid){
+        System.out.println("Async finding movie average score by mID...");
+        BasicDBObject query = new BasicDBObject();
+        query.append("mid", mid);
+        DBCursor cursor = getRatingCollection().find(query);
+        double score = 0;
+        int cnt = 0;
+        while(cursor.hasNext()){
+            Rating rating = DBObject2Rating(cursor.next()) ;
+            double curScore = rating.getScore();
+            score += curScore;
+            cnt ++;
+        }
+        double avgScore = score/cnt;
+        return  CompletableFuture.completedFuture(String.format("%.2f", avgScore).toString());
     }
 
     private Rating findRating(int uid, int mid){

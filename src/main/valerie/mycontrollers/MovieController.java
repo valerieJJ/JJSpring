@@ -20,6 +20,10 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @RequestMapping("/movie")
 @Controller
@@ -34,6 +38,8 @@ public class MovieController {
     private ESService esService;
     @Autowired
     private FavoriteService favoriteService;
+    @Autowired
+    private MultiThreadsService multiThreadsService;
 
     @RequestMapping("rate")
     public String rateMovie(
@@ -138,14 +144,19 @@ public class MovieController {
             @ModelAttribute("mid") int mid
             ,@ModelAttribute("rating") Rating rating
             , HttpServletRequest request
-            , ModelAndView modelAndView) {
+            , ModelAndView modelAndView) throws ExecutionException, InterruptedException {
 //        int mid = movieReq.getMid();
         System.out.println("getmovie - get mid = "+mid);
-//        if(mid==0){
-//            mid = 2549;
-//        }
-        Movie movie = movieService.findByMID(mid);
-        String movie_score = ratingService.getMovieAverageScores(mid);
+
+//        Movie movie = movieService.findByMID(mid);
+//        String movie_score = ratingService.getMovieAverageScores(mid);
+
+        CompletableFuture<Movie> asy_movie = movieService.asyfindByMID(mid);
+        CompletableFuture<String> asy_movie_score = ratingService.asygetMovieAverageScores(mid);
+        CompletableFuture.allOf(asy_movie,asy_movie_score).join();
+        Movie movie = asy_movie.get();
+        String movie_score = asy_movie_score.get();
+
         if(movie==null){
             System.out.println("movie not found");
             modelAndView.setViewName("show");
@@ -236,13 +247,13 @@ public class MovieController {
             , Model model) {
         int mid = (int) request.getAttribute("mid");
         System.out.println("getmovie - get mid = "+mid);
+
         Movie movie = movieService.findByMID(mid);
         if(movie==null){
         }else {
             model.addAttribute("movie",movie);
         }
         HttpSession session = request.getSession();
-
         session.setAttribute("movie", movie);
 
         User user = (User) session.getAttribute("user");
