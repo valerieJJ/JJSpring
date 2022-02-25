@@ -13,7 +13,7 @@ public class Like {
 
     private int mid;
 
-    private String label;
+//    private String label;
 
     private long timestamp;
 
@@ -28,10 +28,9 @@ public class Like {
     public Like() {
     }
 
-    public Like(int uid, int mid, String label) {
+    public Like(int uid, int mid) {
         this.uid = uid;
         this.mid = mid;
-        this.label = label;
         this.timestamp = new Date().getTime();
     }
 
@@ -51,13 +50,13 @@ public class Like {
         this.mid = mid;
     }
 
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
+//    public String getLabel() {
+//        return label;
+//    }
+//
+//    public void setLabel(String label) {
+//        this.label = label;
+//    }
 
     public long getTimestamp() {
         return timestamp;

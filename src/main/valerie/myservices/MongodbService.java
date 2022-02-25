@@ -7,6 +7,7 @@ import com.mongodb.*;
 import com.mongodb.client.model.Filters;
 import com.mongodb.util.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import valerie.myModel.Movie;
 import valerie.myModel.User;
@@ -30,6 +31,7 @@ public class MongodbService {
 
     public MongodbService() throws UnknownHostException {
     }
+
 
     public String getData() throws UnknownHostException {
         DB db = mongoClient.getDB( "MovieDB" );
@@ -68,6 +70,7 @@ public class MongodbService {
             return null;
         }
     }
+
     public List<Movie> getDataObj(String field, String value) throws UnknownHostException {
         DB db = mongoClient.getDB( "MovieDB" );
         DBCollection coll = db.getCollection("Movie");

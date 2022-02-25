@@ -87,7 +87,7 @@ public class FavoriteService {
         query.append("mid", mid);
         DBCursor cursor = this.getCollection().find(query);
         if (cursor.count()>0){
-            System.out.println("you have written tag for it before");
+            System.out.println("It's in your favorites");
              Favorite favorite = DBOjbect2Favorite(cursor.next());
             return favorite;
         }else {
@@ -137,6 +137,7 @@ public class FavoriteService {
     public boolean updateFavorite(FavoriteRequest favoriteRequest) throws IllegalAccessException {
         Favorite favorite = new Favorite(favoriteRequest.getUid(), favoriteRequest.getMid());
         updateFavorite2Redis(favorite); // 先更新redis缓存
+        System.out.print("Already updated favorites in redis...");
         if(favoriteExistMongo(favorite.getUid(), favorite.getMid())){ //再操作数据库，如果以前收藏过该电影，
             return updateFavorite2Mongo(favorite); //
         }else{

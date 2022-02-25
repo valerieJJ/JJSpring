@@ -15,10 +15,7 @@ import valerie.myModel.Favorite;
 import valerie.myModel.Movie;
 import valerie.myModel.User;
 import valerie.myModel.VO.MovieVO;
-import valerie.myModel.requests.FavoriteRequest;
-import valerie.myModel.requests.HotMovieRequest;
-import valerie.myModel.requests.LoginUserRequest;
-import valerie.myModel.requests.RegisterUserRequest;
+import valerie.myModel.requests.*;
 import valerie.myservices.FavoriteService;
 import valerie.myservices.MovieService;
 import valerie.myservices.RecService;
@@ -209,14 +206,22 @@ public class UserController {
         HttpSession session = request.getSession();
         ModelAndView mv = new ModelAndView();
         User user = (User) session.getAttribute("user");
-        HotMovieRequest hotMovieRequest = new HotMovieRequest(6);
+
+        HotMovieRequest hotMovieRequest = new HotMovieRequest(6);//取出6个
         List<MovieVO> movieVOS = recService.getHotRecommendations(hotMovieRequest);
+
+        LatestMovieRequest latestMovieRequest = new LatestMovieRequest(6);//取出6个
+        List<MovieVO> latestMovieVOS = recService.getLatestRecommendations(latestMovieRequest);
+        System.out.print("latest count: "+latestMovieVOS.size());
+        latestMovieVOS.stream().forEach(x->System.out.println("latest: "+x.getName()+", "+x.getShoot()));
+
         if(user==null){// || session.getAttribute("user")==null
             mv.setViewName("index");
             System.out.println("no log in");
         }else{
             System.out.println("goIndex: username = "+user.getUsername());
             mv.addObject("user", user);
+            mv.addObject("latestmovieVOS", latestMovieVOS);
             mv.addObject("hotmovieVOS", movieVOS);
             mv.setViewName("mainIndex");
         }

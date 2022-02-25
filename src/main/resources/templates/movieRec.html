@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Movie Recommandation</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="../static/assets/favicon.ico" />
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" crossorigin="anonymous"></script>
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" type="text/css" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="../static/css/styles.css" rel="stylesheet" />
+</head>
+
+<body id="page-top">
+
+<section class="page-section bg-light" id="portfolio">
+    <div class="container">
+        <div class="text-center">
+            <!--            <h3 class="section-subheading text-muted">Movie Information</h3>-->
+            <h2 class="section-heading text-uppercase" th:text="${folder_name}"></h2>
+            <!--            <h3 class="section-subheading text-muted" th:text="${movie.getDescri()}"></h3>-->
+        </div>
+        <div class="row">
+
+            <div class="col-lg-4 col-sm-6 mb-4" th:each="movie:${hotmovies}">
+                <div class="portfolio-item">
+                    <a class="portfolio-link" data-bs-toggle="modal" th:href="@{'/movie/getmovie?mid='+${movie.getMid()}}">
+                        <div class="portfolio-hover">
+                            <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"></i></div>
+                        </div>
+                        <img class="img-fluid" src="../static/assets/img/myIcons/mickey.png" alt="..." />
+                    </a>
+                    <div class="portfolio-caption">
+                        <div class="portfolio-caption-heading" th:text="${movie.getName()}">
+                        </div>
+                        <div class="portfolio-caption-subheading text-muted" th:text="${movie.getLanguage()}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </tr>
+        </div>
+
+        <div class="text-center">
+            <p>  </p>
+<!--            <button class="btn btn-lg btn-primary btn-block"  onclick="{ javascript:history.back(-1)}">back</button>-->
+            <button  class="btn btn-lg btn-primary btn-block"  onclick="{ location.href='/user/goindex'}">mainIndex</button>
+            <button  class="btn btn-lg btn-primary btn-block"  onclick="{ location.href='/user/account#service2'}">account</button><br>
+        </div>
+        <!--        <button  class="btn btn-lg btn-primary btn-block"  onclick="{ location.href='/user/goindex'}">mainIndex</button><br>-->
+        <!--        <button  class="btn btn-lg btn-primary btn-block"  onclick="{ location.href='/user/account#service1'}">account</button><br>-->
+    </div>
+
+</section>
+
+</body>
+</html>

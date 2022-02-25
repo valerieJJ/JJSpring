@@ -27,7 +27,7 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav text-uppercase ms-auto py-4 py-lg-0">
-                        <li class="nav-item"><a class="nav-link" href="#services">Latest Movies</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#latest-movies">Latest Movies</a></li>
                         <li class="nav-item"><a class="nav-link" href="#portfolio">MovieRec</a></li>
                         <li class="nav-item"><a class="nav-link" href="#team">Team</a></li>
                         <li class="nav-item"><a class="nav-link" href="#myaccount">MyHistory</a></li>
@@ -57,41 +57,69 @@
 
             </div>
         </header>
+
         <!-- Services-->
-        <section class="page-section" id="services">
+<!--        <section class="page-section" id="services">-->
+<!--            <div class="container">-->
+<!--                <div class="text-center">-->
+<!--                    <h2 class="section-heading text-uppercase">Latest Movies</h2>-->
+<!--                    <h3 class="section-subheading text-muted">Here are the descriptions of the latest movies</h3>-->
+<!--                </div>-->
+<!--                <div class="row text-center">-->
+<!--                    <div class="col-md-4">-->
+<!--                        <span class="fa-stack fa-4x">-->
+<!--                            <i class="fas fa-circle fa-stack-2x text-primary"></i>-->
+<!--                            <i class="fas fa-shopping-cart fa-stack-1x fa-inverse"></i>-->
+<!--                        </span>-->
+<!--                        <h4 class="my-3">Thriller</h4>-->
+<!--                        <p class="text-muted">the best selling album in the history</p>-->
+<!--                    </div>-->
+<!--                    <div class="col-md-4">-->
+<!--                        <span class="fa-stack fa-4x">-->
+<!--                            <i class="fas fa-circle fa-stack-2x text-primary"></i>-->
+<!--                            <i class="fas fa-laptop fa-stack-1x fa-inverse"></i>-->
+<!--                        </span>-->
+<!--                        <h4 class="my-3">Smooth Criminal</h4>-->
+<!--                        <p class="text-muted">Annie are u ok ? Are u ok annie?</p>-->
+<!--                    </div>-->
+<!--                    <div class="col-md-4">-->
+<!--                        <span class="fa-stack fa-4x">-->
+<!--                            <i class="fas fa-circle fa-stack-2x text-primary"></i>-->
+<!--                            <i class="fas fa-lock fa-stack-1x fa-inverse"></i>-->
+<!--                        </span>-->
+<!--                        <h4 class="my-3">Billie Jean</h4>-->
+<!--                        <p class="text-muted">Not my lover. But she said i am the one...</p>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </section>-->
+
+        <!-- Services-->
+        <section class="page-section" id="latest-movies">
             <div class="container">
                 <div class="text-center">
                     <h2 class="section-heading text-uppercase">Latest Movies</h2>
-                    <h3 class="section-subheading text-muted">Here are the descriptions of the latest movies</h3>
+                    <h3 class="section-subheading text-muted">What are the latest movies ...</h3>
                 </div>
                 <div class="row text-center">
-                    <div class="col-md-4">
-                        <span class="fa-stack fa-4x">
-                            <i class="fas fa-circle fa-stack-2x text-primary"></i>
-                            <i class="fas fa-shopping-cart fa-stack-1x fa-inverse"></i>
-                        </span>
-                        <h4 class="my-3">Thriller</h4>
-                        <p class="text-muted">the best selling album in the history</p>
-                    </div>
-                    <div class="col-md-4">
-                        <span class="fa-stack fa-4x">
-                            <i class="fas fa-circle fa-stack-2x text-primary"></i>
-                            <i class="fas fa-laptop fa-stack-1x fa-inverse"></i>
-                        </span>
-                        <h4 class="my-3">Smooth Criminal</h4>
-                        <p class="text-muted">Annie are u ok ? Are u ok annie?</p>
-                    </div>
-                    <div class="col-md-4">
-                        <span class="fa-stack fa-4x">
-                            <i class="fas fa-circle fa-stack-2x text-primary"></i>
-                            <i class="fas fa-lock fa-stack-1x fa-inverse"></i>
-                        </span>
-                        <h4 class="my-3">Billie Jean</h4>
-                        <p class="text-muted">Not my lover. But she said i am the one...</p>
+                    <div class="col-lg-4 col-sm-6 mb-4" th:each="movieVO:${latestmovieVOS}">
+                        <div class="portfolio-item">
+                            <a th:href="@{'/movie/movieid?mid='+${movieVO.getMid()}}">
+                                <div class="portfolio-hover">
+                                    <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"></i></div>
+                                </div>
+                                <img class="img-fluid" src="../static/assets/img/myIcons/mickey.png" alt="..." />
+                            </a>
+                            <h4 class="my-3" th:text="${movieVO.getName()}"></h4>
+                            <p class="text-muted" th:text="${movieVO.getShoot()}"></p>
+                            <p class="text-muted" th:text="${movieVO.getGenres()}"></p>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
+
+
         <!-- Portfolio Grid-->
         <section class="page-section bg-light" id="portfolio">
             <div class="container">
