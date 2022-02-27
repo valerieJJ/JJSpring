@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.*;
+import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
 import com.mongodb.util.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,14 +77,23 @@ public class MongodbService {
         DBCollection coll = db.getCollection("Movie");
         DBObject query = new BasicDBObject(field,value);
 
+        //https://www.jianshu.com/p/de6dc0a67dc5
         DBCursor cursor = coll.find(query);
+
+//        BasicDBList condList = new BasicDBList();
+//        condList.add(query);
+//        condList.add(query);
+//        BasicDBObject joint = new BasicDBObject();
+//        joint.put("$and", condList);
+
         List<Movie> movies = new ArrayList<>();
         int cnt = 1;
-        while(cursor.hasNext() && cnt<=9){
+        while(cursor.hasNext() && movies.size()<=9){
+            int number = (int)(Math.random()*100)+1;
+            if(number%2==0) continue;
             DBObject movieObj = cursor.next();
             Movie movie = this.DBObject2Movie(movieObj);
             movies.add(movie);
-            cnt++;
         }
 
         System.out.println(movies);

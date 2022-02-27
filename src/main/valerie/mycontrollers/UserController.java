@@ -5,6 +5,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -84,6 +86,7 @@ public class UserController {
         HttpSession session = request.getSession();
         System.out.println("whoisit - port:"+request.getServerPort()+",session:"+session.getId());
         User user = (User)session.getAttribute("user");
+
         if(user==null){
             System.out.println("no log in");
             return "index";
@@ -103,9 +106,11 @@ public class UserController {
 //    }
 
 //    @GetMapping("/dologin")
+//    @RequestMapping("")
     @RequestMapping("/dologin") //@RequestMapping("/user/dologin")
     public String login(@ModelAttribute("user") User user,@ModelAttribute("movie") Movie movieReq, Model model,HttpServletRequest request) throws UnknownHostException {
         User newUsr = userService.loginUser(new LoginUserRequest(user.getUsername(),user.getPassword()));
+
         if(newUsr==null){
             System.out.println("Account does not exist");
 //            Main.Result.builder().code(-1).msg("用户名或密码错误").build();
@@ -113,9 +118,19 @@ public class UserController {
         }else {
             System.out.println("\nGet username="+newUsr.getUsername());
             System.out.println("Get password="+newUsr.getPassword());
+
+            LatestMovieRequest latestMovieRequest = new LatestMovieRequest(6);//取出6个
+            List<MovieVO> latestMovieVOS = recService.getLatestRecommendations(latestMovieRequest);
+            model.addAttribute("latestmovieVOS", latestMovieVOS);
+
             HotMovieRequest hotMovieRequest = new HotMovieRequest(6);
             List<MovieVO> movieVOS = recService.getHotRecommendations(hotMovieRequest);
             model.addAttribute("hotmovieVOS", movieVOS);
+
+            Set<String> rank = favoriteService.getZsetRank();
+            List<Integer> rankmids = rank.stream().limit(5).map(x->Integer.parseInt(x)).collect(Collectors.toList());
+            List<MovieVO> rankMovieVOS = movieService.getMovieVOS(rankmids);
+            model.addAttribute("rankmovieVOS", rankMovieVOS);
 
             HttpSession session = request.getSession();
             session.setAttribute("user", newUsr);
@@ -212,6 +227,11 @@ public class UserController {
 
         LatestMovieRequest latestMovieRequest = new LatestMovieRequest(6);//取出6个
         List<MovieVO> latestMovieVOS = recService.getLatestRecommendations(latestMovieRequest);
+
+        Set<String> rank = favoriteService.getZsetRank();
+        List<Integer> rankmids = rank.stream().limit(5).map(x->Integer.parseInt(x)).collect(Collectors.toList());
+        List<MovieVO> rankMovieVOS = movieService.getMovieVOS(rankmids);
+
         System.out.print("latest count: "+latestMovieVOS.size());
         latestMovieVOS.stream().forEach(x->System.out.println("latest: "+x.getName()+", "+x.getShoot()));
 
@@ -223,6 +243,7 @@ public class UserController {
             mv.addObject("user", user);
             mv.addObject("latestmovieVOS", latestMovieVOS);
             mv.addObject("hotmovieVOS", movieVOS);
+            mv.addObject("rankmovieVOS", rankMovieVOS);
             mv.setViewName("mainIndex");
         }
         return mv;
@@ -236,6 +257,7 @@ public class UserController {
             , HttpServletResponse response
             , Model model) throws IllegalAccessException, ServletException, IOException {
 //            User user = userService.findByUsername(username);
+        System.out.print("doFavorite......");
             HttpSession session = request.getSession();
             User user = (User) session.getAttribute("user");
             FavoriteRequest favoriteRequest = new FavoriteRequest(user.getUid(), mid);
@@ -246,11 +268,13 @@ public class UserController {
             }else {
                 succ = favoriteService.dropFavorite(favoriteRequest);
             }
-            boolean state = (favoriteService.findFavorite(user.getUid(), mid)==null)?false:true;
+            boolean state = (favoriteService.findFavorite2Mongo(user.getUid(), mid)==null)?false:true;
+//            boolean state = (favoriteService.findFavorite(user.getUid(), mid)==null)?false:true;
             model.addAttribute("success",succ);
             model.addAttribute("state", state);
+//            rank.forEach(x->System.out.println("zset rank: "+x));
 
-            System.out.println("\n\nstate1 is " + String.valueOf(state)+"\n");
+//            System.out.println("\n\n is " + String.valueOf(state)+"\n");
         String toUrl = "/movie/movieid?mid="+mid;
         request.getRequestDispatcher(toUrl).forward(request, response);
     }

@@ -3,10 +3,17 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.*;
+import com.mongodb.internal.operation.AggregateToCollectionOperation;
 import com.mongodb.util.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.data.mongodb.core.MongoTemplate;
+//import org.springframework.data.mongodb.core.aggregation.Aggregation;
+//import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+//import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
+import scala.Int;
 import valerie.myModel.Favorite;
 import valerie.myModel.Movie;
 import valerie.myModel.Rating;
@@ -17,6 +24,7 @@ import valerie.myModel.requests.TagRequest;
 import java.lang.reflect.Field;
 import java.net.UnknownHostException;
 import java.util.*;
+//import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 
 @Service
 public class FavoriteService {
@@ -29,8 +37,13 @@ public class FavoriteService {
     private ObjectMapper objectMapper = new ObjectMapper();
     @Autowired
     private Jedis jedis;
+//    @Autowired
+//    private MongoTemplate mongoTemplate;
+    @Autowired
+    RedisTemplate redisTemplate;
 
     private String collectionName = "Favorite";
+    private String zsetName = "favoriteRank";
 
     public FavoriteService() throws UnknownHostException {
     }
@@ -66,6 +79,20 @@ public class FavoriteService {
         return collection;
     }
 
+    public Favorite findFavorite2Mongo(int uid, int mid){
+        BasicDBObject query = new BasicDBObject();
+        query.append("uid", uid);
+        query.append("mid", mid);
+        DBCursor cursor = this.getCollection().find(query);
+        if (cursor.count()>0){
+            System.out.println("It's in your favorites");
+            Favorite favorite = DBOjbect2Favorite(cursor.next());
+            return favorite;
+        }else {
+            return null;
+        }
+    }
+
     public boolean insertFavorite2Mongo(Favorite favorite) throws IllegalAccessException {
         DBObject dbObject = mongodbService.bean2DBObject(favorite);
         this.getCollection().insert(dbObject);
@@ -76,23 +103,9 @@ public class FavoriteService {
         BasicDBObject query = new BasicDBObject();
         query.append("uid", uid);
         query.append("mid", mid);
-
+        Favorite favorite = findFavorite2Mongo(uid, mid);
         this.getCollection().findAndRemove(query);
         return true;
-    }
-
-    public Favorite findFavorite(int uid, int mid){
-        BasicDBObject query = new BasicDBObject();
-        query.append("uid", uid);
-        query.append("mid", mid);
-        DBCursor cursor = this.getCollection().find(query);
-        if (cursor.count()>0){
-            System.out.println("It's in your favorites");
-             Favorite favorite = DBOjbect2Favorite(cursor.next());
-            return favorite;
-        }else {
-            return null;
-        }
     }
 
     public List<Favorite> getFavoriteHistory(int uid){
@@ -107,114 +120,159 @@ public class FavoriteService {
         return favoriteList;
     }
 
-    private void updateFavorite2Redis(Favorite favorite){
-        // 刷新缓存时，先删缓存再写缓存
-        if(jedis.exists("uid:"+favorite.getUid())
-                && jedis.llen("uid:"+favorite.getUid())>=40){
-            jedis.rpop("uid:"+favorite.getUid());
+//    private void updateFavorite2Redis(Favorite favorite){
+//        Set<String> rankList = redisTemplate.opsForZSet().reverseRange(favorite.getMid(), 0L, 49L);
+//        List<Map> result = new ArrayList<>();
+//        for (String name : rankList){
+//            Map<String, Object> map = new HashMap<>();
+//            map.put("name", name);
+//            Double score = redisTemplate.opsForZSet().score(rankingKey, name);
+//            map.put("score", score);
+//            result.add(map);
+//        }
+//        System.out.println("通过key获取value：    " + jedis.get("uid:"+favorite.getUid()));
+//    }
+
+    private int getMIDFavoriteCounts(int mid){
+        BasicDBObject query = new BasicDBObject();
+        query.append("mid", mid);
+        DBCursor cursor = getCollection().find(query);
+        int cnt = 0;
+        while(cursor.hasNext()){
+            cnt ++;
         }
-        jedis.lpush("uid:"+favorite.getUid(),String.valueOf(favorite.getMid()));
+        return cnt;
     }
-
-
-    private void dropFavorite2Redis(Favorite favorite){
-        // 刷新缓存时，先删缓存再写缓存
-        if(jedis.exists("uid:"+favorite.getUid())
-                && jedis.llen("uid:"+favorite.getUid())>=40){
-            jedis.rpop("uid:"+favorite.getUid());
-        }
-        jedis.lpush("uid:"+favorite.getUid(),String.valueOf(favorite.getMid()));
+//
+//    class FavoriteCount{
+//        int fmid;
+//        int n;
+//    }
+    private HashMap<String, Double> getAllMoviesFavoritesCounts(){
+//
+//        System.out.println("getAllMoviesFavoritesCounts()... ");
+//
+//        TypedAggregation agg = Aggregation.newAggregation(
+//                Favorite.class,
+//                group("mid").count().as("n"),
+//                project("n").and("fmid")
+//        );
+//        AggregationResults<FavoriteCount> output = mongoTemplate.aggregate(agg,FavoriteCount.class);
+//        List<FavoriteCount> favoriteList = output.getMappedResults();
+//        System.out.println("getAllMoviesFavoritesCounts()... "+favoriteList.size());
+//        HashMap<String, Double> map = new HashMap<>();
+//        for(FavoriteCount f:favoriteList){
+////            int cnt = getMIDFavoriteCounts(f.fmid);
+//            map.put(String.valueOf(f.fmid), (double)f.n);
+//        }
+//        return  map;
+        return  null;
     }
 
     public boolean favoriteExistMongo(int uid, int mid){
-        if(findFavorite(uid, mid)!=null){
+        if(findFavorite2Mongo(uid, mid)!=null){
             return true;
         }else {
             return false;
         }
     }
 
+    public boolean updateFavorite2Mongo(Favorite favorite){//先查询后重置用户对该电影的评价
+        BasicDBObject query = new BasicDBObject();
+        query.append("uid", favorite.getUid());
+        query.append("mid", favorite.getMid());
+        getCollection().update(query,
+                new BasicDBObject("$set",  // {$set:{field:value}}把文档中某个字段field的值设为value
+                        new BasicDBObject("timestamp",favorite.getTimestamp())
+                )
+        );
+//        redisTemplate.opsForZSet().incrementScore(sortedSetKet, favorite, 1);
+        return true;
+    }
+
+    /********************   jedis   ******************************/
+    private void initZsetFromMongo(){
+//        Map<String, Double> map = getAllMoviesFavoritesCounts();
+//        jedis.zadd(zsetName, map);
+//        System.out.println("initZsetFromMongo()...");
+    }
+
+    public Set<String> getZsetRank(){
+        Set<String> set = redisTemplate.opsForZSet().reverseRange(zsetName, 0, 9);
+        System.out.println("\ngetZsetRank()...: size="+set.size());
+        return set;
+    }
+
+    private void addFavoriteZset(Favorite favorite){
+        if(!jedis.exists(zsetName)){
+            System.out.println("!jedis.exists(zsetName)...");
+//            initZsetFromMongo();
+        }
+        Set<String> ranks = getZsetRank();
+        if(ranks.size()==0){
+            System.out.println("ranks.size()==0...");
+//            initZsetFromMongo();
+        }
+
+        String mid = String.valueOf(favorite.getMid());
+        if(ranks.contains(mid)) return;
+        redisTemplate.opsForZSet().incrementScore(zsetName,mid,1.0);
+        System.out.println("addFavoriteZset...");
+    }
+
+    private boolean decreaseFavoriteZset(Favorite favorite){
+        Set<String> ranks = getZsetRank();
+        String mid = String.valueOf(favorite.getMid());
+
+        System.out.println("decreasingZset...");
+        if(ranks.size()!=0 && ranks.contains(mid)) {
+            redisTemplate.opsForZSet().incrementScore(zsetName, mid, -1.0);
+            redisTemplate.opsForZSet().removeRangeByScore(zsetName, -1*Integer.MAX_VALUE, 0.1);
+//            redisTemplate.opsForZSet().remove(zsetName, mid);
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+//    private void dropFavoriteZset(Favorite favorite){
+//        // 刷新缓存时，先删缓存再写缓存
+//        if(jedis.exists("uid:"+favorite.getUid())
+//                && jedis.llen("uid:"+favorite.getUid())>=40){
+//            jedis.rpop("uid:"+favorite.getUid());
+//        }
+//        jedis.lpush("uid:"+favorite.getUid(),String.valueOf(favorite.getMid()));
+//    }
+
+    /********************  dealing with requests   ******************************/
     public boolean updateFavorite(FavoriteRequest favoriteRequest) throws IllegalAccessException {
         Favorite favorite = new Favorite(favoriteRequest.getUid(), favoriteRequest.getMid());
-        updateFavorite2Redis(favorite); // 先更新redis缓存
-        System.out.print("Already updated favorites in redis...");
+
+//        updateFavorite2Redis(favorite); // 先更新redis缓存
+//        addOrUpdateZset(favorite);
+        boolean res;
         if(favoriteExistMongo(favorite.getUid(), favorite.getMid())){ //再操作数据库，如果以前收藏过该电影，
-            return updateFavorite2Mongo(favorite); //
+            res = updateFavorite2Mongo(favorite); //
         }else{
-            return insertFavorite2Mongo(favorite); // 否则插入新的收藏
+            res = insertFavorite2Mongo(favorite); // 否则插入新的收藏
         }
+        System.out.println("mongo added favorite ... ");
+        addFavoriteZset(favorite);
+        Set<String> rank = getZsetRank();
+        rank.forEach(x->System.out.println("zset rank: mid="+x));
+        return res;
     }
 
     public boolean dropFavorite(FavoriteRequest favoriteRequest) throws IllegalAccessException {
         Favorite favorite = new Favorite(favoriteRequest.getUid(), favoriteRequest.getMid());
-        dropFavorite2Redis(favorite); // 先更新redis缓存
+//        dropFavorite2Redis(favorite); // 先更新redis缓存
+        decreaseFavoriteZset(favorite);
         if(favoriteExistMongo(favoriteRequest.getUid(), favoriteRequest.getMid())){ //再操作数据库，如果以前收藏过该电影，
             return dropFavorite2Mongo(favoriteRequest.getUid(), favoriteRequest.getMid()); //
         }else{
             return false;
         }
     }
-
-    public <T> DBObject bean2DBObject(T bean) throws IllegalArgumentException,
-            IllegalAccessException {
-        if (bean == null) {
-            return null;
-        }
-        DBObject dbObject = new BasicDBObject();
-        // 获取对象对应类中的所有属性域
-        Field[] fields = bean.getClass().getDeclaredFields();
-        for (Field field : fields) {
-            // 获取属性名
-            String varName = field.getName();
-            // 修改访问控制权限
-            boolean accessFlag = field.isAccessible();
-            if (!accessFlag) {
-                field.setAccessible(true);
-            }
-            Object param = field.get(bean);
-            if (param == null) {
-                continue;
-            } else if (param instanceof Integer) {//判断变量的类型
-                int value = ((Integer) param).intValue();
-                dbObject.put(varName, value);
-            } else if (param instanceof String) {
-                String value = (String) param;
-                dbObject.put(varName, value);
-            } else if (param instanceof Double) {
-                double value = ((Double) param).doubleValue();
-                dbObject.put(varName, value);
-            } else if (param instanceof Float) {
-                float value = ((Float) param).floatValue();
-                dbObject.put(varName, value);
-            } else if (param instanceof Long) {
-                long value = ((Long) param).longValue();
-                dbObject.put(varName, value);
-            } else if (param instanceof Boolean) {
-                boolean value = ((Boolean) param).booleanValue();
-                dbObject.put(varName, value);
-            } else if (param instanceof Date) {
-                Date value = (Date) param;
-                dbObject.put(varName, value);
-            }
-            // 恢复访问控制权限
-            field.setAccessible(accessFlag);
-        }
-        return dbObject;
-    }
-
-    public boolean updateFavorite2Mongo(Favorite favorite){//先查询后重置用户对该电影的评价
-        BasicDBObject query = new BasicDBObject();
-        query.append("uid", favorite.getUid());
-        query.append("mid", favorite.getMid());
-
-        getCollection().update(query,
-                new BasicDBObject("$set",  // {$set:{field:value}}把文档中某个字段field的值设为value
-                        new BasicDBObject("timestamp",favorite.getTimestamp())
-                )
-        );
-        return true;
-    }
-
     public static void main(String[] args) throws UnknownHostException, IllegalAccessException {
         FavoriteService favoriteService = new FavoriteService();
 //        DBCollection collection = favoriteService.getCollection("Favorite");
@@ -222,7 +280,7 @@ public class FavoriteService {
         FavoriteRequest favoriteRequest = new FavoriteRequest(231141674, 1721);
 //        DBObject object = favoriteService.bean2DBObject(favorite);
 //        favoriteService.updateFavorite2Mongo(favorite);
-        favoriteService.dropFavorite(favoriteRequest);
+//        favoriteService.dropFavorite(favoriteRequest);
 //        favoriteService.getCollection().insert(object);
 
         List<Favorite> favoriteList = favoriteService.getFavoriteHistory(231141674);
