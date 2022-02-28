@@ -19,7 +19,7 @@ public class MyAspect {
     //切入点：待增强的方法是RecMovieController类中的所有方法
 //    @Pointcut("@args(valerie.mycontrollers.MovieController)")
     //execution（<修饰符模式>？<返回类型模式><方法名模式>（<参数模式>）<异常模式>？）除了返回类型模式，方法名模式和参数模式外，其它项都是可选的。
-    @Pointcut("execution(public * valerie.mycontrollers.MovieController..*.*(..))")
+    @Pointcut("execution(public * valerie.mycontrollers.RecMovieController.*(..))")
     public void message(){
         System.out.println("\nHere comes the pointCut...");
     }
