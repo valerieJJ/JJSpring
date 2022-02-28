@@ -109,7 +109,7 @@ public class UserController {
 //    @RequestMapping("")
 //    @RequestMapping("/mainpage") //@RequestMapping("/user/dologin")
 //    @GetMapping("/pagemain")
-    @RequestMapping("/mainpage")
+    @RequestMapping("/dologin")
     public String login(@ModelAttribute("user") User user,@ModelAttribute("movie") Movie movieReq, Model model,HttpServletRequest request) throws UnknownHostException {
         User newUsr = userService.loginUser(new LoginUserRequest(user.getUsername(),user.getPassword()));
 

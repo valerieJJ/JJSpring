@@ -38,8 +38,6 @@ public class MovieController {
     private ESService esService;
     @Autowired
     private FavoriteService favoriteService;
-    @Autowired
-    private MultiThreadsService multiThreadsService;
 
     @RequestMapping("rate")
     public String rateMovie(

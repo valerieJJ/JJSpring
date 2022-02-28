@@ -1,4 +1,4 @@
-package valerie.myservices;
+package valerie.myservices.trash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import valerie.myModel.User;
+import valerie.myservices.UserService;
 
 import java.util.List;
 
