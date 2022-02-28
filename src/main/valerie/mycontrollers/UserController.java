@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 //import valerie.mycontrollers.MongodbService;
 import valerie.myModel.Favorite;
 import valerie.myModel.Movie;
+import valerie.myModel.PermissionAnnotation;
 import valerie.myModel.User;
 import valerie.myModel.VO.MovieVO;
 import valerie.myModel.requests.*;
@@ -252,6 +253,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/{mid}/favor", produces = "application/json", method = RequestMethod.POST )
+    @PermissionAnnotation()
     public void doFavorite(
             @PathVariable("mid")int mid,
             @RequestParam("favoption")boolean favoption
