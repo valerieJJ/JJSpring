@@ -85,7 +85,7 @@ public class LoginController {
             System.out.println("Get password="+newUsr.getPassword());
             HttpSession session = request.getSession();
             session.setAttribute("user", newUsr);
-            return "redirect:goindex";
+            return "redirect:main";
 //            return "mainIndex";
         }
     }

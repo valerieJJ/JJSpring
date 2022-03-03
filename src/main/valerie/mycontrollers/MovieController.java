@@ -83,9 +83,6 @@ public class MovieController {
         modelAndView.addObject("movies", data);
         modelAndView.addObject("folder_name", type);
         modelAndView.setViewName("movieFolder");
-//        HttpSession session = request.getSession();
-//        User usr = (User)session.getAttribute("user");
-//        modelAndView.addObject("user", usr);
         return modelAndView;
     }
     @RequestMapping("/moviefolder1")
