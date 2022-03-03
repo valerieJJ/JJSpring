@@ -122,16 +122,6 @@ public class UserController {
             System.out.println("\nGet username="+newUsr.getUsername());
             System.out.println("Get password="+newUsr.getPassword());
 
-            HotMovieRequest hotMovieRequest = new HotMovieRequest(6);//取出6个
-            CompletableFuture<List<MovieVO>> hotMovieVOS = recService.getHotRecommendations(hotMovieRequest);
-
-            LatestMovieRequest latestMovieRequest = new LatestMovieRequest(6);//取出6个
-            CompletableFuture<List<MovieVO>> latestMovieVOS = recService.getLatestRecommendations(latestMovieRequest);
-
-            CompletableFuture.allOf(hotMovieVOS, latestMovieVOS).join();
-            List<MovieVO> hotmovies = hotMovieVOS.get();
-            List<MovieVO> latestmovies = hotMovieVOS.get();
-
             getRecs2(model);
 
             Set<String> rank = favoriteService.getZsetRank();
@@ -177,14 +167,14 @@ public class UserController {
         System.out.println("password is " + password);
 
 
-        HotMovieRequest hotMovieRequest = new HotMovieRequest(6);//取出6个
-        CompletableFuture<List<MovieVO>> hotMovieVOS = recService.getHotRecommendations(hotMovieRequest);
-        LatestMovieRequest latestMovieRequest = new LatestMovieRequest(6);//取出6个
-        CompletableFuture<List<MovieVO>> latestMovieVOS = recService.getLatestRecommendations(latestMovieRequest);
-
-        CompletableFuture.allOf(hotMovieVOS, latestMovieVOS).join();
-        List<MovieVO> hotmovies = hotMovieVOS.get();
-        List<MovieVO> latestmovies = hotMovieVOS.get();
+//        HotMovieRequest hotMovieRequest = new HotMovieRequest(6);//取出6个
+//        CompletableFuture<List<MovieVO>> hotMovieVOS = recService.getHotRecommendations(hotMovieRequest);
+//        LatestMovieRequest latestMovieRequest = new LatestMovieRequest(6);//取出6个
+//        CompletableFuture<List<MovieVO>> latestMovieVOS = recService.getLatestRecommendations(latestMovieRequest);
+//
+//        CompletableFuture.allOf(hotMovieVOS, latestMovieVOS).join();
+//        List<MovieVO> hotmovies = hotMovieVOS.get();
+//        List<MovieVO> latestmovies = hotMovieVOS.get();
 
 //        HotMovieRequest hotMovieRequest = new HotMovieRequest(6);
 //        List<MovieVO> movieVOS = recService.getHotRecommendations(hotMovieRequest);
@@ -244,21 +234,9 @@ public class UserController {
         ModelAndView mv = new ModelAndView();
         User user = (User) session.getAttribute("user");
 
-        HotMovieRequest hotMovieRequest = new HotMovieRequest(6);//取出6个
-        CompletableFuture<List<MovieVO>> hotMovieVOS = recService.getHotRecommendations(hotMovieRequest);
-        LatestMovieRequest latestMovieRequest = new LatestMovieRequest(6);//取出6个
-        CompletableFuture<List<MovieVO>> latestMovieVOS = recService.getLatestRecommendations(latestMovieRequest);
-
-        CompletableFuture.allOf(hotMovieVOS, latestMovieVOS).join();
-        List<MovieVO> hotmovies = hotMovieVOS.get();
-        List<MovieVO> latestmovies = hotMovieVOS.get();
-
         Set<String> rank = favoriteService.getZsetRank();
         List<Integer> rankmids = rank.stream().limit(5).map(x->Integer.parseInt(x)).collect(Collectors.toList());
         List<MovieVO> rankMovieVOS = movieService.getMovieVOS(rankmids);
-
-        System.out.print("latest count: "+latestmovies.size());
-        latestmovies.stream().forEach(x->System.out.println("latest: "+x.getName()+", "+x.getShoot()));
 
         if(user==null){// || session.getAttribute("user")==null
             mv.setViewName("index");
