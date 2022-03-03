@@ -33,8 +33,9 @@ public class WelcomeController {
         List<MovieVO> latestmovies = hotMovieVOS.get();
 
         ModelAndView mv = new ModelAndView();
-        mv.addObject("latestmovieVOS", latestmovies);
-        mv.addObject("hotmovieVOS", hotmovies);
+
+        mv.addObject("rechotmovieVOS", hotmovies);
+        mv.addObject("reclatestmovieVOS", latestmovies);
         mv.setViewName("index");
         return mv;
     }
