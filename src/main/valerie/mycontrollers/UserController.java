@@ -21,10 +21,8 @@ import valerie.myModel.PermissionAnnotation;
 import valerie.myModel.User;
 import valerie.myModel.VO.MovieVO;
 import valerie.myModel.requests.*;
-import valerie.myservices.FavoriteService;
-import valerie.myservices.MovieService;
-import valerie.myservices.RecService;
-import valerie.myservices.UserService;
+import valerie.myUtils.SpringUtil;
+import valerie.myservices.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.ServletException;
@@ -44,6 +42,8 @@ public class UserController {
     private RecService recService;
     @Autowired
     private FavoriteService favoriteService;
+    @Autowired
+    private LikeService likeService;
 
     public UserController() throws UnknownHostException {
     }
@@ -254,10 +254,7 @@ public class UserController {
     @RequestMapping(value = "/{mid}/favor", produces = "application/json", method = RequestMethod.POST )
     @PermissionAnnotation()
     public void doFavorite(
-            @PathVariable("mid")int mid,
-            @RequestParam("favoption")boolean favoption
-            , HttpServletRequest request
-            , HttpServletResponse response
+            @PathVariable("mid")int mid, @RequestParam("favoption")boolean favoption, HttpServletRequest request, HttpServletResponse response
             , Model model) throws IllegalAccessException, ServletException, IOException {
 //            User user = userService.findByUsername(username);
         System.out.print("doFavorite......");
@@ -279,6 +276,33 @@ public class UserController {
         String toUrl = "/movie/movieid?mid="+mid;
         request.getRequestDispatcher(toUrl).forward(request, response);
     }
+
+    @RequestMapping(value = "/{mid}/like", produces = "application/json", method = RequestMethod.POST )
+    @PermissionAnnotation()
+    public void like(@PathVariable("mid")int mid, @RequestParam("likeoption")boolean likeoption, HttpServletRequest request, HttpServletResponse response
+            , Model model) throws IllegalAccessException, ServletException, IOException {
+        LikeService likeService = SpringUtil.getBean(LikeService.class);
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        LikeRequest likeRequest = new LikeRequest(user.getUid(), mid);
+        LikeService ls = SpringUtil.getBean(LikeService.class);
+
+        boolean succ = false;
+
+        if(likeoption){
+            succ = likeService.updateLike(likeRequest);
+        }else {
+            succ =likeService.updateLike(likeRequest);
+        }
+        boolean state = (likeService.findLike(user.getUid(), mid)==null)?false:true;
+
+        model.addAttribute("success",succ);
+        model.addAttribute("state", state);
+
+        String toUrl = "/movie/movieid?mid="+mid;
+        request.getRequestDispatcher(toUrl).forward(request, response);
+    }
+
     public void getRecs(ModelAndView mv) throws ExecutionException, InterruptedException {
         HotMovieRequest hotMovieRequest = new HotMovieRequest(6);//取出6个
         CompletableFuture<List<MovieVO>> hotMovieVOS = recService.getHotRecommendations(hotMovieRequest);
