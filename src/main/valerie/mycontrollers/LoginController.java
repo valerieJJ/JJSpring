@@ -83,22 +83,13 @@ public class LoginController {
         }else {
             System.out.println("\nGet username="+newUsr.getUsername());
             System.out.println("Get password="+newUsr.getPassword());
-
-            getRecs2(model);
-
-            Set<String> rank = favoriteService.getZsetRank();
-            List<Integer> rankmids = rank.stream().limit(5).map(x->Integer.parseInt(x)).collect(Collectors.toList());
-            List<MovieVO> rankMovieVOS = movieService.getMovieVOS(rankmids);
-            model.addAttribute("rankmovieVOS", rankMovieVOS);
-
             HttpSession session = request.getSession();
             session.setAttribute("user", newUsr);
-            model.addAttribute("user", newUsr);
-            System.out.println("login - port:"+request.getServerPort()+",session:"+session.getId());
-
-            return "mainIndex";
+            return "redirect:goindex";
+//            return "mainIndex";
         }
     }
+
 
     public void getRecs(ModelAndView mv) throws ExecutionException, InterruptedException {
         HotMovieRequest hotMovieRequest = new HotMovieRequest(6);//取出6个
