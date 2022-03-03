@@ -111,8 +111,7 @@ public class UserController {
 //    @GetMapping("/dologin")
 //    @RequestMapping("")
 //    @RequestMapping("/mainpage") //@RequestMapping("/user/dologin")
-//    @GetMapping("/pagemain")
-    @RequestMapping("/dologin")
+    @RequestMapping(value = "/dologin", method = {RequestMethod.GET,RequestMethod.POST})
     public String login(@ModelAttribute("user") User user,@ModelAttribute("movie") Movie movieReq, Model model,HttpServletRequest request) throws UnknownHostException, ExecutionException, InterruptedException {
         User newUsr = userService.loginUser(new LoginUserRequest(user.getUsername(),user.getPassword()));
 
