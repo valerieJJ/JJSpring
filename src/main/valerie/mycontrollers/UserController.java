@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,7 +113,7 @@ public class UserController {
 //    @RequestMapping("/mainpage") //@RequestMapping("/user/dologin")
 //    @GetMapping("/pagemain")
     @RequestMapping("/dologin")
-    public String login(@ModelAttribute("user") User user,@ModelAttribute("movie") Movie movieReq, Model model,HttpServletRequest request) throws UnknownHostException {
+    public String login(@ModelAttribute("user") User user,@ModelAttribute("movie") Movie movieReq, Model model,HttpServletRequest request) throws UnknownHostException, ExecutionException, InterruptedException {
         User newUsr = userService.loginUser(new LoginUserRequest(user.getUsername(),user.getPassword()));
 
         if(newUsr==null){
@@ -122,13 +124,25 @@ public class UserController {
             System.out.println("\nGet username="+newUsr.getUsername());
             System.out.println("Get password="+newUsr.getPassword());
 
-            LatestMovieRequest latestMovieRequest = new LatestMovieRequest(6);//取出6个
-            List<MovieVO> latestMovieVOS = recService.getLatestRecommendations(latestMovieRequest);
-            model.addAttribute("latestmovieVOS", latestMovieVOS);
+//            LatestMovieRequest latestMovieRequest = new LatestMovieRequest(6);//取出6个
+//            List<MovieVO> latestMovieVOS = recService.getLatestRecommendations(latestMovieRequest);
+//
+//            HotMovieRequest hotMovieRequest = new HotMovieRequest(6);
+//            List<MovieVO> movieVOS = recService.getHotRecommendations(hotMovieRequest);
 
-            HotMovieRequest hotMovieRequest = new HotMovieRequest(6);
-            List<MovieVO> movieVOS = recService.getHotRecommendations(hotMovieRequest);
-            model.addAttribute("hotmovieVOS", movieVOS);
+
+            HotMovieRequest hotMovieRequest = new HotMovieRequest(6);//取出6个
+            CompletableFuture<List<MovieVO>> hotMovieVOS = recService.getHotRecommendations(hotMovieRequest);
+
+            LatestMovieRequest latestMovieRequest = new LatestMovieRequest(6);//取出6个
+            CompletableFuture<List<MovieVO>> latestMovieVOS = recService.getLatestRecommendations(latestMovieRequest);
+
+            CompletableFuture.allOf(hotMovieVOS, latestMovieVOS).join();
+            List<MovieVO> hotmovies = hotMovieVOS.get();
+            List<MovieVO> latestmovies = hotMovieVOS.get();
+
+            model.addAttribute("hotmovieVOS", hotmovies);
+            model.addAttribute("latestmovieVOS", latestmovies);
 
             Set<String> rank = favoriteService.getZsetRank();
             List<Integer> rankmids = rank.stream().limit(5).map(x->Integer.parseInt(x)).collect(Collectors.toList());
@@ -165,15 +179,27 @@ public class UserController {
         return "register";
     }
     @RequestMapping("/doregister")
-    public String register(Model model, HttpServletRequest request){
+    public String register(Model model, HttpServletRequest request) throws ExecutionException, InterruptedException {
         String name = request.getParameter("username");
         String password = request.getParameter("password");
 
         System.out.println("username is " + name);
         System.out.println("password is " + password);
-        HotMovieRequest hotMovieRequest = new HotMovieRequest(6);
-        List<MovieVO> movieVOS = recService.getHotRecommendations(hotMovieRequest);
+
+
+        HotMovieRequest hotMovieRequest = new HotMovieRequest(6);//取出6个
+        CompletableFuture<List<MovieVO>> hotMovieVOS = recService.getHotRecommendations(hotMovieRequest);
+        LatestMovieRequest latestMovieRequest = new LatestMovieRequest(6);//取出6个
+        CompletableFuture<List<MovieVO>> latestMovieVOS = recService.getLatestRecommendations(latestMovieRequest);
+
+        CompletableFuture.allOf(hotMovieVOS, latestMovieVOS).join();
+        List<MovieVO> hotmovies = hotMovieVOS.get();
+        List<MovieVO> latestmovies = hotMovieVOS.get();
+
+//        HotMovieRequest hotMovieRequest = new HotMovieRequest(6);
+//        List<MovieVO> movieVOS = recService.getHotRecommendations(hotMovieRequest);
 //        User user = userservice.getUser(new RegisterUserRequest(name, password));
+
         if(userService.checkUserExist(name)){
             System.out.println("user already exists, please login");
             model.addAttribute("success",false);
@@ -183,7 +209,9 @@ public class UserController {
             model.addAttribute("success", true);
             User user = userService.registerUser(new RegisterUserRequest(name,password));
             model.addAttribute("user", user);
-            model.addAttribute("hotmovieVOS", movieVOS);
+//            model.addAttribute("hotmovieVOS", movieVOS);
+            model.addAttribute("hotmovieVOS", hotmovies);
+            model.addAttribute("latestmovieVOS", latestmovies);
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
             System.out.println("register successful!");
@@ -220,23 +248,33 @@ public class UserController {
     }
 
     @RequestMapping("/goindex")
-    public ModelAndView goIndex(@ModelAttribute("movie") Movie movie, HttpServletRequest request){
+    public ModelAndView goIndex(@ModelAttribute("movie") Movie movie, HttpServletRequest request) throws ExecutionException, InterruptedException {
         HttpSession session = request.getSession();
         ModelAndView mv = new ModelAndView();
         User user = (User) session.getAttribute("user");
 
-        HotMovieRequest hotMovieRequest = new HotMovieRequest(6);//取出6个
-        List<MovieVO> movieVOS = recService.getHotRecommendations(hotMovieRequest);
+//        HotMovieRequest hotMovieRequest = new HotMovieRequest(6);//取出6个
+//        List<MovieVO> movieVOS = recService.getHotRecommendations(hotMovieRequest);
+//
+//        LatestMovieRequest latestMovieRequest = new LatestMovieRequest(6);//取出6个
+//        List<MovieVO> latestMovieVOS = recService.getLatestRecommendations(latestMovieRequest);
 
+
+        HotMovieRequest hotMovieRequest = new HotMovieRequest(6);//取出6个
+        CompletableFuture<List<MovieVO>> hotMovieVOS = recService.getHotRecommendations(hotMovieRequest);
         LatestMovieRequest latestMovieRequest = new LatestMovieRequest(6);//取出6个
-        List<MovieVO> latestMovieVOS = recService.getLatestRecommendations(latestMovieRequest);
+        CompletableFuture<List<MovieVO>> latestMovieVOS = recService.getLatestRecommendations(latestMovieRequest);
+
+        CompletableFuture.allOf(hotMovieVOS, latestMovieVOS).join();
+        List<MovieVO> hotmovies = hotMovieVOS.get();
+        List<MovieVO> latestmovies = hotMovieVOS.get();
 
         Set<String> rank = favoriteService.getZsetRank();
         List<Integer> rankmids = rank.stream().limit(5).map(x->Integer.parseInt(x)).collect(Collectors.toList());
         List<MovieVO> rankMovieVOS = movieService.getMovieVOS(rankmids);
 
-        System.out.print("latest count: "+latestMovieVOS.size());
-        latestMovieVOS.stream().forEach(x->System.out.println("latest: "+x.getName()+", "+x.getShoot()));
+        System.out.print("latest count: "+latestmovies.size());
+        latestmovies.stream().forEach(x->System.out.println("latest: "+x.getName()+", "+x.getShoot()));
 
         if(user==null){// || session.getAttribute("user")==null
             mv.setViewName("index");
@@ -244,8 +282,11 @@ public class UserController {
         }else{
             System.out.println("goIndex: username = "+user.getUsername());
             mv.addObject("user", user);
-            mv.addObject("latestmovieVOS", latestMovieVOS);
-            mv.addObject("hotmovieVOS", movieVOS);
+//            mv.addObject("latestmovieVOS", latestMovieVOS);
+//            mv.addObject("hotmovieVOS", movieVOS);
+            mv.addObject("hotmovieVOS", hotmovies);
+            mv.addObject("latestmovieVOS", latestmovies);
+
             mv.addObject("rankmovieVOS", rankMovieVOS);
             mv.setViewName("mainIndex");
         }

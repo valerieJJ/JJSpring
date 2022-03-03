@@ -11,6 +11,7 @@ import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import valerie.myModel.Rating;
 import valerie.myModel.VO.MovieVO;
@@ -23,6 +24,7 @@ import valerie.myUtils.Constant;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class RecService {
@@ -50,16 +52,17 @@ public class RecService {
         }
     }
 
-
-    public List<MovieVO> getLatestRecommendations(LatestMovieRequest request) {
+    @Async
+    public CompletableFuture<List<MovieVO>> getLatestRecommendations(LatestMovieRequest request) {
         int sum = request.getSum();
+
+
+
         System.out.println("latest recommendation getSum = " + sum);
         DBCollection movieCollection = mongodbService.getCollection("Movie");
 //        BasicDBObject shoot =
 //        DBCursor cursor = movieCollection.find().sort(Sorts.orderBy(Sorts.descending("times"))).limit(sum);
-
         DBCursor cursor = movieCollection.find().sort(new BasicDBObject("shoot", -1));//.sort(Sorts.descending("yearmonth")).limit(sum)
-
         List<MovieVO> movieVOS = new ArrayList<>();
         while (cursor.hasNext() && sum != 0) {
             MovieDTO movieDTO = DBObject2MovieDTO(cursor.next());
@@ -81,10 +84,11 @@ public class RecService {
 
             sum--;
         }
-        return movieVOS;
+        return CompletableFuture.completedFuture(movieVOS);
     }
 
-    public List<MovieVO> getHotRecommendations(HotMovieRequest request){
+    @Async
+    public CompletableFuture<List<MovieVO>> getHotRecommendations(HotMovieRequest request){
         int sum = request.getSum();
         System.out.println("hot recommendation getSum = "+sum);
         DBCollection movieCollection = mongodbService.getCollection("RateMoreMovies");
@@ -110,7 +114,7 @@ public class RecService {
 
             sum--;
         }
-        return movieVOS;
+        return CompletableFuture.completedFuture(movieVOS);
 
     }
 

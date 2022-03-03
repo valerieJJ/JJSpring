@@ -4,12 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import valerie.myModel.Movie;
 import valerie.myModel.VO.MovieVO;
 import valerie.myModel.requests.HotMovieRequest;
 import valerie.myModel.requests.LatestMovieRequest;
 import valerie.myservices.*;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 @Controller
 public class WelcomeController {
@@ -17,17 +20,21 @@ public class WelcomeController {
     private RecService recService;
 
     @RequestMapping("")
-    public ModelAndView welcomePage(){
+    public ModelAndView welcomePage() throws ExecutionException, InterruptedException {
 
         HotMovieRequest hotMovieRequest = new HotMovieRequest(6);//取出6个
-        List<MovieVO> movieVOS = recService.getHotRecommendations(hotMovieRequest);
+        CompletableFuture<List<MovieVO>> hotMovieVOS = recService.getHotRecommendations(hotMovieRequest);
 
         LatestMovieRequest latestMovieRequest = new LatestMovieRequest(6);//取出6个
-        List<MovieVO> latestMovieVOS = recService.getLatestRecommendations(latestMovieRequest);
+        CompletableFuture<List<MovieVO>> latestMovieVOS = recService.getLatestRecommendations(latestMovieRequest);
+
+        CompletableFuture.allOf(hotMovieVOS, latestMovieVOS).join();
+        List<MovieVO> hotmovies = hotMovieVOS.get();
+        List<MovieVO> latestmovies = hotMovieVOS.get();
 
         ModelAndView mv = new ModelAndView();
-        mv.addObject("latestmovieVOS", latestMovieVOS);
-        mv.addObject("hotmovieVOS", movieVOS);
+        mv.addObject("latestmovieVOS", latestmovies);
+        mv.addObject("hotmovieVOS", hotmovies);
         mv.setViewName("index");
         return mv;
     }

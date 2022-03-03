@@ -13,6 +13,8 @@ import valerie.myModel.requests.LatestMovieRequest;
 import valerie.myservices.RecService;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 @Controller
 public class RecMovieController {
@@ -20,19 +22,23 @@ public class RecMovieController {
     private RecService recService;
 
     @RequestMapping("/")
-    public ModelAndView recHotMovies(){
+    public ModelAndView recHotMovies() throws ExecutionException, InterruptedException {
         System.out.println("recHotMovies////");
 
-        HotMovieRequest hotMovieRequest = new HotMovieRequest(6);
-        List<MovieVO> movieVOS = recService.getHotRecommendations(hotMovieRequest);
 
+        HotMovieRequest hotMovieRequest = new HotMovieRequest(6);//取出6个
+        CompletableFuture<List<MovieVO>> hotMovieVOS = recService.getHotRecommendations(hotMovieRequest);
         LatestMovieRequest latestMovieRequest = new LatestMovieRequest(6);//取出6个
-        List<MovieVO> latestMovieVOS = recService.getLatestRecommendations(latestMovieRequest);
+        CompletableFuture<List<MovieVO>> latestMovieVOS = recService.getLatestRecommendations(latestMovieRequest);
+
+        CompletableFuture.allOf(hotMovieVOS, latestMovieVOS).join();
+        List<MovieVO> hotmovies = hotMovieVOS.get();
+        List<MovieVO> latestmovies = hotMovieVOS.get();
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("rechotmovieVOS", movieVOS);
+        modelAndView.addObject("rechotmovieVOS",hotmovies);
 
-        modelAndView.addObject("reclatestmovieVOS",latestMovieVOS);
+        modelAndView.addObject("reclatestmovieVOS",latestmovies);
 
 
         modelAndView.setViewName("index");
