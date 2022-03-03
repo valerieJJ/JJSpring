@@ -68,7 +68,6 @@ public class UserController {
         return "show";
     }
 
-
 //    @RequestMapping("/accountPage")
 //    public String goAccountPage(Model model, HttpServletRequest request) throws UnknownHostException {
 //        HttpSession session = request.getSession();
@@ -108,27 +107,20 @@ public class UserController {
 //        return "login";
 //    }
 
-//    @GetMapping("/dologin")
-//    @RequestMapping("")
-//    @RequestMapping("/mainpage") //@RequestMapping("/user/dologin")
+//    public getRec(){
+//
+//    }
+
     @RequestMapping(value = "/dologin", method = {RequestMethod.GET,RequestMethod.POST})
     public String login(@ModelAttribute("user") User user,@ModelAttribute("movie") Movie movieReq, Model model,HttpServletRequest request) throws UnknownHostException, ExecutionException, InterruptedException {
         User newUsr = userService.loginUser(new LoginUserRequest(user.getUsername(),user.getPassword()));
 
         if(newUsr==null){
             System.out.println("Account does not exist");
-//            Main.Result.builder().code(-1).msg("用户名或密码错误").build();
             return "login";
         }else {
             System.out.println("\nGet username="+newUsr.getUsername());
             System.out.println("Get password="+newUsr.getPassword());
-
-//            LatestMovieRequest latestMovieRequest = new LatestMovieRequest(6);//取出6个
-//            List<MovieVO> latestMovieVOS = recService.getLatestRecommendations(latestMovieRequest);
-//
-//            HotMovieRequest hotMovieRequest = new HotMovieRequest(6);
-//            List<MovieVO> movieVOS = recService.getHotRecommendations(hotMovieRequest);
-
 
             HotMovieRequest hotMovieRequest = new HotMovieRequest(6);//取出6个
             CompletableFuture<List<MovieVO>> hotMovieVOS = recService.getHotRecommendations(hotMovieRequest);
@@ -140,8 +132,7 @@ public class UserController {
             List<MovieVO> hotmovies = hotMovieVOS.get();
             List<MovieVO> latestmovies = hotMovieVOS.get();
 
-            model.addAttribute("hotmovieVOS", hotmovies);
-            model.addAttribute("latestmovieVOS", latestmovies);
+            getRecs2(model);
 
             Set<String> rank = favoriteService.getZsetRank();
             List<Integer> rankmids = rank.stream().limit(5).map(x->Integer.parseInt(x)).collect(Collectors.toList());
@@ -208,9 +199,10 @@ public class UserController {
             model.addAttribute("success", true);
             User user = userService.registerUser(new RegisterUserRequest(name,password));
             model.addAttribute("user", user);
+            getRecs2(model);
 //            model.addAttribute("hotmovieVOS", movieVOS);
-            model.addAttribute("hotmovieVOS", hotmovies);
-            model.addAttribute("latestmovieVOS", latestmovies);
+//            model.addAttribute("hotmovieVOS", hotmovies);
+//            model.addAttribute("latestmovieVOS", latestmovies);
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
             System.out.println("register successful!");
@@ -252,13 +244,6 @@ public class UserController {
         ModelAndView mv = new ModelAndView();
         User user = (User) session.getAttribute("user");
 
-//        HotMovieRequest hotMovieRequest = new HotMovieRequest(6);//取出6个
-//        List<MovieVO> movieVOS = recService.getHotRecommendations(hotMovieRequest);
-//
-//        LatestMovieRequest latestMovieRequest = new LatestMovieRequest(6);//取出6个
-//        List<MovieVO> latestMovieVOS = recService.getLatestRecommendations(latestMovieRequest);
-
-
         HotMovieRequest hotMovieRequest = new HotMovieRequest(6);//取出6个
         CompletableFuture<List<MovieVO>> hotMovieVOS = recService.getHotRecommendations(hotMovieRequest);
         LatestMovieRequest latestMovieRequest = new LatestMovieRequest(6);//取出6个
@@ -280,12 +265,8 @@ public class UserController {
             System.out.println("no log in");
         }else{
             System.out.println("goIndex: username = "+user.getUsername());
+            getRecs(mv);
             mv.addObject("user", user);
-//            mv.addObject("latestmovieVOS", latestMovieVOS);
-//            mv.addObject("hotmovieVOS", movieVOS);
-            mv.addObject("hotmovieVOS", hotmovies);
-            mv.addObject("latestmovieVOS", latestmovies);
-
             mv.addObject("rankmovieVOS", rankMovieVOS);
             mv.setViewName("mainIndex");
         }
@@ -313,14 +294,39 @@ public class UserController {
                 succ = favoriteService.dropFavorite(favoriteRequest);
             }
             boolean state = (favoriteService.findFavorite2Mongo(user.getUid(), mid)==null)?false:true;
-//            boolean state = (favoriteService.findFavorite(user.getUid(), mid)==null)?false:true;
+
             model.addAttribute("success",succ);
             model.addAttribute("state", state);
-//            rank.forEach(x->System.out.println("zset rank: "+x));
 
-//            System.out.println("\n\n is " + String.valueOf(state)+"\n");
         String toUrl = "/movie/movieid?mid="+mid;
         request.getRequestDispatcher(toUrl).forward(request, response);
     }
+    public void getRecs(ModelAndView mv) throws ExecutionException, InterruptedException {
+        HotMovieRequest hotMovieRequest = new HotMovieRequest(6);//取出6个
+        CompletableFuture<List<MovieVO>> hotMovieVOS = recService.getHotRecommendations(hotMovieRequest);
+        LatestMovieRequest latestMovieRequest = new LatestMovieRequest(6);//取出6个
+        CompletableFuture<List<MovieVO>> latestMovieVOS = recService.getLatestRecommendations(latestMovieRequest);
 
+        CompletableFuture.allOf(hotMovieVOS, latestMovieVOS).join();
+        List<MovieVO> hotmovies = hotMovieVOS.get();
+        List<MovieVO> latestmovies = hotMovieVOS.get();
+            mv.addObject("rechotmovieVOS", hotmovies);
+            mv.addObject("reclatestmovieVOS", latestmovies);
+        return ;
+    }
+
+    public void getRecs2(Model model) throws ExecutionException, InterruptedException {
+        HotMovieRequest hotMovieRequest = new HotMovieRequest(6);//取出6个
+        CompletableFuture<List<MovieVO>> hotMovieVOS = recService.getHotRecommendations(hotMovieRequest);
+        LatestMovieRequest latestMovieRequest = new LatestMovieRequest(6);//取出6个
+        CompletableFuture<List<MovieVO>> latestMovieVOS = recService.getLatestRecommendations(latestMovieRequest);
+
+        CompletableFuture.allOf(hotMovieVOS, latestMovieVOS).join();
+        List<MovieVO> hotmovies = hotMovieVOS.get();
+        List<MovieVO> latestmovies = hotMovieVOS.get();
+
+            model.addAttribute("rechotmovieVOS", hotmovies);
+            model.addAttribute("reclatestmovieVOS", latestmovies);
+        return ;
+    }
 }
