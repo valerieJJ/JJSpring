@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
 
-@RequestMapping("/user")
+//@RequestMapping("/user")
 @Controller
 public class UserController {
 
@@ -48,7 +48,7 @@ public class UserController {
     public UserController() throws UnknownHostException {
     }
 
-    @RequestMapping("/show")
+    @RequestMapping("/user/show")
     public String getData(@ModelAttribute("movie") Movie movie, Model model,HttpServletRequest request) throws UnknownHostException {
 
         String field="language";
@@ -83,7 +83,7 @@ public class UserController {
 //    }
 
 
-    @RequestMapping("/whoisit")
+    @RequestMapping("/user/whoisit")
     public String getNickname(Model model, HttpServletRequest request) throws UnknownHostException {
         HttpSession session = request.getSession();
         System.out.println("whoisit - port:"+request.getServerPort()+",session:"+session.getId());
@@ -99,8 +99,8 @@ public class UserController {
     }
 
     /****************************  Log out  **************************/
-    @RequestMapping("/logout")
-    public String logout(HttpServletRequest request){
+    @RequestMapping("/user/logout")
+    public String logout(HttpServletRequest request) {
         HttpSession session = request.getSession();
         // 将用户信息从session中删除
         session.removeAttribute("user");
@@ -110,10 +110,11 @@ public class UserController {
         }else{
             System.out.println("failed to logout");
         }
+
         return "index";
     }
 
-    @RequestMapping("/account")
+    @RequestMapping("/user/account")
     public String accountPage(Model model, HttpServletRequest request){//
 
         HttpSession session = request.getSession();
@@ -141,7 +142,7 @@ public class UserController {
         return "accountPage";
     }
 
-    @RequestMapping("/goindex")
+    @RequestMapping("/user/main")
     public ModelAndView goIndex(@ModelAttribute("movie") Movie movie, HttpServletRequest request) throws ExecutionException, InterruptedException {
         HttpSession session = request.getSession();
         ModelAndView mv = new ModelAndView();
@@ -190,7 +191,7 @@ public class UserController {
         request.getRequestDispatcher(toUrl).forward(request, response);
     }
 
-    @RequestMapping(value = "/{mid}/like", produces = "application/json", method = RequestMethod.POST )
+    @RequestMapping(value = "/user/{mid}/like", produces = "application/json", method = RequestMethod.POST )
     @PermissionAnnotation()
     public void like(@PathVariable("mid")int mid, @RequestParam("likeoption")boolean likeoption, HttpServletRequest request, HttpServletResponse response
             , Model model) throws IllegalAccessException, ServletException, IOException {
