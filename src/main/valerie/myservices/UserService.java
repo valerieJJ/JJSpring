@@ -7,7 +7,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.*;
 import org.bson.json.JsonWriterSettings;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import valerie.myModel.Movie;
 import valerie.myModel.User;
 
@@ -20,8 +22,11 @@ import com.mongodb.util.JSON;
 import org.bson.Document;
 import valerie.myModel.requests.LoginUserRequest;
 import valerie.myModel.requests.RegisterUserRequest;
+import valerie.myUtils.CookieUtil;
 
 import javax.jws.soap.SOAPBinding;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 @Service
@@ -32,9 +37,14 @@ public class UserService {
     private ObjectMapper objectMapper;
     @Autowired
     private MongodbService mongodbService;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
-    private DBCollection collection;
-    private DBObject userobj;
+//    private DBCollection collection;
+//    private DBObject userobj;
+
+    private ThreadLocal<DBCollection> collection = new ThreadLocal<>();
+    private ThreadLocal<DBObject> userobj = new ThreadLocal<>();
 
     public UserService() throws UnknownHostException {
     }
@@ -42,6 +52,16 @@ public class UserService {
     public String getnickname(){
         User user = new User();
         return user.getNickname();
+    }
+
+    public User getUserbyCookie(String userTicket, HttpServletRequest request, HttpServletResponse response){
+        if(!StringUtils.hasText(userTicket)) return  null;
+        User user = (User) redisTemplate.opsForValue().get("user:"+userTicket);
+        if (user!=null){
+            CookieUtil.setCookie(request, response, "userticket", userTicket);
+        }
+
+        return user;
     }
 
     public User getDefaultUser(){
@@ -75,8 +95,9 @@ public class UserService {
 
     public List<Movie> getCollectionData(String field, String value) throws UnknownHostException {
         DB db = mongoClient.getDB( "MovieDB" );
-        collection = db.getCollection("Movie");
-        DBObject myDoc = collection.findOne();
+        DBCollection dbcollection = db.getCollection("Movie");
+        collection.set(dbcollection);
+        DBObject myDoc = collection.get().findOne();
         System.out.println(myDoc);
 
 //        DBObject res = mongodbService.getDataObj();
@@ -102,21 +123,15 @@ public class UserService {
         return user;
     }
 
-    public User loginUser(LoginUserRequest request){
-        User user = findUser(request.getUsername());
+    public User loginUser(LoginUserRequest loginUserRequest, HttpServletRequest request, HttpServletResponse response){
+        User user = findUserMongoDB(loginUserRequest.getUsername());
         if(null == user) {
             return null;
-        }else if(!user.passwordMatch(request.getPassword())){
+        }else if(!user.passwordMatch(loginUserRequest.getPassword())){
             return null;
         }
-        return user;
-    }
-
-    public User loginUser(String name){
-        User user = findUser(name);
-        if(null == user) {
-            return null;
-        }
+        String userticket = loginUserRequest.getUsername()+user.getPassword();
+        CookieUtil.setCookie(request, response, "userticket", userticket);
         return user;
     }
 
@@ -141,23 +156,25 @@ public class UserService {
 
     public User findByUsername(String username){
         BasicDBObject query = new BasicDBObject("username",username);
-        userobj = getUserCollection().findOne(query);
+        DBObject obj = getUserCollection().findOne(query);
+        userobj.set(obj);
         System.out.println("check user exist");
 
-        if(null == userobj)
+        if(null == userobj.get())
             return null;
-        return DBObject2User(userobj);
+        return DBObject2User(userobj.get());
     }
 
-    public User findUser(String name){
+    public User findUserMongoDB(String name){
         BasicDBObject query = new BasicDBObject("username", name);
         DBCollection coll = getUserCollection();
 //        List<DBObject> userObjList = coll.find(query);
-        userobj = coll.findOne(query);
+        DBObject obj = coll.findOne(query);
+        userobj.set(obj);
         if(null == userobj)
             return null;
         System.out.println("Get user collection!"+userobj.toString());
-        User user = DBObject2User(userobj);
+        User user = DBObject2User(userobj.get());
 
         return user;
     }

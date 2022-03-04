@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -165,7 +166,7 @@ public class UserController {
         return mv;
     }
 
-    @RequestMapping(value = "/{mid}/favor", produces = "application/json", method = RequestMethod.POST )
+    @RequestMapping(value = "/user/{mid}/favor", produces = "application/json", method = RequestMethod.POST )
     @PermissionAnnotation()
     public void doFavorite(
             @PathVariable("mid")int mid, @RequestParam("favoption")boolean favoption, HttpServletRequest request, HttpServletResponse response
@@ -176,6 +177,7 @@ public class UserController {
             User user = (User) session.getAttribute("user");
             FavoriteRequest favoriteRequest = new FavoriteRequest(user.getUid(), mid);
             boolean succ = false;
+
 
             if(favoption){
                 succ = favoriteService.updateFavorite(favoriteRequest);

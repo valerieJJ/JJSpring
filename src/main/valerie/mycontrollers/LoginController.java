@@ -19,7 +19,9 @@ import valerie.myservices.MovieService;
 import valerie.myservices.RecService;
 import valerie.myservices.UserService;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -74,8 +76,11 @@ public class LoginController {
 
 
     @RequestMapping(value = "/user/dologin", method = {RequestMethod.GET,RequestMethod.POST})
-    public String login(@ModelAttribute("user") User user, @ModelAttribute("movie") Movie movieReq, Model model, HttpServletRequest request) throws UnknownHostException, ExecutionException, InterruptedException {
-        User newUsr = userService.loginUser(new LoginUserRequest(user.getUsername(),user.getPassword()));
+    public String login(@ModelAttribute("user") User user, @ModelAttribute("movie") Movie movieReq
+            , Model model, HttpServletRequest request, HttpServletResponse response) throws UnknownHostException, ExecutionException, InterruptedException {
+        LoginUserRequest loginUserRequest = new LoginUserRequest(user.getUsername(),user.getPassword());
+
+        User newUsr = userService.loginUser(loginUserRequest,request,response);
 
         if(newUsr==null){
             System.out.println("Account does not exist");
@@ -83,8 +88,13 @@ public class LoginController {
         }else {
             System.out.println("\nGet username="+newUsr.getUsername());
             System.out.println("Get password="+newUsr.getPassword());
+
             HttpSession session = request.getSession();
             session.setAttribute("user", newUsr);
+
+
+//            Cookie cookie_user = new Cookie("user", user);
+            // response.addCookie(cookie);
             return "redirect:main";
 //            return "mainIndex";
         }
