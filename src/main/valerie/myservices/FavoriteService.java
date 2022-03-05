@@ -3,6 +3,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.*;
+import com.mongodb.client.model.Accumulators;
+import com.mongodb.client.model.Aggregates;
 import com.mongodb.internal.operation.AggregateToCollectionOperation;
 import com.mongodb.util.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 //import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.Tuple;
 import scala.Int;
 import valerie.myModel.Favorite;
 import valerie.myModel.Movie;
@@ -24,6 +28,7 @@ import valerie.myModel.requests.TagRequest;
 import java.lang.reflect.Field;
 import java.net.UnknownHostException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 //import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 
 @Service
@@ -136,9 +141,10 @@ public class FavoriteService {
     private int getMIDFavoriteCounts(int mid){
         BasicDBObject query = new BasicDBObject();
         query.append("mid", mid);
-        DBCursor cursor = getCollection().find(query);
+        DBCursor cursor = this.getCollection().find(query);
         int cnt = 0;
         while(cursor.hasNext()){
+            System.out.println(mid+": "+cnt);
             cnt ++;
         }
         return cnt;
@@ -150,8 +156,8 @@ public class FavoriteService {
 //    }
     private HashMap<String, Double> getAllMoviesFavoritesCounts(){
 //
-//        System.out.println("getAllMoviesFavoritesCounts()... ");
-//
+        System.out.println("getAllMoviesFavoritesCounts()... ");
+
 //        TypedAggregation agg = Aggregation.newAggregation(
 //                Favorite.class,
 //                group("mid").count().as("n"),
@@ -192,31 +198,45 @@ public class FavoriteService {
 
     /********************   jedis   ******************************/
     private void initZsetFromMongo(){
-//        Map<String, Double> map = getAllMoviesFavoritesCounts();
-//        jedis.zadd(zsetName, map);
-//        System.out.println("initZsetFromMongo()...");
+//        BasicDBObject query = new BasicDBObject();
+//        DBCursor cursor = this.getCollection().find(query);
+        HashMap<String, Double> map = new HashMap<>();
+        DBCursor cursor = this.getCollection().find();
+        System.out.println("initZsetFromMongo()...");
+        while(cursor.hasNext()){
+            Favorite favorite = DBOjbect2Favorite(cursor.next());
+            int mid = favorite.getMid();
+            if(!map.containsKey(String.valueOf(mid))){
+//                int cnt = getMIDFavoriteCounts(mid);
+                map.put(String.valueOf(mid), 0.);
+                System.out.println("mid="+mid+", cnt=");
+            }
+        }
+
+        jedis.zadd(zsetName, map);
+        System.out.println("initZsetFromMongo()...done");
+        return;
     }
 
     public Set<String> getZsetRank(){
-        Set<String> set = redisTemplate.opsForZSet().reverseRange(zsetName, 0, 9);
-        System.out.println("\ngetZsetRank()...: size="+set.size());
+//        Set<String> set = redisTemplate.opsForZSet().reverseRange(zsetName, 0, 9);
+//        Set<String> set = jedis.zrevrange(zsetName, 0, -1);
+        Set<String> set = redisTemplate.opsForZSet().reverseRangeByScore(zsetName, 1, 100);
+//        Set<ZSetOperations.TypedTuple<String>> set = redisTemplate.opsForZSet().reverseRange(zsetName, 0, 100);;
+//        for(String mid:set){
+//            Double score = redisTemplate.opsForZSet().score(zsetName, mid);
+//            System.out.println("!!! mid="+mid+", cnt="+score);
+//        }
+
         return set;
     }
 
     private void addFavoriteZset(Favorite favorite){
-        if(!jedis.exists(zsetName)){
-            System.out.println("!jedis.exists(zsetName)...");
-//            initZsetFromMongo();
-        }
         Set<String> ranks = getZsetRank();
-        if(ranks.size()==0){
-            System.out.println("ranks.size()==0...");
-//            initZsetFromMongo();
-        }
 
         String mid = String.valueOf(favorite.getMid());
-        if(ranks.contains(mid)) return;
-        redisTemplate.opsForZSet().incrementScore(zsetName,mid,1.0);
+        if(!ranks.contains(mid)) redisTemplate.opsForZSet().add(zsetName, mid,1.0);
+        else redisTemplate.opsForZSet().incrementScore(zsetName, mid,1.0);
         System.out.println("addFavoriteZset...");
     }
 
@@ -226,11 +246,16 @@ public class FavoriteService {
 
         System.out.println("decreasingZset...");
         if(ranks.size()!=0 && ranks.contains(mid)) {
+            System.out.println("decreasingZset...2");
             redisTemplate.opsForZSet().incrementScore(zsetName, mid, -1.0);
-            redisTemplate.opsForZSet().removeRangeByScore(zsetName, -1*Integer.MAX_VALUE, 0.1);
+//            redisTemplate.opsForZSet().removeRangeByScore(zsetName, -1*Integer.MAX_VALUE, 0.1);
 //            redisTemplate.opsForZSet().remove(zsetName, mid);
             return true;
         }else{
+            if(ranks.size()==0){
+                System.out.println("!jedis.exists(zsetName)...");
+                initZsetFromMongo();
+            }
             return false;
         }
     }
@@ -257,9 +282,13 @@ public class FavoriteService {
             res = insertFavorite2Mongo(favorite); // 否则插入新的收藏
         }
         System.out.println("mongo added favorite ... ");
+
         addFavoriteZset(favorite);
         Set<String> rank = getZsetRank();
-        rank.forEach(x->System.out.println("zset rank: mid="+x));
+        for(String mid:rank){
+            Double score = redisTemplate.opsForZSet().score(zsetName, mid);
+            System.out.println("!!! mid="+mid+", cnt="+score);
+        }
         return res;
     }
 

@@ -30,7 +30,7 @@ public class WelcomeController {
 
         CompletableFuture.allOf(hotMovieVOS, latestMovieVOS).join();
         List<MovieVO> hotmovies = hotMovieVOS.get();
-        List<MovieVO> latestmovies = hotMovieVOS.get();
+        List<MovieVO> latestmovies = latestMovieVOS.get();
 
         ModelAndView mv = new ModelAndView();
 

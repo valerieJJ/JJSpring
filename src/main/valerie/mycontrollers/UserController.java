@@ -227,7 +227,7 @@ public class UserController {
 
         CompletableFuture.allOf(hotMovieVOS, latestMovieVOS).join();
         List<MovieVO> hotmovies = hotMovieVOS.get();
-        List<MovieVO> latestmovies = hotMovieVOS.get();
+        List<MovieVO> latestmovies = latestMovieVOS.get();
             mv.addObject("rechotmovieVOS", hotmovies);
             mv.addObject("reclatestmovieVOS", latestmovies);
         return ;
@@ -241,7 +241,7 @@ public class UserController {
 
         CompletableFuture.allOf(hotMovieVOS, latestMovieVOS).join();
         List<MovieVO> hotmovies = hotMovieVOS.get();
-        List<MovieVO> latestmovies = hotMovieVOS.get();
+        List<MovieVO> latestmovies = latestMovieVOS.get();
 
             model.addAttribute("rechotmovieVOS", hotmovies);
             model.addAttribute("reclatestmovieVOS", latestmovies);
