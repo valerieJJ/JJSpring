@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-@Controller
+//@Controller
 public class RecMovieController {
     @Autowired
     private RecService recService;
@@ -25,7 +25,6 @@ public class RecMovieController {
     public ModelAndView recHotMovies() throws ExecutionException, InterruptedException {
         System.out.println("recHotMovies////");
 
-
         HotMovieRequest hotMovieRequest = new HotMovieRequest(6);//取出6个
         CompletableFuture<List<MovieVO>> hotMovieVOS = recService.getHotRecommendations(hotMovieRequest);
         LatestMovieRequest latestMovieRequest = new LatestMovieRequest(6);//取出6个
@@ -33,7 +32,7 @@ public class RecMovieController {
 
         CompletableFuture.allOf(hotMovieVOS, latestMovieVOS).join();
         List<MovieVO> hotmovies = hotMovieVOS.get();
-        List<MovieVO> latestmovies = hotMovieVOS.get();
+        List<MovieVO> latestmovies = latestMovieVOS.get();
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("rechotmovieVOS",hotmovies);
