@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -99,21 +98,7 @@ public class UserController {
         }
     }
 
-    /****************************  Log out  **************************/
-    @RequestMapping("/user/logout")
-    public String logout(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        // 将用户信息从session中删除
-        session.removeAttribute("user");
-        Object info = session.getAttribute("user");
-        if(info==null){
-            System.out.println("logout success");
-        }else{
-            System.out.println("failed to logout");
-        }
 
-        return "index";
-    }
 
     @RequestMapping("/user/account")
     public String accountPage(Model model, HttpServletRequest request){//

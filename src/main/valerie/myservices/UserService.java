@@ -5,11 +5,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.*;
+import com.mongodb.client.model.Filters;
 import org.bson.json.JsonWriterSettings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.session.Session;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+//import valerie.myDAO.UserRepository;
 import valerie.myModel.Movie;
 import valerie.myModel.User;
 
@@ -24,13 +27,16 @@ import valerie.myModel.requests.LoginUserRequest;
 import valerie.myModel.requests.RegisterUserRequest;
 import valerie.myUtils.CookieUtil;
 
+import javax.annotation.Resource;
 import javax.jws.soap.SOAPBinding;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
 @Service
 public class UserService {
+
     @Autowired
     private MongoClient mongoClient;
     @Autowired
@@ -54,15 +60,14 @@ public class UserService {
         return user.getNickname();
     }
 
-    public User getUserbyCookie(String userTicket, HttpServletRequest request, HttpServletResponse response){
-        if(!StringUtils.hasText(userTicket)) return  null;
-        User user = (User) redisTemplate.opsForValue().get("user:"+userTicket);
-        if (user!=null){
-            CookieUtil.setCookie(request, response, "userticket", userTicket);
-        }
-
-        return user;
-    }
+//    public User getUserbyCookie(String userTicket, HttpServletRequest request, HttpServletResponse response){
+//        if(!StringUtils.hasText(userTicket)) return  null;
+//        User user = (User) redisTemplate.opsForValue().get("user:"+userTicket);
+//        if (user!=null){
+//            CookieUtil.setCookie(request, response, "userticket", userTicket);
+//        }
+//        return user;
+//    }
 
     public User getDefaultUser(){
         User user = new User();
@@ -100,7 +105,6 @@ public class UserService {
         DBObject myDoc = collection.get().findOne();
         System.out.println(myDoc);
 
-//        DBObject res = mongodbService.getDataObj();
         List<Movie> res = mongodbService.getDataObj(field,value);
         return res;
     }
@@ -124,14 +128,14 @@ public class UserService {
     }
 
     public User loginUser(LoginUserRequest loginUserRequest, HttpServletRequest request, HttpServletResponse response){
+
         User user = findUserMongoDB(loginUserRequest.getUsername());
         if(null == user) {
             return null;
         }else if(!user.passwordMatch(loginUserRequest.getPassword())){
             return null;
         }
-        String userticket = loginUserRequest.getUsername()+user.getPassword();
-        CookieUtil.setCookie(request, response, "userticket", userticket);
+//        CookieUtil.setCookie(request, response, "userticket", userticket);
         return user;
     }
 
@@ -164,12 +168,23 @@ public class UserService {
             return null;
         return DBObject2User(userobj.get());
     }
+    public void updateUser(){
+
+
+        //更新文档   将文档中likes=100的文档修改为likes=200
+//        BasicDBObject query = new BasicDBObject("username", name);
+//        getUserCollection().findOne().updateOne(eq("item", "paper"),
+//                combine(set("size.uom", "cm"), set("status", "P"), currentDate("lastModified")));
+//
+//        getUserCollection().update( new DBObject("$set",new Document("likes",200)));
+    }
 
     public User findUserMongoDB(String name){
         BasicDBObject query = new BasicDBObject("username", name);
         DBCollection coll = getUserCollection();
 //        List<DBObject> userObjList = coll.find(query);
         DBObject obj = coll.findOne(query);
+
         userobj.set(obj);
         if(null == userobj)
             return null;

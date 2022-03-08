@@ -76,30 +76,62 @@ public class LoginController {
 
 
     @RequestMapping(value = "/user/dologin", method = {RequestMethod.GET,RequestMethod.POST})
-    public String login(@ModelAttribute("user") User user, @ModelAttribute("movie") Movie movieReq
+    public String login(@ModelAttribute("user") User usr, @ModelAttribute("movie") Movie movieReq
             , Model model, HttpServletRequest request, HttpServletResponse response) throws UnknownHostException, ExecutionException, InterruptedException {
-        LoginUserRequest loginUserRequest = new LoginUserRequest(user.getUsername(),user.getPassword());
 
-        User newUsr = userService.loginUser(loginUserRequest,request,response);
+        LoginUserRequest loginUserRequest = new LoginUserRequest(usr.getUsername(),usr.getPassword());
 
-        if(newUsr==null){
+        HttpSession session = request.getSession();
+        User userCheck = (User) session.getAttribute("user");
+        if(userCheck!=null){
+            System.out.println("已登陆");
+            return "redirect:main";
+        }
+
+        User user = userService.loginUser(loginUserRequest,request,response);
+
+        if(user==null){
             System.out.println("Account does not exist");
             return "login";
         }else {
-            System.out.println("\nGet username="+newUsr.getUsername());
-            System.out.println("Get password="+newUsr.getPassword());
+            System.out.println("\nGet username="+user.getUsername());
+            System.out.println("Get password="+user.getPassword());
 
-            HttpSession session = request.getSession();
-            session.setAttribute("user", newUsr);
+            // 将登录用户信息保存到session中
+            session.setAttribute("user", user);
 
+            // 保存cookie，实现自动登录
+            String userticket = loginUserRequest.getUsername();
+            Cookie cookie_user = new Cookie("userticket", userticket);
+            cookie_user.setMaxAge(60*60);//过期时间设为1小时，单位为秒
+            cookie_user.setPath(request.getContextPath());//设置cookie共享路径
+            response.addCookie(cookie_user);// 向客户端发送cookie
 
-//            Cookie cookie_user = new Cookie("user", user);
-            // response.addCookie(cookie);
             return "redirect:main";
 //            return "mainIndex";
         }
     }
+    /****************************  Log out  **************************/
+    @RequestMapping("/user/logout")
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
+        // 销毁cookie
+        Cookie userticket = new Cookie("userticket", "");
+        userticket.setMaxAge(0);
+        userticket.setPath(request.getContextPath());
+        response.addCookie(userticket);
 
+        HttpSession session = request.getSession();
+        // 将用户信息从session中删除
+        session.removeAttribute("user");
+
+        Object info = session.getAttribute("user");
+        if(info==null){
+            System.out.println("logout success");
+        }else{
+            System.out.println("failed to logout");
+        }
+        return "index";
+    }
 
     public void getRecs(ModelAndView mv) throws ExecutionException, InterruptedException {
         HotMovieRequest hotMovieRequest = new HotMovieRequest(6);//取出6个
