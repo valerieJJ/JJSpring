@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import valerie.myModel.DTO.MovieDTO;
 import valerie.myModel.Movie;
+import valerie.myModel.PermissionAnnotation;
 import valerie.myModel.Rating;
 import valerie.myModel.User;
 import valerie.myModel.VO.MovieVO;
@@ -16,6 +17,7 @@ import valerie.myModel.requests.MovieRatingRequest;
 import valerie.myservices.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -163,7 +165,6 @@ public class MovieController {
         HttpSession session = request.getSession();
         session.setAttribute("movie", movie);
 
-
         User user = (User) session.getAttribute("user");
         boolean state = favoriteService.favoriteExistMongo(user.getUid(), mid);
         modelAndView.addObject("state", state);
@@ -174,9 +175,10 @@ public class MovieController {
     }
 
     @RequestMapping("/moviefield")
+    @PermissionAnnotation
     public ModelAndView searchMovieByName(String fieldname
-                                          ,String value
-            , HttpServletRequest request) throws IOException {
+                                          , String value
+            , HttpServletRequest request, HttpServletResponse response) throws IOException {
         ModelAndView modelAndView = new ModelAndView();
         System.out.println("search movie field = "+fieldname);
         System.out.println("search value = " + value);
@@ -184,8 +186,8 @@ public class MovieController {
         String[] excludes = {};
         String[] includes = {"mid", "name", "genres", "language", "descri", "issue", "shoot", "directors", "timelong"};
 
-        HashMap<List<MovieDTO>, String> map;
-
+//        HashMap<List<MovieDTO>, String> map;
+        HashMap<List<MovieVO>, String> map;
         map = esService.fullQuery("match", es_collection,
                 fieldname, value, excludes, includes, 6);
 //        if (fieldname=="genres"){
@@ -196,16 +198,16 @@ public class MovieController {
 //            map = esService.fullQuery("wildCard", es_collection, fieldname, value, excludes, includes, 10);
 //        }
 
-        Set<List<MovieDTO>> set = map.keySet();
+        Set<List<MovieVO>> set = map.keySet();
         List<MovieVO> movieVOList = new ArrayList<>();
-        for(List<MovieDTO> list: set){
-            for(MovieDTO movieDTO: list){
-                Integer mid = movieDTO.getMid();
-                MovieVO movieVO = new MovieVO();
+        for(List<MovieVO> list: set){
+            for(MovieVO movieVO: list){
+                Integer mid = movieVO.getMid();
+//                MovieVO movieVO = new MovieVO();
                 Movie mov = movieService.findByMID(mid);
                 String movie_score = ratingService.getMovieAverageScores(mid);
-                movieVO.setMid(mid);
-                movieVO.setName(mov.getName());
+//                movieVO.setMid(mid);
+//                movieVO.setName(mov.getName());
                 movieVO.setScore(movie_score);
                 movieVO.setIssue(mov.getIssue());
                 movieVO.setGenres(mov.getGenres());
@@ -216,8 +218,8 @@ public class MovieController {
                 movieVOList.add(movieVO);
             }
         }
-        System.out.println("get movieVOList.size() = "+movieVOList.size());
-        System.out.println("get movieVOList.get(0) = "+movieVOList.get(0).getName());
+        System.out.println("es get movieVOList.size() = "+movieVOList.size());
+        System.out.println("es get movieVOList.get(0) = "+movieVOList.get(0).getName());
 
         if(movieVOList==null){
             System.out.println("movie not found");
@@ -229,6 +231,7 @@ public class MovieController {
             modelAndView.addObject("fieldname",fieldname);
             modelAndView.addObject("value", value);
             modelAndView.setViewName("movieList");
+//            modelAndView.setViewName("movieInfo");
             HttpSession session = request.getSession();
             session.setAttribute("movieVOList", movieVOList);
         }
@@ -237,6 +240,7 @@ public class MovieController {
 
 
     @RequestMapping("/favor")
+//    @PermissionAnnotation
     public void doFavor(
             HttpServletRequest request
             , Model model) {

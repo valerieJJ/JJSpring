@@ -10,11 +10,16 @@ import org.bson.json.JsonObject;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import valerie.myModel.User;
 import valerie.myModel.requests.FavoriteRequest;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.HashMap;
 
 @Aspect
@@ -30,15 +35,39 @@ public class PermissionAspect {
     public Object permissionChecking(ProceedingJoinPoint joinPoint) throws Throwable {
         Object[] objects = joinPoint.getArgs();//获取接口类的请求参数
 
-        int mid = (int)objects[0];
+
+        System.out.println("user permission checking...");
+        String mid = (String) objects[0];
 
         HttpSession session = ((HttpServletRequest) objects[2]).getSession();
         User user = (User) session.getAttribute("user");
 
-        System.out.println("user identity permission checking...");
-        if(user==null || user.getUid()<0 || mid<0){
-            return "{\"message\":\"illegal id\",\"code\":403}";
+        System.out.println("target=" + joinPoint.getTarget());
+
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();//获取request
+        HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();//获取response
+
+
+        try {
+            if(user.getUsername().equals("michael"))
+                throw new Exception("no privilege");
+        } catch (Exception ex) {
+//            request.setAttribute("msg", "no privilege");
+            System.out.println("no privilege");
+            response.sendRedirect(request.getContextPath() + "/user/dologin");
+
+//            try {
+//                request.getRequestDispatcher("/index.html").forward(
+//                        request, response);
+//            } catch (ServletException e) {
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
         }
+//        if(user==null || user.getUid()<0 || mid<0){
+//            return "{\"message\":\"illegal id\",\"code\":403}";
+//        }
         return joinPoint.proceed();
 
     }
