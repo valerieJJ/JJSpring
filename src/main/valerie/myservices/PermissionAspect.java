@@ -43,8 +43,11 @@ public class PermissionAspect {
 
         System.out.println("target=" + joinPoint.getTarget());
 
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();//获取request
-        HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();//获取response
+        HttpServletRequest request = (HttpServletRequest) objects[2];
+        HttpServletResponse response = (HttpServletResponse) objects[3];
+
+//        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();//获取request
+//        HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();//获取response
 
         try {
             if(user.getUsername().equals("michael"))
