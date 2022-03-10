@@ -35,7 +35,6 @@ public class PermissionAspect {
     public Object permissionChecking(ProceedingJoinPoint joinPoint) throws Throwable {
         Object[] objects = joinPoint.getArgs();//获取接口类的请求参数
 
-
         System.out.println("user permission checking...");
         String mid = (String) objects[0];
 
@@ -46,7 +45,6 @@ public class PermissionAspect {
 
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();//获取request
         HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();//获取response
-
 
         try {
             if(user.getUsername().equals("michael"))
