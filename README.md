@@ -9,6 +9,4 @@ thymleaf
 
 environments:
 
-`912 -XX:MaxHeapSize=8589934592 -XX:+PrintCommandLineFlags -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseParallelGC 
-java version "1.8.0_301"
-Java(TM) SE Runtime Environment`
+<img width="1268" alt="image" src="https://user-images.githubusercontent.com/43733497/158498759-11464f43-f290-49ed-a908-a98fa9b9d046.png">
