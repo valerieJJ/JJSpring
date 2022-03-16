@@ -4,7 +4,7 @@
 The movie data used in this project is a subset adopted from a public movie dataset MovieLen
 
 It is mainly wrote in java, html, and the techniques includes the usage of thymleaf, spring-boot, redis, mongodb, elasticsearch.
-Besides, multi-thread is also applied for accelerating some processing speed.
+Besides, multi-threading is also applied for accelerating some processing speed.
 I tried my best to obey the rules of the restful。
 
 The demo for offline recommendation algorithm and data processing is offered in this site `https://github.com/valerieJJ/RecSys`(mainly wrote in spark-scala).
