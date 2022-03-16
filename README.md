@@ -4,7 +4,8 @@
 Springboot, 
 redis, 
 MongoDB, 
-ElasticSearch
+ElasticSearch, 
+thymleaf
 
 environments:
 
