@@ -1,4 +1,4 @@
-# JJSpring
+# This is a web system for movie recommendation based on a movie dataset(including movies and user behaviours)
 Springboot, 
 redis, 
 MongoDB, 
