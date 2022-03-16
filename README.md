@@ -10,9 +10,9 @@ I tried my best to obey the rules of the restful。
 The demo for offline recommendation algorithm and data processing is offered in this site `https://github.com/valerieJJ/RecSys`(mainly wrote in spark-scala).
 
 I am still working on functional refinements and improvements, even though I am busy with my academic paper at the same time.
-If you have any question, welcome to contact `820439600@qq.com`.
 
-environments:
+
+Environments:
 
 <img width="1268" alt="image" src="https://user-images.githubusercontent.com/43733497/158498759-11464f43-f290-49ed-a908-a98fa9b9d046.png">
 
