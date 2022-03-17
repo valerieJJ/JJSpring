@@ -28,7 +28,7 @@ but I would prefer the follow refined JVM settings：
 -XX:+UseCMSCompactAtFullCollection
 -XX:CMSFullGCsBeforeCompaction=0`
 
-### mongDB
+### mongoDB
 Useful Tool: MongoDB - Robo
 
 start server:
