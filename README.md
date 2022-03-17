@@ -3,7 +3,7 @@
 
 The movie data used in this project is a subset adopted from a public movie dataset MovieLen
 
-It is mainly wrote in java, html, and the techniques includes the usage of thymleaf, spring-boot, redis, mongodb, elasticsearch.
+It is mainly developed in java, html, and the techniques includes the usage of thymleaf, spring-boot, redis, mongodb, elasticsearch.
 Besides, multi-threading is also applied for accelerating some processing speed.
 I tried my best to obey the rules of the restful。
 
