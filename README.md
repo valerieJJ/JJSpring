@@ -11,10 +11,22 @@ The demo for offline recommendation algorithm and data processing is offered in 
 
 I am still working on functional refinements and improvements, even though I am busy with my academic paper at the same time.
 
-
-Environments:
+As for environment, you can use default jvm like this:
 
 <img width="1268" alt="image" src="https://user-images.githubusercontent.com/43733497/158498759-11464f43-f290-49ed-a908-a98fa9b9d046.png">
+
+but I would prefer the follow refined JVM settings：
+`-Xms4096M
+-Xmx4096M
+-Xmn3072M
+-Xss1M
+-XX:PermSize=256M
+-XX:MaxPermSize=256M
+-XX:+UseParNewGC
+-XX:+UseConcMarkSweepGC
+-XX:CMSInitiatingOccupancyFaction=92
+-XX:+UseCMSCompactAtFullCollection
+-XX:CMSFullGCsBeforeCompaction=0`
 
 ### mongDB
 Useful Tool: MongoDB - Robo
