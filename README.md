@@ -48,6 +48,7 @@ Note: To save storage space, I didn't download all the poster images for each mo
 ![image-20220316094252015](/Users/jj/Library/Application Support/typora-user-images/image-20220316094252015.png)
 
 <img width="1280" alt="image" src="https://user-images.githubusercontent.com/43733497/158501934-0de13ccb-5eec-46e1-a3b2-e58f42b6f2e6.png">
+![piccc](/Users/jj/Pictures/piccc.png)
 
 <img width="1285" alt="image" src="https://user-images.githubusercontent.com/43733497/158501345-8cfe6ef0-97a5-4115-8dd0-7129cc249c9a.png">
 
