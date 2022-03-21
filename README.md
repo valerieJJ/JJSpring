@@ -42,6 +42,12 @@ start server:
 `jj@master ~ % redis-server`
 <img width="1623" alt="image" src="https://user-images.githubusercontent.com/43733497/158499459-46ce4489-72af-4133-98f7-9459892ee47d.png">
 
+### elasticsearch 
+`jj@master ~ % elasticsearch`（It has already been added to my system environment variables）
+Here it is applied to improve the speed of searching movies in various ways.
+
+It will return the movie ID retrieved based on the content, based on which you can further check the MongoDB table to get more information.
+
 ### zookeeper utils
 I am currently working on extending redis to a distributed architecture based on zookeeper
 
