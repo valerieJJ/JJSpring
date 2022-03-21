@@ -42,6 +42,12 @@ start server:
 `jj@master ~ % redis-server`
 <img width="1623" alt="image" src="https://user-images.githubusercontent.com/43733497/158499459-46ce4489-72af-4133-98f7-9459892ee47d.png">
 
+### zookeeper utils
+I am currently working on extending redis to a distributed architecture based on zookeeper
+
+<img width="1603" alt="image" src="https://user-images.githubusercontent.com/43733497/159327103-3947eda0-b6d3-4471-8de1-4dca4ce826fb.png">
+
+
 Here are some system showcases：
 Note: To save storage space, I didn't download all the poster images for each movie. Instead, I used the same images as general movie posters.
 
