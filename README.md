@@ -49,7 +49,7 @@ Here it is applied to improve the speed of searching movies in various ways.
 It will return the movie ID retrieved based on the content, based on which you can further check the MongoDB table to get more information.
 
 ### zookeeper utils
-I am currently working on extending redis to a distributed architecture based on zookeeper
+I am considering extending this project to spring-cloud based on zookeeper
 
 <img width="1603" alt="image" src="https://user-images.githubusercontent.com/43733497/159327103-3947eda0-b6d3-4471-8de1-4dca4ce826fb.png">
 
