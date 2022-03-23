@@ -7,7 +7,7 @@ It is mainly developed in java, html, and the techniques includes the usage of t
 Besides, multi-threading is also applied for accelerating processing speed in some business.
 I tried my best to obey the rules of the restful。
 
-The demo for offline recommendation algorithm and data processing is offered in this site `https://github.com/valerieJJ/RecSys`(mainly wrote in spark-scala).
+The demos for operating data on HBase and offline recommendation algorithm are accessible in this site `https://github.com/valerieJJ/RecSys`(mainly wrote in spark-scala).
 
 I am still working on functional refinements and improvements, even though I am busy with my academic paper at the same time.
 
